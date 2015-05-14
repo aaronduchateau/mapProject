@@ -1,18 +1,22 @@
 window.translations = {
 	held: {},
+	//DouglasCountyMap: ["cartodb_id","acreage"],
+	//DouglasCountyMap: ["cartodb_id","the_geom_GEO","acreage","addr1","addr2","addr3","allaccount","alt_acct_n","assd_value","block","code_area","county_pro","csz","id","inst_no","legal","loc_code","lot","maint_area","mtl_acreag","name","nbhd_code","owner_id","prop_id","special_in","taxid","total_imp","total_land","total_mark","created_at","updated_at"],
+	DouglasCountyMap: ["cartodb_id","acreage","addr1","addr2","addr3","allaccount","alt_acct_n","assd_value","block","code_area","county_pro","csz","id","inst_no","legal","loc_code","lot","maint_area","mtl_acreag","name","nbhd_code","owner_id","prop_id","special_in","taxid","total_imp","total_land","total_mark","created_at","updated_at"],
+
 	DouglasCounty: {
 		translate: function(o) {
-			if (o.CSZ) {
-				var commaSplit = o.CSZ.value.split(",");
+			if (o.csz) {
+				var commaSplit = o.csz.split(",");
 				var CITY = commaSplit[0];
 				var stateZip = commaSplit[1];
 				var stateZipSplit = stateZip.split(" ");
 
 				var STATE = stateZipSplit[0];
 				var ZIP = stateZipSplit[1];
-				var cityObj = {value: CITY};
-				var stateObj = {value: STATE};
-				var zipObj = {value: ZIP};
+				var cityObj = CITY;
+				var stateObj = STATE;
+				var zipObj = ZIP;
 
 			} else {
 				var CITY = null, STATE = null, ZIP = null; 
@@ -20,40 +24,40 @@ window.translations = {
 			//query on maptaxlot, queryVal holds actual query val
 			var tempJson = {
 				mapNumber: null,
-				account: o.PROP_ID,
+				account: o.prop_id,
 				taxcode: null,
 				inCareOf: null,
-				ownerAddress1: o.ADDR1,
-				ownerAddress2: o.ADDR2,
-				ownerAddress3: o.ADDR3,
+				ownerAddress1: o.addr1,
+				ownerAddress2: o.addr2,
+				ownerAddress3: o.addr3,
 				ownerCity: cityObj,
 				ownerState: stateObj,
 				ownerZip: zipObj,
 				numberOwners: null,
-				ownerName: o.NAME,
-				impValue: o.TOTAL_IMP,
-				landValue: o.TOTAL_LAND,
-				totalValue: o.TOTAL_MARK.value,
-				yearBuilt: o.INST_NO,
-				taxLot: o.TAXID,
+				ownerName: o.name,
+				impValue: o.total_imp,
+				landValue: o.total_land,
+				totalValue: o.total_mark,
+				yearBuilt: o.inst_no,
+				taxLot: o.taxid,
 				buildingType: null,
 				exemptDescription: null,
-				propertyClassCode: o.COUNTY_PRO,
+				propertyClassCode: o.county_pro,
 				propertyClassDescription: null,
 				stateClassCodeOrBuildCode: null,
 				stateClassDescription: null,
-				acreage: o.ACREAGE,
-				assesedtaxableValue: o.ASSD_VALUE,
+				acreage: o.acreage,
+				assesedtaxableValue: o.assd_value,
 				assesedImpTaxable: null,
 				assesedLandTaxable: null,
 				mapTaxLotNumber: null,
-				zoning: o.CODE_AREA,
+				zoning: o.code_area,
 				landUseNumber: null,
 				planDescription: null,
 				fireDistrict: null,
 				schoolDistrict: null,
-				nieghborHood: o.NBHD_CODE,
-				queryVal: o.ID
+				nieghborHood: o.nbhd_code,
+				queryVal: o.id
 			};
 
 			window.translations.held = tempJson;

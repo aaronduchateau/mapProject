@@ -20,7 +20,7 @@
     {{ HTML::style('dist/scroll/jquery.mCustomScrollbar.css') }}
    
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,800,400' rel='stylesheet' type='text/css'>
-
+    <link rel="stylesheet" href="http://libs.cartodb.com/cartodb.js/v3/3.14/themes/css/cartodb.css" />
   </head>
 
   <body id="body-dash" style="background-color: #337ab7;">

@@ -82,7 +82,132 @@ window.gmd = {
 
 		}
 	},
+	onClickTileManager: function(e, latlng, pos, data, layerNumber){
+		window.infoWindowLat = latlng[0];
+		window.infoWindowLng = latlng[1];
+	 
+
+	  	//let's translate our data
+	  	//console.log(window.g.mapConfig[0]);
+
+	  	var row = window.translations[window.g.mapConfig.countyNameConcat].translate(data);
+	  	console.log(row);
+
+	    if (row['ownerName']){
+	    	var feeOwner = row['ownerName'];
+	    } else {
+	    	var feeOwner = 'unavailable';
+	    }
+	    if (row['acreage']){
+	    	var acreage = row['acreage'];
+	    } else {
+	    	var acreage = 'unavailable';
+	    }
+	    if (row['totalValue']){
+	    	var totalValue = this.sanatizeTotalValue(row['totalValue']);
+	    }
+	    // else {
+	    //	var totalValue= 'unavailable';
+	    //}
+	    var infoWindowHtml;
+	    infoWindowHtml = "<div><h5>" + feeOwner + "</h5>";
+  		infoWindowHtml += "<div style='padding:10px;'><b>Acreage: </b>" + acreage + "<br/>";
+  		infoWindowHtml += "<b>Total Value: </b>$" + totalValue + "</div>";
+  		infoWindowHtml += "<a href='javascript:void(0);' class='btn btn-primary left-open pull-right' style='color:white;'>Full Information</a>";
+  		infoWindowHtml += "</div>";
+
+  		console.log(infoWindowHtml);
+	    
+		setTimeout(function(){
+		    $( '.cartodb-popup-content' ).each(function( index ) {
+			  $( this ).html(infoWindowHtml);
+			});
+		}, 500);
+
+	    window.g.mapRowData = row;
+	    window.g.mapRowData.lat = window.infoWindowLat;
+	    window.g.mapRowData.lng = window.infoWindowLng;
+	    window.g.mapRowData.accountOwnerName = window.g.mapConfig.accountOwnerName;
+	    window.g.mapRowData.accountOwnerPhone = window.g.mapConfig.accountOwnerPhone;
+	    window.g.mapRowData.countyName = window.g.mapConfig.countyName;
+	},
+
+	sanatizeTotalValue: function(value){
+		if (value){
+	    	var currencyParse =  value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+	    	var splitNum = currencyParse.split(".");
+	    	return splitNum[0];
+		} else {
+			return 'EMPTY';
+		}
+	},
+
+	//this guy is now the main function
+	populateMapAfterTimeout: function(){
+        
+        var thisScoped = this;
+
+		var LayerConfig = {
+	    	user_name: 'devtest', // Required
+	    	type: 'cartodb', // Required
+	    	tiler_domain: 'anonymoustransaction.com',
+	    	tiler_port:     "8181",
+	    	tiler_protocol: 'http',
+	    	sublayers: [{
+	        	sql: "SELECT * FROM douglas83feet", // Required
+	        	cartocss: '#douglas83feet {polygon-fill: #FF6600; polygon-opacity: 0.8; line-color: #FFF; line-width: 1; line-opacity: 1;}'
+	        	//interactivity: 'cartodb_id, the_geom, acreage, id, created_at'
+	    	}]
+	  	};
+
+		cartodb.createLayer(window.map, LayerConfig)
+         .addTo(window.map)
+         .on('done', function(layer) {
+           var infowindow_model = layer.getSubLayer(0).infowindow;
+           // get sublayer 0 and set the infowindow template
+           var sublayer = layer.getSubLayer(0);
+            sublayer.setInteraction(true);          
+          
+            layer.getSubLayer(0).set('template', $('#infowindow_template').html())
+            .on('error', function(err){
+              console.log('infowindow error: ', err);
+            });
+
+            //console.log($('#infowindow_template').html());
+           
+            sublayer.infowindow.set('template', $('#infowindow_template').html());
+           
+
+            sublayer.on('featureClick', function(e, latlng, pos, data, layerNumber) {
+                  //alert("Hey! You clicked " + data.cartodb_id);
+                  //console.log(pos);
+                  console.log('latlng');
+                  console.log(latlng);
+                  console.log(data);
+                  infowindow_model.set('visibility', true);
+                  console.log(infowindow_model);
+    			  console.log(window.translations[window.g.mapConfig.countyNameConcat + 'Map']);
+                  
+                  thisScoped.onClickTileManager(e, latlng, pos, data, layerNumber);
+
+            });
+
+            //lets keep this commented out for now
+            //sublayer.on('featureOver', function(e, latlng, pos, data, layerNumber) {
+           	//});
+
+            var configurationArray = window.translations[window.g.mapConfig.countyNameConcat + 'Map'];
+            console.log(configurationArray);
+            cdb.vis.Vis.addInfowindow(window.map, layer.getSubLayer(0), configurationArray, {'infowindowTemplate': $('#infowindow_template').html(), 'templateType': 'mustache'})
+
+          }).on('error', function() {
+            console.log("some error occurred");
+        });
+    },
+
 	populateMap : function (latMap, lngMap){
+		var thisScoped = this;
+
 		var poly;
 		window.map;
 		var marker;
@@ -95,21 +220,38 @@ window.gmd = {
 
 
 	    setTimeout(function(){
+	    	window.map = L.map('map-canvas', { 
+	          zoomControl: true,
+	          center: new L.LatLng(latMap, lngMap),
+	          zoom: 13,
+	          infoWindow: true
+	        });
+
+	        var ggl2 = new L.Google('TERRAIN');
+        	window.map.addLayer(ggl2);
+	    	/*
 	    	window.map = new google.maps.Map(document.getElementById('map-canvas'), {
 				center: jacksonCounty,
 				zoom: 16,
 				mapTypeId: google.maps.MapTypeId.HYBRID
 			});
-
+	    	
 			var marker = new google.maps.Marker({
 			    position: jacksonCounty,
 			    map: window.map,
 			    icon: window.gmd.pointMarkerUrl(),
 			    title: 'Hello World!'
 			});
+			*/
 
-	    	populateMap();
-	   
+	    	thisScoped.populateMapAfterTimeout();
+	    	//this should go below
+	   		$( ".dash-center" ).show();
+	   		$( ".options-inter-margin" ).show();
+	   		$( ".dash-left-inter-margin" ).show();
+	   		$( ".dash-right-inter-margin" ).show();
+
+	   		/*
 		    var hasLoadedOnce = false;
 		    google.maps.event.addListener(window.map, 'idle', function() {
 		    	if (!hasLoadedOnce){
@@ -127,7 +269,9 @@ window.gmd = {
 		    	}
 		    	hasLoadedOnce = true;
 			});
+		*/
 		},1300);
+
 
 		function sanatizeValue(value){
 			if (value){
@@ -139,6 +283,70 @@ window.gmd = {
 			}
 		}
 
+		//this guy is now the main function
+		function populateMainMap(){
+
+			var LayerConfig = {
+		    	user_name: 'devtest', // Required
+		    	type: 'cartodb', // Required
+		    	tiler_domain: 'anonymoustransaction.com',
+		    	tiler_port:     "8181",
+		    	tiler_protocol: 'http',
+		    	sublayers: [{
+		        	sql: "SELECT * FROM douglas83feet", // Required
+		        	cartocss: '#douglas83feet {polygon-fill: #FF6600; polygon-opacity: 0.8; line-color: #FFF; line-width: 1; line-opacity: 1;}'
+		        	//interactivity: 'cartodb_id, the_geom, acreage, id, created_at'
+		    	}]
+		  	};
+
+			cartodb.createLayer(window.map, LayerConfig)
+	         .addTo(window.map)
+	         .on('done', function(layer) {
+	           var infowindow_model = layer.getSubLayer(0).infowindow;
+	           // get sublayer 0 and set the infowindow template
+	           var sublayer = layer.getSubLayer(0);
+	            sublayer.setInteraction(true);          
+	          
+	            layer.getSubLayer(0).set('template', $('#infowindow_template').html())
+	            .on('error', function(err){
+	              console.log('infowindow error: ', err);
+	            });
+
+	            //console.log($('#infowindow_template').html());
+	           
+	            sublayer.infowindow.set('template', $('#infowindow_template').html());
+	           
+
+	            sublayer.on('featureClick', function(e, latlng, pos, data, layerNumber) {
+	                  //alert("Hey! You clicked " + data.cartodb_id);
+	                  //console.log(pos);
+	                  console.log(data);
+	                  infowindow_model.set('visibility', true);
+	                  console.log(infowindow_model);
+	    
+	                  console.log(window.translations[window.g.mapConfig.countyNameConcat + 'Map']);
+	                  //return false;
+	                  //this.infowindow.set('template', $('#infowindow_template').html());
+	            });
+
+	            sublayer.on('featureOver', function(e, latlng, pos, data, layerNumber) {
+	              //$('.leaflet-container').css('cursor','pointer');
+	              //console.log(e.layerNumber);
+	              //console.log(e, latlng, pos, data, layerNumber);
+	              //console.log(data);
+	            });
+
+	            //alert('d');
+	            var config = window.translations[window.g.mapConfig.countyNameConcat + 'Map'];
+	            console.log(config);
+	            cdb.vis.Vis.addInfowindow(window.map, layer.getSubLayer(0), config, {'infowindowTemplate': $('#infowindow_template').html(), 'templateType': 'mustache'})
+
+	          }).on('error', function() {
+	            console.log("some error occurred");
+	        });
+	    }
+
+		//this guy is old and no longer called
 	    function populateMap(){
 		  layer = new google.maps.FusionTablesLayer({
 		    query: {

@@ -1,3 +1,13 @@
+<script type="infowindow/html" id="infowindow_template">
+  <div class="cartodb-popup">
+    <a href="#close" class="cartodb-popup-close-button close">x</a>
+     <div class="cartodb-popup-content-wrapper" style="width: auto;max-width: 300px;">
+       <div class="cartodb-popup-content" style="height:100px;">
+       </div>
+     </div>
+     <div class="cartodb-popup-tip-container"></div>
+  </div>
+</script>
 <script id="user-reviews" type="text/x-handlebars-template">
 	@{{#userReviews}} 
 	<!--start item-->
@@ -138,7 +148,7 @@
 			</div>
             <div style="clear:both;"></div>
             <div class="custom-well-info letter" contenteditable="true" style="padding-top:10px;padding-left:10px;padding-right:10px;padding-bottom: 10px;border-radius: 4px;">
-	            Dear @{{emptyCheck ownerName.value}}, <br/>
+	            Dear @{{emptyCheck ownerName}}, <br/>
 	            my name is @{{emptyCheck accountOwnerName}} and I'm interested in your property in @{{emptyCheck countyName}} (please find the enclosed map). If you're interested in selling please let me know. My number is @{{emptyCheck accountOwnerPhone}}.
 	            <br/><br/>
 				Thank you,
@@ -155,7 +165,7 @@
             				<br/>
             				<h5>
 	            				<span class="label label-primary darker-blue-backgroud-class">
-	            					@{{emptyCheck ownerName.value}} / @{{emptyCheck inCareOf.value}}
+	            					@{{emptyCheck ownerName}} / @{{emptyCheck inCareOf}}
 	            				</span>	
             				</h5>
             			</div>
@@ -166,7 +176,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						$@{{formatCurrency landValue.value}} / $@{{formatCurrency impValue.value}}
+            						$@{{formatCurrency landValue}} / $@{{formatCurrency impValue}}
         						</span>
     						</h5>
     					</div>
@@ -177,7 +187,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-								@{{emptyCheck acreage.value}}
+								@{{emptyCheck acreage}}
 								</span>
 							</h5>
             			</div>
@@ -188,7 +198,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-								#@{{emptyCheck account.value}}
+								#@{{emptyCheck account}}
 								</span>
 							</h5>
             			</div>
@@ -201,7 +211,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck ownerAddress1.value}}
+            						@{{emptyCheck ownerAddress1}}
         						</span>
     						</h5>
     					</div>
@@ -212,7 +222,7 @@
             				<br/>
             				<h5>
 	            				<span class="label label-primary darker-blue-backgroud-class">
-	            					@{{emptyCheck ownerAddress2.value}}
+	            					@{{emptyCheck ownerAddress2}}
 	            				</span>	
             				</h5>
             			</div>
@@ -223,7 +233,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck ownerAddress2.value}}
+            						@{{emptyCheck ownerAddress2}}
         						</span>
     						</h5>
     					</div>
@@ -234,7 +244,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-								@{{emptyCheck ownerCity.value}}, @{{emptyCheck ownerState.value}} @{{emptyCheck ownerZip.value}} 
+								@{{emptyCheck ownerCity}}, @{{emptyCheck ownerState}} @{{emptyCheck ownerZip}} 
 								</span>
 							</h5>
             			</div>
@@ -266,7 +276,7 @@
             				<br/>
             				<h5>
 	            				<span class="label label-primary darker-blue-backgroud-class">
-	            					@{{emptyCheck mapTaxLotNumber.value}} 
+	            					@{{emptyCheck mapTaxLotNumber}} 
 	            				</span>	
             				</h5>
             			</div>
@@ -277,7 +287,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck taxLot.value}} 
+            						@{{emptyCheck taxLot}} 
         						</span>
     						</h5>
     					</div>
@@ -288,7 +298,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-								@{{emptyCheck numberOwners.value}}
+								@{{emptyCheck numberOwners}}
 								</span>
 							</h5>
             			</div>
@@ -299,7 +309,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-									$@{{formatCurrency assesedLandValue.value}} / $@{{formatCurrency assesedImpValue.value}}
+									$@{{formatCurrency assesedLandValue}} / $@{{formatCurrency assesedImpValue}}
 								</span>
 							</h5>
             			</div>
@@ -310,7 +320,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-								@{{emptyCheck zoning.value}}
+								@{{emptyCheck zoning}}
 								</span>
 							</h5>
             			</div>
@@ -321,7 +331,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-								@{{emptyCheck landUseNumber.value}}
+								@{{emptyCheck landUseNumber}}
 								</span>
 							</h5>
             			</div>
@@ -332,7 +342,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-								@{{emptyCheck planDescription.value}}
+								@{{emptyCheck planDescription}}
 								</span>
 							</h5>
             			</div>
@@ -343,7 +353,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-								@{{emptyCheck fireDistrict.value}}
+								@{{emptyCheck fireDistrict}}
 								</span>
 							</h5>
             			</div>
@@ -354,7 +364,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-								@{{emptyCheck schoolDistrict.value}}
+								@{{emptyCheck schoolDistrict}}
 								</span>
 							</h5>
             			</div>
@@ -365,7 +375,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-								@{{emptyCheck nieghborHood.value}}
+								@{{emptyCheck nieghborHood}}
 								</span>
 							</h5>
             			</div>
@@ -389,7 +399,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck mapNumber.value}}
+            						@{{emptyCheck mapNumber}}
         						</span>
     						</h5>
     					</div>
@@ -400,7 +410,7 @@
             				<br/>
             				<h5>
 	            				<span class="label label-primary darker-blue-backgroud-class">
-	            					@{{emptyCheck taxcode.value}}
+	            					@{{emptyCheck taxcode}}
 	            				</span>	
             				</h5>
             			</div>
@@ -411,7 +421,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck yearBuilt.value}}
+            						@{{emptyCheck yearBuilt}}
         						</span>
     						</h5>
     					</div>
@@ -422,7 +432,7 @@
 							<br/>
 							<h5>
 								<span class="label label-primary darker-blue-backgroud-class">
-									@{{formatCurrency assesedTaxableValue.value}}
+									@{{formatCurrency assesedTaxableValue}}
 								</span>
 							</h5>
             			</div>
@@ -433,7 +443,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck buildingType.value}}
+            						@{{emptyCheck buildingType}}
         						</span>
     						</h5>
     					</div>
@@ -444,7 +454,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck exemptDescription.value}}
+            						@{{emptyCheck exemptDescription}}
         						</span>
     						</h5>
     					</div>
@@ -455,7 +465,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck propertyClassCode.value}}
+            						@{{emptyCheck propertyClassCode}}
         						</span>
     						</h5>
     					</div>
@@ -466,7 +476,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck propertyClassDescription.value}}
+            						@{{emptyCheck propertyClassDescription}}
         						</span>
     						</h5>
     					</div>
@@ -477,7 +487,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck stateClassCodeOrBuildCode.value}}
+            						@{{emptyCheck stateClassCodeOrBuildCode}}
         						</span>
     						</h5>
     					</div>
@@ -488,7 +498,7 @@
             				<br/>
             				<h5>
             					<span class="label label-primary darker-blue-backgroud-class">
-            						@{{emptyCheck stateClassDescription.value}}
+            						@{{emptyCheck stateClassDescription}}
         						</span>
     						</h5>
     					</div>

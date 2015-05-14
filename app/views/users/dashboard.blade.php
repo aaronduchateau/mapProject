@@ -163,7 +163,14 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
+<!-- https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&v=3&libraries=geometry -->
+<!-- start new libs -->
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&v=3&libraries=geometry"></script>
+<script src="http://libs.cartocdn.com/cartodb.js/v3/3.14/cartodb.js"></script>
+<script src="{{ URL::asset('dist/js/layer/tile/Google.js') }}"></script>
+<!-- end new libs -->
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 
@@ -301,6 +308,7 @@
     });
 
     $(document).on('click', '.left-open', function(event) {
+      alert('f');
         $('#config').hide();
         $('.back').show();
         $('.back-right').hide()

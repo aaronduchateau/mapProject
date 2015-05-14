@@ -5,7 +5,7 @@ window.dashModel = {
 			userKey: window.g.mapConfig.userId, 
 			lat: window.g.mapRowData.lat,
 			lng: window.g.mapRowData.lng, 
-			ownerName: window.g.mapRowData.ownerName.value,
+			ownerName: window.g.mapRowData.ownerName,
 			totalValue: window.g.mapRowData.totalValue 
 		};
 		$.ajaxSetup({
