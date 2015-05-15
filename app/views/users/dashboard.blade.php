@@ -307,8 +307,12 @@
       toggleLetter();
     });
 
-    $(document).on('click', '.left-open', function(event) {
-      alert('f');
+    
+    //as far as i can tell this should be bubbling up and working, don't know why it isn't
+    //for now i'll use ghetto onclick event from info window, but not happy about it
+    //$(document).on('click', '.left-open', function(event) {  
+    window.leftPainOpenFromInfoWindow = function(event){  
+      
         $('#config').hide();
         $('.back').show();
         $('.back-right').hide()
@@ -327,7 +331,7 @@
           var source = $("#dash-expanded-info-template").html();
           var leftDashTemplate = Handlebars.compile(source);
           //var indexTracker = $(event.target).attr('data-result-index');
-          var indexTracker = $(event.target).closest('div').attr('data-result-index');
+          //var indexTracker = $(event.target).closest('div').attr('data-result-index');
         
           var templateResult = leftDashTemplate(window.g.mapRowData);
           $('.dash-left-full-margin').html(templateResult);
@@ -350,7 +354,8 @@
           $('.dash-left-full-margin').slideDown('slow');
           toggleLetter();
         });
-    });
+    //});
+    };
     
     //bind scroll click to view user reviews
     $(document).on('click', '#review-scroll', function() {
@@ -407,7 +412,7 @@
        var lng = $(event.target).closest('div').attr('data-result-lng');
        var owner = $(event.target).closest('div').attr('data-result-owner');
        window.g.communiqueOpen('Adding marker, and centering map, for taxlot owned by ' + owner);
-       window.gmd.interactMap.panToPosition(lat, lng);
+       window.gmd.interactMap.panToPosition('tree', lat, lng);
        setTimeout(function(){ 
          window.g.communiqueClose();
        }, 4000);
@@ -449,7 +454,7 @@
          $( this ).removeClass('active-item-right');
        });
        $('.single-right-item:first').addClass('active-item-right');
-       window.gmd.interactMap.panToPosition( $('#latMap').val(), $('#lngMap').val() );
+       window.gmd.interactMap.panToPosition('blueMarker', $('#latMap').val(), $('#lngMap').val() );
        goBack();
     });
 
@@ -474,7 +479,7 @@
        var latMap = $(event.target).closest('table').attr('data-attr-lat');
        var lngMap = $(event.target).closest('table').attr('data-attr-lng');
        window.g.highlightLastItem('.single-right-item', event, 'active-item-right');
-       window.gmd.interactMap.panToPosition( latMap, lngMap );
+       window.gmd.interactMap.panToPosition('blueMarker', latMap, lngMap );
       
     });
 
