@@ -3,6 +3,35 @@ window.gmd = {
 	pointMarkerUrl: function(){
 		//return (window.g.jsBaseUrl() + '/images/icon-map-new-small.png');
 	},
+	cartoSqlConfig: new cartodb.SQL({
+    	user: 'devtest', // Required
+    	type: 'cartodb', // Required
+    	host: 'anonymoustransaction.com:8080',
+    	version: 'v1',
+    	port:'8080',
+    	protocol: 'http',
+    	type: 'get',
+		dataType: 'json',
+		crossDomain: true
+	}),
+	cartoLayerConfig: function(sql, styles){
+
+		var layerConfig = {
+	    	user_name: 'devtest', // Required
+	    	type: 'cartodb', // Required
+	    	tiler_domain: 'anonymoustransaction.com',
+	    	tiler_port:     "8181",
+	    	tiler_protocol: 'http',
+	    	sublayers: [{
+	        	sql: sql, // Required
+	        	cartocss: styles
+	        	//interactivity: 'cartodb_id, the_geom, acreage, id, created_at'
+	    	}]
+	  	};
+
+	  	return layerConfig;
+
+	},
 	interactMap: {
 		panToPosition: function(iconType, latMap, lngMap){
 			/*
@@ -60,10 +89,19 @@ window.gmd = {
 			  }
 			});
 		},
+		queryAndPanToBounds: function(map, query) {
+			//window.gmd.cartoSqlConfig
+			window.gmd.cartoSqlConfig.getBounds(query).done(function(bounds) {
+	       		map.fitBounds(bounds);
+	       		console.log('BOUNDS')
+	       		console.log(bounds);
+	       });
+
+		},
 		nestedMap: function(){
+
 			var thisScoped = this;
-			var customAccountString = window.g.mapConfig.nestedMapColumnName + ' = ' + window.g.mapRowData.queryVal;
-			console.log(customAccountString);
+			
 			//instantiate map
 			window.nestedMap = L.map('nested-map', { 
 	          zoomControl: true,
@@ -72,97 +110,29 @@ window.gmd = {
 	          infoWindow: true
 	        });
 
-	        //var ggl2 = new L.Google('TERRAIN');
+	        var ggl1 = new L.Google('TERRAIN');
 	        var ggl2 = new L.Google('HYBRID');
 	        window.nestedMap.addLayer(ggl2);
+	        window.nestedMap.addControl(new L.Control.Layers( {'Google Satelite':ggl2, 'Google Terrain':ggl1}, {}));
 
-			var LayerConfig = {
-		    	user_name: 'devtest', // Required
-		    	type: 'cartodb', // Required
-		    	tiler_domain: 'anonymoustransaction.com',
-		    	tiler_port:     "8181",
-		    	tiler_protocol: 'http',
-		    	sublayers: [{
-		        	sql: "SELECT * FROM douglas83feet WHERE " + customAccountString, // Required
-		        	cartocss: '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.5; line-color: #FFF; line-width: 1; line-opacity: 1;}'
-		        	//interactivity: 'cartodb_id, the_geom, acreage, id, created_at'
-		    	}]
-		  	};
+	        var customAccountString = window.g.mapConfig.nestedMapColumnName + ' = ' + window.g.mapRowData.queryVal;
+			//console.log(customAccountString);
+	        var sql = "SELECT * FROM douglas83feet WHERE " + customAccountString;
+	        var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.0; line-color: #8a0002; line-width: 2; line-opacity: 1;}';
+			var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
 
 			cartodb.createLayer(window.nestedMap, LayerConfig)
 	         .addTo(window.nestedMap)
 	         .on('done', function(layer) {
-	           console.log('cool beans');
-	           console.log(layer);
-	           window.testlayer = layer;
+	           thisScoped.queryAndPanToBounds(window.nestedMap, sql);
 	          }).on('error', function() {
 	            console.log("some error occurred");
 	        });
 	        
 	        setTimeout(function(){ 
-        	//$(window).trigger('resize');
-        	window.nestedMap.invalidateSize(true);
-        	}, 500);
-
-        	/*
-        	var sql = new cartodb.SQL({
-		    	user: 'devtest', // Required
-		    	type: 'cartodb', // Required
-		    	host: 'anonymoustransaction.com:8080',
-		    	version: 'v1',
-		    	port:'8080',
-		    	tiler_port:     "8181",
-		    	tiler_protocol: 'http'});
-	       sql.getBounds("SELECT * FROM douglas83feet WHERE " + customAccountString).done(function(bounds) {
-	       	console.log(bounds);
-	       });
-			*/
-	       //map.fitBounds(bounds)
-
-        	//$(window).trigger( "resize" )
-
-			/*
-			var jacksonCounty = new google.maps.LatLng(window.infoWindowLat, window.infoWindowLng);
-			console.log(jacksonCounty);
-			var mapOptions = {
-				center: jacksonCounty,
-				zoom: 17,
-				mapTypeId: google.maps.MapTypeId.HYBRID,
-				suppressInfoWindows: true
-			};
-
-			window.nestedMap = new google.maps.Map(document.getElementById('nested-map'),
-			  mapOptions);
-			//console.log(customAccount);
-			//console.log('ddd', window.g.mapRowData.queryVal);
-			console.log('column name');
-			console.log(window.g.mapConfig.nestedMapColumnName);
-			console.log('query value');
-			console.log(window.g.mapRowData.queryVal);
-			var customAccountString = window.g.mapConfig.nestedMapColumnName + ' = ' + window.g.mapRowData.queryVal;
-			var layer = new google.maps.FusionTablesLayer({
-		    query: {
-		      select: 'geometry',
-		      from: window.g.mapConfig.remoteTableId,
-		      where: customAccountString
-		    },
-		    styles: [{
-		      polygonOptions: {
-		      	strokeColor: '#8a0002',
-		      	strokeOpacity: 1,
-    			strokeWeight: 2,
-		        fillOpacity: 0.01,
-		        suppressInfoWindows: true
-		      }
-		    }]
-		  });
-
-		  layer.setMap(window.nestedMap);
-		  //sometimes our map kinks up on slide down
-		  setTimeout(function(){ 
-		  	google.maps.event.trigger(window.nestedMap, 'resize');
-		  }, 4000);
-		*/
+        		$(window).trigger('resize');
+        		window.nestedMap.invalidateSize(true);
+        	}, 700);
 
 		}
 	},
@@ -224,18 +194,9 @@ window.gmd = {
         
         var thisScoped = this;
 
-		var LayerConfig = {
-	    	user_name: 'devtest', // Required
-	    	type: 'cartodb', // Required
-	    	tiler_domain: 'anonymoustransaction.com',
-	    	tiler_port:     "8181",
-	    	tiler_protocol: 'http',
-	    	sublayers: [{
-	        	sql: "SELECT * FROM douglas83feet", // Required
-	        	cartocss: '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.5; line-color: #FFF; line-width: 1; line-opacity: 1;}'
-	        	//interactivity: 'cartodb_id, the_geom, acreage, id, created_at'
-	    	}]
-	  	};
+        var sql = "SELECT * FROM douglas83feet"
+	    var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.5; line-color: #FFF; line-width: 1; line-opacity: 1;}'
+		var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
 
 		cartodb.createLayer(window.map, LayerConfig)
          .addTo(window.map)
@@ -279,6 +240,7 @@ window.gmd = {
         });
     },
 
+    //this is our entry point to the map
 	populateMap : function (latMap, lngMap){
 		var thisScoped = this;
 
@@ -326,25 +288,6 @@ window.gmd = {
 	   		$( ".dash-left-inter-margin" ).show();
 	   		$( ".dash-right-inter-margin" ).show();
 
-	   		/*
-		    var hasLoadedOnce = false;
-		    google.maps.event.addListener(window.map, 'idle', function() {
-		    	if (!hasLoadedOnce){
-		    		setTimeout(function(){
-			    		$( ".dash-left-inter-margin" ).slideDown( "slow", function() {
-						    	//google.maps.event.trigger(map, 'resize');
-						    	$( ".dash-center" ).show();
-						    	google.maps.event.trigger(map, 'resize');
-						    	$( ".dash-right-inter-margin" ).slideDown( "slow", function() {
-								    $( ".options-inter-margin" ).show();
-								});
-							
-						});
-		    		},300);
-		    	}
-		    	hasLoadedOnce = true;
-			});
-		*/
 		},1300);
 	}
 };
