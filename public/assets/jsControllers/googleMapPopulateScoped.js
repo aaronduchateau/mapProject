@@ -110,21 +110,49 @@ window.gmd = {
 	          infoWindow: true
 	        });
 
-	        var ggl1 = new L.Google('TERRAIN');
-	        var ggl2 = new L.Google('HYBRID');
-	        window.nestedMap.addLayer(ggl2);
-	        window.nestedMap.addControl(new L.Control.Layers( {'Google Satelite':ggl2, 'Google Terrain':ggl1}, {}));
+	        var gglTerrain = new L.Google('TERRAIN');
+	        var gglHybrid = new L.Google('HYBRID');
+	        var gglSatelite = new L.Google('SATELLITE');
+	        var gglRoadmap = new L.Google('ROADMAP');
+	        var bing = new L.BingLayer("Av_xt-ldQjqGScP74Vcd-aD7ArRjnSnV6_Lb2ye2WSmNDAu7lcX0kX2KK_1QWZfR");
+	        //var yanSatelite = new L.Yandex();
+	        //var yanSatelite = new L.Yandex("satelliteMap", {traffic:true, opacity:0.8, overlay:true});
+	        
+	        window.nestedMap.addLayer(gglHybrid);
 
 	        var customAccountString = window.g.mapConfig.nestedMapColumnName + ' = ' + window.g.mapRowData.queryVal;
+	        
+	        var tableName = window.g.mapConfig.countyNameConcat + "_" + window.g.mapConfig.stateAb;
+	        console.log(tableName);
 			//console.log(customAccountString);
-	        var sql = "SELECT * FROM douglas83feet WHERE " + customAccountString;
+	        var sql = "SELECT * FROM " + tableName + " WHERE " + customAccountString;
 	        var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.0; line-color: #8a0002; line-width: 2; line-opacity: 1;}';
 			var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
 
 			cartodb.createLayer(window.nestedMap, LayerConfig)
 	         .addTo(window.nestedMap)
 	         .on('done', function(layer) {
-	           thisScoped.queryAndPanToBounds(window.nestedMap, sql);
+
+	         	//add controls to our map
+	            window.nestedMap.addControl(
+		        	new L.Control.Layers( 
+		        		{   'Google Satelite' : gglSatelite,
+		        		    'Google Terrain' : gglTerrain, 
+		        		    'Google Hybrid' : gglHybrid,
+		        		    'Google Roadmap' : gglRoadmap,
+		        		    'Bing Satelite' : bing
+		        		    //,
+		        		    //'Yandex Satelite': yanSatelite
+		        		},
+		        		{
+		        		    'Platlines' : layer	
+						}
+					)
+				);
+
+	            //zoom and pan so our platlines fall nicely in our map
+				thisScoped.queryAndPanToBounds(window.nestedMap, sql);
+
 	          }).on('error', function() {
 	            console.log("some error occurred");
 	        });
@@ -194,7 +222,9 @@ window.gmd = {
         
         var thisScoped = this;
 
-        var sql = "SELECT * FROM douglas83feet"
+        var tableName = window.g.mapConfig.countyNameConcat + "_" + window.g.mapConfig.stateAb;
+
+        var sql = "SELECT * FROM " + tableName;
 	    var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.5; line-color: #FFF; line-width: 1; line-opacity: 1;}'
 		var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
 
@@ -259,7 +289,7 @@ window.gmd = {
 	    	window.map = L.map('map-canvas', { 
 	          zoomControl: true,
 	          center: new L.LatLng(latMap, lngMap),
-	          zoom: 13,
+	          zoom: 18,
 	          infoWindow: true
 	        });
 

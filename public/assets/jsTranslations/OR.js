@@ -65,56 +65,60 @@ window.translations = {
 
 		}
 	},
+
+	JacksonCountyMap: ["cartodb_id", "account", "acreage", "address1", "address2", "addressnum", "addsort", "assessimp", "assessland","buildcode", "city", "commsqft", "contract", "feeowner", "gis_area", "impvalue", "incareof", "landvalue", "lotdepth", "lottype", "lotwidth", "maintenanc", "maplot", "mapnum", "mapnumber", "neighborho", "ownersort", "propclass", "scheduleco", "shape_star", "shape_stle", "siteadd", "state", "streetname", "taxcode", "taxlot", "tm_maplot", "trssort", "yearblt", "zipcode", "created_at", "updated_at"], 
+
 	JacksonCounty: {
 		translate: function(o) {
-			if (o.ASSESIMP && o.ASSESLAND){
-				var assesedTaxableValue = parseInt(o.ASSESIMP.value) + parseInt(o.ASSESLAND.value);
+			//should add different logic here to account for zero vals
+			if (o.assessimp && o.assessland){
+				var assesedTaxableValue = parseInt(o.assessimp) + parseInt(o.assessland);
 			} else {
 				var assesedTaxableValue = null;
 			}
 
-			if (o.IMPVALUE && o.LANDVALUE){
-				var totalValue = parseInt(o.IMPVALUE.value) + parseInt(o.LANDVALUE.value);
+			if (o.impvalue && o.landvalue){
+				var totalValue = parseInt(o.impvalue) + parseInt(o.landvalue);
 			} else {
 				var totalValue = null;
 			}
 			//query on ACCOUNT, queryVal holds actual query val
 			var tempJson = {
-				mapNumber: o.MAPNUMBER,
-				account: o.ACCOUNT,
-				taxcode: o.TAXCODE,
-				inCareOf: o.INCAREOF,
-				ownerAddress1: o.SITEADD,
-				ownerAddress2: o.ADDRESS1,
-				ownerAddress3: o.ADDRESS2,
-				ownerCity: o.CITY,
-				ownerState: o.STATE,
-				ownerZip: o.ZIPCODE,
+				mapNumber: o.mapnumber,
+				account: o.account,
+				taxcode: o.taxcode,
+				inCareOf: o.incareof,
+				ownerAddress1: o.siteadd,
+				ownerAddress2: o.address1,
+				ownerAddress3: o.address2,
+				ownerCity: o.city,
+				ownerState: o.state,
+				ownerZip: o.zipcode,
 				numberOwners: null,
-				ownerName: o.FEEOWNER,
-				impValue: o.IMPVALUE,
-				landValue: o.LANDVALUE,
+				ownerName: o.feeowner,
+				impValue: o.impvalue,
+				landValue: o.landvalue,
 				totalValue: totalValue,
-				yearBuilt: o.YEARBLT,
-				taxLot: o.TAXLOT,
+				yearBuilt: o.yearblt,
+				taxLot: o.taxlot,
 				buildingType: null,
 				exemptDescription: null,
-				propertyClassCode: o.PROPCLASS,
+				propertyClassCode: o.propclass,
 				propertyClassDescription: null,
-				stateClassCodeOrBuildCode: o.BUILDCODE,
+				stateClassCodeOrBuildCode: o.buildcode,
 				stateClassDescription: null,
-				acreage: o.ACREAGE,
-				assesedtaxableValue: {value: assesedTaxableValue},
-				assesedImpTaxable: o.ASSESIMP,
-				assesedLandTaxable: o.ASSESLAND,
-				mapTaxLotNumber: o.TM_MAPLOT,
+				acreage: o.acreage,
+				assesedtaxableValue: assesedTaxableValue,
+				assesedImpTaxable: o.assessimp,
+				assesedLandTaxable: o.assessland,
+				mapTaxLotNumber: o.tm_maplot,
 				zoning: null,
 				landUseNumber: null,
 				planDescription: null,
 				fireDistrict: null,
 				schoolDistrict: null,
-				nieghborHood: o.NEIGHBORHO,
-				queryVal: o.ACCOUNT
+				nieghborHood: o.neighborho,
+				queryVal: o.account
 			};
 
 			window.translations.held = tempJson;
@@ -122,10 +126,12 @@ window.translations = {
 
 		}
 	},
+	
+	LaneCountyMap: ["cartodb_id", "mapnumber", "acctno", "taxcode", "addr1", "addr2", "addr3", "ownercity", "ownerprvst", "ownerzip", "numowners", "ownname", "impval", "landval", "yearblt", "taxlot", "bldgtype", "exemptdesc", "propcl", "propcldes", "statcl", "statcldes", "mapacres", "assdtotval", "maptaxlot", "zoning", "numlanduse", "plandes", "firedist", "schooldist", "neighbor", "created_at", "updated_at"],
 	LaneCounty: {
 		translate: function(o) {
 			if (o.impval && o.landval){
-				var totalValue = parseInt(o.impval.value) + parseInt(o.landval.value);
+				var totalValue = parseInt(o.impval) + parseInt(o.landval);
 			} else {
 				var totalValue = null;
 			}
@@ -152,8 +158,8 @@ window.translations = {
 				exemptDescription: o.exemptdesc,
 				propertyClassCode: o.propcl,
 				propertyClassDescription: o.propcldes,
-				stateClassCodeOrBuildCode: o.statecl,
-				stateClassDescription: o.statecldes,
+				stateClassCodeOrBuildCode: o.statcl,
+				stateClassDescription: o.statcldes,
 				acreage: o.mapacres,
 				assesedtaxableValue: o.assdtotval,
 				assesedImpTaxable: null,
@@ -161,10 +167,10 @@ window.translations = {
 				mapTaxLotNumber: o.maptaxlot,
 				zoning: o.zoning,
 				landUseNumber: o.numlanduse,
-				planDescription: o.plandesc,
+				planDescription: o.plandes,
 				fireDistrict: o.firedist,
 				schoolDistrict: o.schooldist,
-				nieghborHood: o.nieghbor,
+				nieghborHood: o.neighbor,
 				queryVal: o.maptaxlot
 			};
 

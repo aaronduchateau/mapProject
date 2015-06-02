@@ -166,8 +166,11 @@
 <!-- https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&v=3&libraries=geometry -->
 <!-- start new libs -->
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&v=3&libraries=geometry"></script>
+<script src="http://api-maps.yandex.ru/2.0/?load=package.map&lang=ru-RU" type="text/javascript"></script>
 <script src="http://libs.cartocdn.com/cartodb.js/v3/3.14/cartodb.js"></script>
 <script src="{{ URL::asset('dist/js/layer/tile/Google.js') }}"></script>
+<script src="{{ URL::asset('dist/js/layer/tile/Bing.js') }}"></script>
+<script src="{{ URL::asset('dist/js/layer/tile/Yandex.js') }}"></script>
 <!-- end new libs -->
 
 
