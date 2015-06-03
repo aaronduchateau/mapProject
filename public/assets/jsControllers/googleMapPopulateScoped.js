@@ -98,6 +98,39 @@ window.gmd = {
 	       });
 
 		},
+		userQuery: function(){
+			window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest.lanecounty_or WHERE ownname = 'RNS MANAGEMENT LLC'")
+			  .done(function(data) {
+			    console.log(data.rows);
+			  })
+			  .error(function(errors) {
+			    // errors contains a list of errors
+			    console.log("errors:" + errors);
+			  });
+		},
+		userQueryApplyToMap: function(owner){
+			var userColumn = window.translations[window.g.mapConfig.countyNameConcat]['nameColumn'];
+			//console.log('user column');
+			//console.log(userColumn);
+			console.log('owner');
+			console.log(owner);
+			var sql = "SELECT * FROM devtest.lanecounty_or WHERE " + userColumn + " LIKE '%" + owner + "%'";
+
+			this.queryAndPanToBounds(window.map, sql);
+
+	    	var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.0; line-color: #8a0002; line-width: 4; line-opacity: 1;}'
+			var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
+
+			cartodb.createLayer(window.map, LayerConfig)
+	         .addTo(window.map)
+	         .on('done', function(layer) {
+	  
+
+	          }).on('error', function() {
+	            console.log("some error occurred");
+	        });
+
+		},
 		nestedMap: function(){
 
 			var thisScoped = this;
@@ -251,7 +284,7 @@ window.gmd = {
                   console.log(data);
                   infowindow_model.set('visibility', true);
                   console.log(infowindow_model);
-    			  console.log(window.translations[window.g.mapConfig.countyNameConcat + 'Map']);
+    			  console.log(window.translations[window.g.mapConfig.countyNameConcat]['mapArr']);
                   
                   thisScoped.onClickTileManager(e, latlng, pos, data, layerNumber);
 
@@ -261,7 +294,9 @@ window.gmd = {
             //sublayer.on('featureOver', function(e, latlng, pos, data, layerNumber) {
            	//});
 
-            var configurationArray = window.translations[window.g.mapConfig.countyNameConcat + 'Map'];
+            var configurationArray = window.translations[window.g.mapConfig.countyNameConcat]['mapArr'];
+            console.log('configuration array');
+            console.log(window.translations);
             console.log(configurationArray);
             cdb.vis.Vis.addInfowindow(window.map, layer.getSubLayer(0), configurationArray, {'infowindowTemplate': $('#infowindow_template').html(), 'templateType': 'mustache'})
 

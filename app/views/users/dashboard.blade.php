@@ -85,6 +85,12 @@
           <input type="text" class="form-control" placeholder="Zip" id="search-zip">
           <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
           <a href="javascript:void(0);" class="btn btn-default" id="search-all-address">Search By Address</a>
+          <br/>
+          <label for="exampleInputEmail1">Search By Owner:</label>
+          <input type="text" class="form-control" placeholder="Full Ownner Name" id="search-owner">
+
+          <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
+          <a href="javascript:void(0);" class="btn btn-default" id="search-all-owners">Search</a>
         </div>
         <!--<div class="form-group">
            <div class="dropdown">
@@ -470,6 +476,20 @@
       var fullAddy = address + ' ' + city + ' ' + state + ' ' + zip;
       window.gmd.interactMap.addressLookup(fullAddy);
       goBack();
+    });
+
+    $(document).on('click', '#search-all-owners', function() {
+      //window.gmd.interactMap.userQuery();
+      var owner = $('#search-owner').val();
+      window.gmd.interactMap.userQueryApplyToMap(owner); 
+       //templateResult = rightDashTemplate(rightTemplateJson());
+       //$('.dash-right-inter-margin').prepend(templateResult);
+       //$( ".single-right-item" ).each(function() {
+       //  $( this ).removeClass('active-item-right');
+       //});
+       //$('.single-right-item:first').addClass('active-item-right');
+       //window.gmd.interactMap.panToPosition('blueMarker', $('#latMap').val(), $('#lngMap').val() );
+       //goBack();
     });
 
     $(document).on('click', '#current-loc-click', function() {
