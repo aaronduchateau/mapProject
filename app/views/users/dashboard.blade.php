@@ -65,6 +65,23 @@
     </div>
   </div>
   <div class="dash-options" style="background-color:rgba(13,106,146,0.0);">
+    <div class="search-dropdown-holder">
+      <div class="search-dropdown-nested-holder">
+        <div class="dropdown">
+          Search by:&nbsp;
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+            <span id="search-but-label-shown">Address</span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation"><a class="dropdown-search-selection" data-action="address-div" role="menuitem" tabindex="-1" href="#">Address</a></li>
+            <li role="presentation"><a class="dropdown-search-selection" data-action="owner-div" role="menuitem" tabindex="-1" href="#">Owner</a></li>
+            <li role="presentation"><a class="dropdown-search-selection" data-action="latLon-div" role="menuitem" tabindex="-1" href="#">Lat and lon</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style="clear:both"></div>
+    </div>
     <div class="options-inter-margin" style="display:none;">
       <!--content-->
       <form role="form">
@@ -73,24 +90,28 @@
           <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Filter by Keywords">
         </div>-->
         <div class="form-group">
-          <label for="exampleInputEmail1">Search by Lat & Long:</label>
-          <input type="text" class="form-control" id="lngMap" placeholder="longitude" value="-122.877734">
-          <input type="text" class="form-control" id="latMap" placeholder="lattitude" value="42.320921">
-          <a href="javascript:void(0);" id="search-click"class="btn btn-default" >Search</a>
-          <br/>
-          <label for="exampleInputEmail1">Search Location:</label>
-          <input type="text" class="form-control" placeholder="Address" id="search-address">
-          <input type="text" class="form-control" placeholder="City" id="search-city">
-          <input type="text" class="form-control" placeholder="State" id="search-state">
-          <input type="text" class="form-control" placeholder="Zip" id="search-zip">
-          <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-          <a href="javascript:void(0);" class="btn btn-default" id="search-all-address">Search By Address</a>
-          <br/>
-          <label for="exampleInputEmail1">Search By Owner:</label>
-          <input type="text" class="form-control" placeholder="Full Ownner Name" id="search-owner">
+          <div class="search-field-holder latLon-div" style="display:none;">
+            <label for="exampleInputEmail1">Search by Lat & Long:</label>
+            <input type="text" class="form-control" id="lngMap" placeholder="longitude" value="-122.877734">
+            <input type="text" class="form-control" id="latMap" placeholder="lattitude" value="42.320921">
+            <a href="javascript:void(0);" id="search-click"class="btn btn-default" >Search</a>
+          </div>
+          <div class="search-field-holder address-div">
+            <label for="exampleInputEmail1">Search Location:</label>
+            <input type="text" class="form-control" placeholder="Address" id="search-address">
+            <input type="text" class="form-control" placeholder="City" id="search-city">
+            <input type="text" class="form-control" placeholder="State" id="search-state">
+            <input type="text" class="form-control" placeholder="Zip" id="search-zip">
+            <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
+            <a href="javascript:void(0);" class="btn btn-default" id="search-all-address">Search By Address</a>
+          </div>
+          <div class="search-field-holder owner-div" style="display:none;">
+            <label for="exampleInputEmail1">Search By Owner:</label>
+            <input type="text" class="form-control" placeholder="Full Ownner Name" id="search-owner">
 
-          <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-          <a href="javascript:void(0);" class="btn btn-default" id="search-all-owners">Search</a>
+            <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
+            <a href="javascript:void(0);" class="btn btn-default" id="search-all-owners">Search</a>
+          </div>
         </div>
         <!--<div class="form-group">
            <div class="dropdown">
@@ -365,6 +386,16 @@
         });
     //});
     };
+
+    $(document).on('click', '.dropdown-search-selection', function(event) {
+        console.log(event);
+        var insideText = $(event.target).text();
+        $('#search-but-label-shown').text(insideText);
+        $('.search-field-holder').hide();
+        var currentAction = $(event.target).attr('data-action');
+        $('.' + currentAction).slideDown('fast');
+        console.log(currentAction);
+    });
     
     //bind scroll click to view user reviews
     $(document).on('click', '#review-scroll', function() {

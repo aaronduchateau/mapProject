@@ -269,6 +269,19 @@ border-bottom: 0px solid #e5e5e5;
     background-color:#337ab7;
 }
 
+.search-dropdown-holder {
+	text-align: right;
+}
+
+.search-dropdown-nested-holder{
+	//padding:20px;
+	color:white;
+	padding: 5px 10px;
+	border-radius: 35px 0px 0px 35px;
+	background-color: #0D6A92;
+	float: right;
+}
+
 .trash-hide {
 	display:none;
 }
