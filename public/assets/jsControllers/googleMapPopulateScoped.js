@@ -91,13 +91,15 @@ window.gmd = {
 		},
 		queryAndPanToBounds: function(map, query) {
 			//window.gmd.cartoSqlConfig
-			window.gmd.cartoSqlConfig.getBounds(query).done(function(bounds) {
+			return window.gmd.cartoSqlConfig.getBounds(query).done(function(bounds) {
 	       		map.fitBounds(bounds);
 	       		console.log('BOUNDS')
 	       		console.log(bounds);
+	       		return bounds;
 	       });
 
 		},
+		//not yet used but should be used for list view later
 		userQuery: function(){
 			window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest.lanecounty_or WHERE ownname = 'RNS MANAGEMENT LLC'")
 			  .done(function(data) {
@@ -114,9 +116,12 @@ window.gmd = {
 			//console.log(userColumn);
 			console.log('owner');
 			console.log(owner);
-			var sql = "SELECT * FROM devtest.lanecounty_or WHERE " + userColumn + " LIKE '%" + owner + "%'";
+			var sql = "SELECT * FROM devtest.lanecounty_or WHERE " + userColumn + " ILIKE '%" + owner + "%'";
 
-			this.queryAndPanToBounds(window.map, sql);
+			var boundingBox = this.queryAndPanToBounds(window.map, sql);
+			//view-source:http://andrew.hedges.name/experiments/haversine/
+
+			window.mainTileSublayer.hide();
 
 	    	var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.0; line-color: #8a0002; line-width: 4; line-opacity: 1;}'
 			var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
@@ -266,17 +271,17 @@ window.gmd = {
          .on('done', function(layer) {
            var infowindow_model = layer.getSubLayer(0).infowindow;
            // get sublayer 0 and set the infowindow template
-           var sublayer = layer.getSubLayer(0);
-            sublayer.setInteraction(true);          
+           window.mainTileSublayer = layer.getSubLayer(0);
+            mainTileSublayer.setInteraction(true);          
           
             layer.getSubLayer(0).set('template', $('#infowindow_template').html())
             .on('error', function(err){
               console.log('infowindow error: ', err);
             });
            
-            sublayer.infowindow.set('template', $('#infowindow_template').html());
+            mainTileSublayer.infowindow.set('template', $('#infowindow_template').html());
 
-            sublayer.on('featureClick', function(e, latlng, pos, data, layerNumber) {
+            mainTileSublayer.on('featureClick', function(e, latlng, pos, data, layerNumber) {
                   //alert("Hey! You clicked " + data.cartodb_id);
                   //console.log(pos);
                   console.log('latlng');
@@ -291,7 +296,7 @@ window.gmd = {
             });
 
             //lets keep this commented out for now
-            //sublayer.on('featureOver', function(e, latlng, pos, data, layerNumber) {
+            //mainTileSublayer.on('featureOver', function(e, latlng, pos, data, layerNumber) {
            	//});
 
             var configurationArray = window.translations[window.g.mapConfig.countyNameConcat]['mapArr'];
