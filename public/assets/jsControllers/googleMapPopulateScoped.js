@@ -47,6 +47,8 @@ window.gmd = {
 			if (iconType == 'blueMarker'){
 				var currentIcon = L.icon({
 				    iconUrl: window.g.jsBaseUrl() + '/images/icon-map-new-small.png',
+				    iconSize: [32, 37],
+				    iconAnchor: [16, 37]
 				});
 			}
 			if (iconType == 'tree'){
@@ -111,17 +113,19 @@ window.gmd = {
 			  });
 		},
 		userQueryApplyToMap: function(owner){
+
+			//if the layer exists, nuke the old results
+			if (window.layerOwnerResults){
+				alert('c');
+				window.map.removeLayer(window.layerOwnerResults);
+			}
+
 			var userColumn = window.translations[window.g.mapConfig.countyNameConcat]['nameColumn'];
-			//console.log('user column');
-			//console.log(userColumn);
-			console.log('owner');
-			console.log(owner);
+		
 			var sql = "SELECT * FROM devtest.lanecounty_or WHERE " + userColumn + " ILIKE '%" + owner + "%'";
 
 			var boundingBox = this.queryAndPanToBounds(window.map, sql);
 			//view-source:http://andrew.hedges.name/experiments/haversine/
-
-			window.mainTileSublayer.hide();
 
 	    	var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.0; line-color: #8a0002; line-width: 4; line-opacity: 1;}'
 			var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
@@ -129,7 +133,8 @@ window.gmd = {
 			cartodb.createLayer(window.map, LayerConfig)
 	         .addTo(window.map)
 	         .on('done', function(layer) {
-	  
+	         	window.layerOwnerResults = layer;
+					  
 
 	          }).on('error', function() {
 	            console.log("some error occurred");
@@ -228,7 +233,7 @@ window.gmd = {
 	    infoWindowHtml = "<div><h5>" + feeOwner + "</h5>";
   		infoWindowHtml += "<div style='padding:10px;'><b>Acreage: </b>" + acreage + "<br/>";
   		infoWindowHtml += "<b>Total Value: </b>$" + totalValue + "</div>";
-  		infoWindowHtml += "<a href='javascript:void(0);' onclick='leftPainOpenFromInfoWindow()' class='btn btn-primary left-open pull-right' style='color:white;'>Full Information</a>";
+  		infoWindowHtml += "<a href='javascript:void(0);' onclick='leftPainOpenFromInfoWindow()' class='btn btn-primary left-open pull-right' style='color:white;margin-top:-3px;'>Full Information</a>";
   		infoWindowHtml += "</div>";
 
   		console.log(infoWindowHtml);
@@ -266,6 +271,7 @@ window.gmd = {
 	    var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.5; line-color: #FFF; line-width: 1; line-opacity: 1;}'
 		var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
 
+		//here is our main layer containing tiles and info window
 		cartodb.createLayer(window.map, LayerConfig)
          .addTo(window.map)
          .on('done', function(layer) {
@@ -308,6 +314,46 @@ window.gmd = {
           }).on('error', function() {
             console.log("some error occurred");
         });
+
+
+        //add our county queried bounding layer, with county specific query  
+        var countyBoundrySql = "SELECT * FROM cb_2013_us_county_5m";
+        var LayerConfigCountyBoundry = window.gmd.cartoLayerConfig(countyBoundrySql, styles);
+
+        cartodb.createLayer(window.map, LayerConfigCountyBoundry)
+         .addTo(window.map)
+         .on('done', function(layer) {
+            window.layerCountyBoundry = layer.getSubLayer(0);
+            window.layerCountyBoundry.hide();
+          }).on('error', function() {
+            console.log("some error occurred");
+        });
+
+        //toggle layers based on zoom  
+        window.map.on("zoomend", function(){
+			zoomLev = window.map.getZoom();
+			if (zoomLev < 13){
+				window.layerCountyBoundry.show();
+				window.mainTileSublayer.hide();
+			}else{
+				window.layerCountyBoundry.hide();
+				window.mainTileSublayer.show();
+			}
+			/*
+			if (zoomLev == 13){
+				window.g.communiqueOpen('You have Zoomed Out, enjoy these sexy County Platlines');
+			    setTimeout(function(){ 
+			       window.g.communiqueClose();
+			    }, 4000);
+			}
+			if (zoomLev == 12){
+				window.g.communiqueOpen('At this Zoomed In, enjoy these sexy Taxlots');
+			    setTimeout(function(){ 
+			       window.g.communiqueClose();
+			    }, 4000);
+			}
+			*/
+		});
     },
 
     //this is our entry point to the map
@@ -329,7 +375,7 @@ window.gmd = {
 	    	window.map = L.map('map-canvas', { 
 	          zoomControl: true,
 	          center: new L.LatLng(latMap, lngMap),
-	          zoom: 18,
+	          zoom: 16,
 	          infoWindow: true
 	        });
 
