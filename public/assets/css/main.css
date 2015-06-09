@@ -52,6 +52,14 @@ padding: 15px;
 border-bottom: 0px solid #e5e5e5;
 }
 
+.text-overflow {
+  width: 99%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
 /*sales page assets*/
 .custom-form-well {
 	margin-top:10px;
@@ -349,6 +357,33 @@ border-bottom: 0px solid #e5e5e5;
 
 .letter {
 	display:none;
+}
+
+/*bootstrap overrides */
+@media print {
+  *,
+  *:before,
+  *:after {
+    color: #000 !important;
+    text-shadow: none !important;
+    background: transparent !important;
+    -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+  }
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  a[href]:after {
+    content: "";
+  }
+  abbr[title]:after {
+    content: "";
+  }
+  a[href^="#"]:after,
+  a[href^="javascript:"]:after {
+    content: "";
+  }
 }
 
 

@@ -13,7 +13,7 @@ L.Google = L.Class.extend({
 		tileSize: 256,
 		subdomains: 'abc',
 		errorTileUrl: '',
-		attribution: '',
+		attribution: false,
 		opacity: 1,
 		continuousWorld: false,
 		noWrap: false,

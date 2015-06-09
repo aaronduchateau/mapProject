@@ -311,7 +311,7 @@
     //print the left dash pain
     $(document).on('click', '#print-me', function(event) {
       $('.dash-left-full-margin').print({
-        globalStyles : false, // Use Global styles
+        globalStyles : true, // Use Global styles
         mediaPrint : false, // Add link with attrbute media=print
         //stylesheet : "http://fonts.googleapis.com/css?family=Inconsolata", //Custom stylesheet
         iframe : true, //Print in a hidden iframe

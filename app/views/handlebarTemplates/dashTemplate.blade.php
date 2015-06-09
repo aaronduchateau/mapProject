@@ -164,7 +164,7 @@
             				</span>
             				<br/>
             				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class">
+	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
 	            					@{{emptyCheck ownerName}} / @{{emptyCheck inCareOf}}
 	            				</span>	
             				</h5>
@@ -175,7 +175,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						$@{{formatCurrency landValue}} / $@{{formatCurrency impValue}}
         						</span>
     						</h5>
@@ -186,7 +186,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 								@{{emptyCheck acreage}}
 								</span>
 							</h5>
@@ -197,7 +197,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 								#@{{emptyCheck account}}
 								</span>
 							</h5>
@@ -210,7 +210,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck ownerAddress1}}
         						</span>
     						</h5>
@@ -221,7 +221,7 @@
             				</span>
             				<br/>
             				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class">
+	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
 	            					@{{emptyCheck ownerAddress2}}
 	            				</span>	
             				</h5>
@@ -232,7 +232,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck ownerAddress2}}
         						</span>
     						</h5>
@@ -243,7 +243,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 								@{{emptyCheck ownerCity}}, @{{emptyCheck ownerState}} @{{emptyCheck ownerZip}} 
 								</span>
 							</h5>
@@ -264,7 +264,7 @@
             				</span>
             				<br/>
             				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class">
+	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
 	            					@{{emptyCheck lat}} 
 	            				</span>	
             				</h5>
@@ -275,7 +275,7 @@
             				</span>
             				<br/>
             				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class">
+	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
 	            					@{{emptyCheck mapTaxLotNumber}} 
 	            				</span>	
             				</h5>
@@ -286,7 +286,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck taxLot}} 
         						</span>
     						</h5>
@@ -297,7 +297,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 								@{{emptyCheck numberOwners}}
 								</span>
 							</h5>
@@ -308,7 +308,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 									$@{{formatCurrency assesedLandValue}} / $@{{formatCurrency assesedImpValue}}
 								</span>
 							</h5>
@@ -319,7 +319,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 								@{{emptyCheck zoning}}
 								</span>
 							</h5>
@@ -330,7 +330,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 								@{{emptyCheck landUseNumber}}
 								</span>
 							</h5>
@@ -341,7 +341,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 								@{{emptyCheck planDescription}}
 								</span>
 							</h5>
@@ -352,7 +352,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 								@{{emptyCheck fireDistrict}}
 								</span>
 							</h5>
@@ -363,7 +363,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 								@{{emptyCheck schoolDistrict}}
 								</span>
 							</h5>
@@ -374,7 +374,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 								@{{emptyCheck nieghborHood}}
 								</span>
 							</h5>
@@ -387,7 +387,7 @@
             				</span>
             				<br/>
             				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class">
+	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
 	            					@{{emptyCheck lng}} 
 	            				</span>	
             				</h5>
@@ -398,7 +398,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck mapNumber}}
         						</span>
     						</h5>
@@ -409,7 +409,7 @@
             				</span>
             				<br/>
             				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class">
+	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
 	            					@{{emptyCheck taxcode}}
 	            				</span>	
             				</h5>
@@ -420,7 +420,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck yearBuilt}}
         						</span>
     						</h5>
@@ -431,7 +431,7 @@
 							</span>
 							<br/>
 							<h5>
-								<span class="label label-primary darker-blue-backgroud-class">
+								<span class="label label-primary darker-blue-backgroud-class text-overflow">
 									@{{formatCurrency assesedTaxableValue}}
 								</span>
 							</h5>
@@ -442,7 +442,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck buildingType}}
         						</span>
     						</h5>
@@ -453,7 +453,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck exemptDescription}}
         						</span>
     						</h5>
@@ -464,7 +464,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck propertyClassCode}}
         						</span>
     						</h5>
@@ -475,7 +475,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck propertyClassDescription}}
         						</span>
     						</h5>
@@ -486,7 +486,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck stateClassCodeOrBuildCode}}
         						</span>
     						</h5>
@@ -497,7 +497,7 @@
             				</span>
             				<br/>
             				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class">
+            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
             						@{{emptyCheck stateClassDescription}}
         						</span>
     						</h5>

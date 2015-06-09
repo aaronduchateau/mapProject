@@ -22,6 +22,7 @@ window.gmd = {
 	    	tiler_domain: 'anonymoustransaction.com',
 	    	tiler_port:     "8181",
 	    	tiler_protocol: 'http',
+	    	cartodb_logo: false,
 	    	sublayers: [{
 	        	sql: sql, // Required
 	        	cartocss: styles
@@ -150,7 +151,8 @@ window.gmd = {
 	          zoomControl: true,
 	          center: new L.LatLng(window.infoWindowLat, window.infoWindowLng),
 	          zoom: 15,
-	          infoWindow: true
+	          infoWindow: true,
+	          attributionControl: false
 	        });
 
 	        var gglTerrain = new L.Google('TERRAIN');
@@ -376,7 +378,8 @@ window.gmd = {
 	          zoomControl: true,
 	          center: new L.LatLng(latMap, lngMap),
 	          zoom: 16,
-	          infoWindow: true
+	          infoWindow: true,
+	          attributionControl: false
 	        });
 
 	        //var ggl2 = new L.Google('TERRAIN');
