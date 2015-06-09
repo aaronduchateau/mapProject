@@ -267,6 +267,16 @@ border-bottom: 0px solid #e5e5e5;
     margin: 0 0 10px 0;
 }
 
+.block-container-toggle-left {
+	width:50%;
+	float:left;
+}
+
+.block-container-toggle-right {
+	width:50%;
+	float:right;
+}
+
 /*start search input and message pop up assets*/
 #search-holder {
 	position:absolute;

@@ -14,6 +14,9 @@
       <a class="btn btn-primary" style="" id="print-me">
         <span class="glyphicon glyphicon-print" aria-hidden="true"></span> 
       </a>
+      <a class="btn btn-primary" style="" id="list-v-grid">
+        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> 
+      </a>
       <a class="btn btn-primary" style="" id="save-me">
         <span class="glyphicon glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> 
       </a>
@@ -320,6 +323,27 @@
         //append : "custom tip can go here", // Add this on top
         //prepend : "<h2>Avatar RFP - MyEyesRemote.com</h2>" // Add this at bottom
       });
+    });
+
+    var listOrGridToggleState = 'list';
+    //list v grid toggle
+    $(document).on('click', '#list-v-grid', function(event) {
+      if (listOrGridToggleState == 'list'){
+        $('.block-container-toggle-left').css('width', '100%');
+        $('.block-container-toggle-left').css('float', 'none');
+        $('.block-container-toggle-right').css('width', '100%');
+        $('.block-container-toggle-right').css('float', 'none');
+        $('#list-v-grid .glyphicon').removeClass('glyphicon-th-list').addClass('glyphicon-th');
+        listOrGridToggleState = 'grid';
+      }else{
+        $('.block-container-toggle-left').css('width', '50%');
+        $('.block-container-toggle-left').css('float', 'left');
+        $('.block-container-toggle-right').css('width', '50%');
+        $('.block-container-toggle-right').css('float', 'right');
+        $('#list-v-grid .glyphicon').removeClass('glyphicon-th').addClass('glyphicon-th-list');
+        listOrGridToggleState = 'list';
+      }
+      
     });
 
     function toggleLetter(){

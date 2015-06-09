@@ -155,356 +155,356 @@
 				<br/>
 				@{{emptyCheck accountOwnerName}}
             </div>
-            <table style="width:100%;">
-            	<tr>
-            		<td style="width:50%;">
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            					Owner Name / In Care of:
-            				</span>
-            				<br/>
-            				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
-	            					@{{emptyCheck ownerName}} / @{{emptyCheck inCareOf}}
-	            				</span>	
-            				</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	Estimated Land Value / Improvment Value:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						$@{{formatCurrency landValue}} / $@{{formatCurrency impValue}}
-        						</span>
-    						</h5>
-    					</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								Measurment in Acres:
+            <div style="width:100%;">
+            	<div class="block-container-toggle-left">
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        					Owner Name / In Care of:
+        				</span>
+        				<br/>
+        				<h5>
+            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
+            					@{{emptyCheck ownerName}} / @{{emptyCheck inCareOf}}
+            				</span>	
+        				</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	Estimated Land Value / Improvment Value:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						$@{{formatCurrency landValue}} / $@{{formatCurrency impValue}}
+    						</span>
+						</h5>
+					</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							Measurment in Acres:
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+							@{{emptyCheck acreage}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-								@{{emptyCheck acreage}}
-								</span>
-							</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								County Account Reference:
+						</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							County Account Reference:
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+							#@{{emptyCheck account}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-								#@{{emptyCheck account}}
-								</span>
-							</h5>
-            			</div>
-            		</td>
-            		<td style="max-width:50%;">
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	Contact Mailing Address 1:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck ownerAddress1}}
-        						</span>
-    						</h5>
-    					</div>
-	            		<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            					Contact Mailing Address 2:
-            				</span>
-            				<br/>
-            				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
-	            					@{{emptyCheck ownerAddress2}}
-	            				</span>	
-            				</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	Contact Mailing Address 3:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck ownerAddress2}}
-        						</span>
-    						</h5>
-    					</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								City, State, ZIP
+						</h5>
+        			</div>
+            	</div>
+            	<div class="block-container-toggle-right">
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	Contact Mailing Address 1:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck ownerAddress1}}
+    						</span>
+						</h5>
+					</div>
+            		<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        					Contact Mailing Address 2:
+        				</span>
+        				<br/>
+        				<h5>
+            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
+            					@{{emptyCheck ownerAddress2}}
+            				</span>	
+        				</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	Contact Mailing Address 3:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck ownerAddress2}}
+    						</span>
+						</h5>
+					</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							City, State, ZIP
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+							@{{emptyCheck ownerCity}}, @{{emptyCheck ownerState}} @{{emptyCheck ownerZip}} 
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-								@{{emptyCheck ownerCity}}, @{{emptyCheck ownerState}} @{{emptyCheck ownerZip}} 
-								</span>
-							</h5>
-            			</div>
-            		</td>
-            	</tr>	
-            </table>
+						</h5>
+        			</div>
+        		</div>
+        	</div>	
+
+            <div style="clear:both;">
+            </div>
+
             <div class="custom-well-info" style="margin-top: 10px;padding-top: 10px;padding-bottom: 10px;border-radius: 4px;">
 	            <div id="nested-map" style="height:400px;">
 	            </div>
             </div>
-            <table style="width:100%;">
-            	<tr>
-            		<td style="width:50%;">
-            			<div class="well custom-well-info">
-            				<span class="just-custom-font detail letter">
-            					Latitude:
-            				</span>
-            				<br/>
-            				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
-	            					@{{emptyCheck lat}} 
-	            				</span>	
-            				</h5>
-            			</div>
-            			<div class="well custom-well-info  detail letter">
-            				<span class="just-custom-font">
-            					Map Taxlot Number:
-            				</span>
-            				<br/>
-            				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
-	            					@{{emptyCheck mapTaxLotNumber}} 
-	            				</span>	
-            				</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	Taxlot Number:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck taxLot}} 
-        						</span>
-    						</h5>
-    					</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								Number of Owners:
+            <div style="width:100%;">
+            	<div class="block-container-toggle-left">
+        			<div class="well custom-well-info">
+        				<span class="just-custom-font detail letter">
+        					Latitude:
+        				</span>
+        				<br/>
+        				<h5>
+            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
+            					@{{emptyCheck lat}} 
+            				</span>	
+        				</h5>
+        			</div>
+        			<div class="well custom-well-info  detail letter">
+        				<span class="just-custom-font">
+        					Map Taxlot Number:
+        				</span>
+        				<br/>
+        				<h5>
+            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
+            					@{{emptyCheck mapTaxLotNumber}} 
+            				</span>	
+        				</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	Taxlot Number:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck taxLot}} 
+    						</span>
+						</h5>
+					</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							Number of Owners:
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+							@{{emptyCheck numberOwners}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-								@{{emptyCheck numberOwners}}
-								</span>
-							</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								Taxable Land Value / Taxable Improvment Value
+						</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							Taxable Land Value / Taxable Improvment Value
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+								$@{{formatCurrency assesedLandValue}} / $@{{formatCurrency assesedImpValue}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-									$@{{formatCurrency assesedLandValue}} / $@{{formatCurrency assesedImpValue}}
-								</span>
-							</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								Zoning:
+						</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							Zoning:
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+							@{{emptyCheck zoning}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-								@{{emptyCheck zoning}}
-								</span>
-							</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								Land Use Number:
+						</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							Land Use Number:
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+							@{{emptyCheck landUseNumber}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-								@{{emptyCheck landUseNumber}}
-								</span>
-							</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								Plan Description
+						</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							Plan Description
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+							@{{emptyCheck planDescription}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-								@{{emptyCheck planDescription}}
-								</span>
-							</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								Fire District:
+						</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							Fire District:
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+							@{{emptyCheck fireDistrict}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-								@{{emptyCheck fireDistrict}}
-								</span>
-							</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								School District:
+						</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							School District:
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+							@{{emptyCheck schoolDistrict}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-								@{{emptyCheck schoolDistrict}}
-								</span>
-							</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								Nieghborhood:
+						</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							Nieghborhood:
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+							@{{emptyCheck nieghborHood}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-								@{{emptyCheck nieghborHood}}
-								</span>
-							</h5>
-            			</div>
-            		</td>
-            		<td style="max-width:50%;">
-            			<div class="well custom-well-info detail letter">
-            				<span class="just-custom-font">
-            					Longitude:
-            				</span>
-            				<br/>
-            				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
-	            					@{{emptyCheck lng}} 
-	            				</span>	
-            				</h5>
-            			</div>
-            			<div class="well custom-well-info detail letter">
-            				<span class="just-custom-font">
-            				 	Map Number:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck mapNumber}}
-        						</span>
-    						</h5>
-    					</div>
-	            		<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            					Tax Code:
-            				</span>
-            				<br/>
-            				<h5>
-	            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
-	            					@{{emptyCheck taxcode}}
-	            				</span>	
-            				</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	Year Built:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck yearBuilt}}
-        						</span>
-    						</h5>
-    					</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-								Total Taxable Value:
+						</h5>
+        			</div>
+        		</div>	
+        		<div class="block-container-toggle-left">
+        			<div class="well custom-well-info detail letter">
+        				<span class="just-custom-font">
+        					Longitude:
+        				</span>
+        				<br/>
+        				<h5>
+            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
+            					@{{emptyCheck lng}} 
+            				</span>	
+        				</h5>
+        			</div>
+        			<div class="well custom-well-info detail letter">
+        				<span class="just-custom-font">
+        				 	Map Number:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck mapNumber}}
+    						</span>
+						</h5>
+					</div>
+            		<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        					Tax Code:
+        				</span>
+        				<br/>
+        				<h5>
+            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
+            					@{{emptyCheck taxcode}}
+            				</span>	
+        				</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	Year Built:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck yearBuilt}}
+    						</span>
+						</h5>
+					</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+							Total Taxable Value:
+						</span>
+						<br/>
+						<h5>
+							<span class="label label-primary darker-blue-backgroud-class text-overflow">
+								@{{formatCurrency assesedTaxableValue}}
 							</span>
-							<br/>
-							<h5>
-								<span class="label label-primary darker-blue-backgroud-class text-overflow">
-									@{{formatCurrency assesedTaxableValue}}
-								</span>
-							</h5>
-            			</div>
-            			<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	Building Type:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck buildingType}}
-        						</span>
-    						</h5>
-    					</div>
-    					<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	Exempt Description:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck exemptDescription}}
-        						</span>
-    						</h5>
-    					</div>
-    					<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	Property Class Code:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck propertyClassCode}}
-        						</span>
-    						</h5>
-    					</div>
-    					<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	Property Class Description:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck propertyClassDescription}}
-        						</span>
-    						</h5>
-    					</div>
-    					<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	State Class Code (or) Build Code:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck stateClassCodeOrBuildCode}}
-        						</span>
-    						</h5>
-    					</div>
-    					<div class="well custom-well-info detail">
-            				<span class="just-custom-font">
-            				 	State Class Description:
-            				</span>
-            				<br/>
-            				<h5>
-            					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            						@{{emptyCheck stateClassDescription}}
-        						</span>
-    						</h5>
-    					</div>
-            		</td>
-            	</tr>	
-            </table>
+						</h5>
+        			</div>
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	Building Type:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck buildingType}}
+    						</span>
+						</h5>
+					</div>
+					<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	Exempt Description:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck exemptDescription}}
+    						</span>
+						</h5>
+					</div>
+					<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	Property Class Code:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck propertyClassCode}}
+    						</span>
+						</h5>
+					</div>
+					<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	Property Class Description:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck propertyClassDescription}}
+    						</span>
+						</h5>
+					</div>
+					<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	State Class Code (or) Build Code:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck stateClassCodeOrBuildCode}}
+    						</span>
+						</h5>
+					</div>
+					<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
+        				 	State Class Description:
+        				</span>
+        				<br/>
+        				<h5>
+        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
+        						@{{emptyCheck stateClassDescription}}
+    						</span>
+						</h5>
+					</div>
+            	</div>
+            </div>
 		</div>
 	</div>
 </script>
