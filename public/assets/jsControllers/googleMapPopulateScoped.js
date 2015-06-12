@@ -103,8 +103,9 @@ window.gmd = {
 
 		},
 		//not yet used but should be used for list view later
-		userQuery: function(){
-			window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest.lanecounty_or WHERE ownname = 'RNS MANAGEMENT LLC'")
+		userQuery: function(){ 
+			var table = window.g.mapConfig.dashTableName;
+			window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
 			  .done(function(data) {
 			    console.log(data.rows);
 			  })
@@ -113,18 +114,38 @@ window.gmd = {
 			    console.log("errors:" + errors);
 			  });
 		},
-		userQueryApplyToMap: function(owner){
+		multiResultQueryBuilder: function(type, params){
+			var table = window.g.mapConfig.dashTableName;
+			if (type == 'owner'){
+				var userColumn = window.translations[window.g.mapConfig.countyNameConcat]['nameColumn'];
+				//select * from table where value  like any (array['%foo%', '%bar%', '%baz%']);
+				var sql = "SELECT * FROM devtest." + table + " WHERE " + userColumn + " ILIKE '%" + params.owner + "%'";
+				return sql;
+			} else if (type == 'acreage'){
+				var acreageColumn = window.translations[window.g.mapConfig.countyNameConcat]['acreageColumn'];
+				var sql = "SELECT * FROM devtest." + table + " WHERE " + acreageColumn + " BETWEEN " + params.first + " AND " + params.second;
+				console.log(sql);
+				return sql;
+			} else if (type == 'taxlot'){
+				var mapTaxLotColumn = window.translations[window.g.mapConfig.countyNameConcat]['mapTaxLotColumn'];
+				//add quotes to fix issue, consider CAST to string for column
+				var sql = "SELECT * FROM devtest." + table + " WHERE " + mapTaxLotColumn + " = " + params.mapTaxLot;
+				console.log(sql);
+				return sql;
+			}
+
+		},
+		//this calls the function above it to build our query
+		//handle sql count and multi result vs single result here
+		multiQueryApplyToMap: function(type, params){
 
 			//if the layer exists, nuke the old results
 			if (window.layerOwnerResults){
-				alert('c');
 				window.map.removeLayer(window.layerOwnerResults);
 			}
-
-			var userColumn = window.translations[window.g.mapConfig.countyNameConcat]['nameColumn'];
 		
-			var sql = "SELECT * FROM devtest.lanecounty_or WHERE " + userColumn + " ILIKE '%" + owner + "%'";
-
+			var sql = this.multiResultQueryBuilder(type, params);
+	
 			var boundingBox = this.queryAndPanToBounds(window.map, sql);
 			//view-source:http://andrew.hedges.name/experiments/haversine/
 
@@ -268,6 +289,7 @@ window.gmd = {
         var thisScoped = this;
 
         var tableName = window.g.mapConfig.countyNameConcat + "_" + window.g.mapConfig.stateAb;
+        window.g.mapConfig.dashTableName = tableName;
 
         var sql = "SELECT * FROM " + tableName;
 	    var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.5; line-color: #FFF; line-width: 1; line-opacity: 1;}'
@@ -315,6 +337,7 @@ window.gmd = {
 
           }).on('error', function() {
             console.log("some error occurred");
+            alert('Something Went Wrong, Please Refresh the Page and let Aaron know');
         });
 
 
