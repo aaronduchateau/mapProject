@@ -95,7 +95,17 @@ window.gmd = {
 		queryAndPanToBounds: function(map, query) {
 			//window.gmd.cartoSqlConfig
 			return window.gmd.cartoSqlConfig.getBounds(query).done(function(bounds) {
+	       		//fit map to bounds
 	       		map.fitBounds(bounds);
+	       		//chill for a sec and check the zoom level, some of the title providers can't handle 20 or greater
+	       		//ghetto solution for bing zoom level issue
+	       		setTimeout(function(){ 
+	       			alert(map.getZoom());
+        			if(map.getZoom() > 18){
+        				map.setZoom(18);
+        			}
+        			
+        		}, 1700);
 	       		console.log('BOUNDS')
 	       		console.log(bounds);
 	       		return bounds;
@@ -172,9 +182,12 @@ window.gmd = {
 	          zoomControl: true,
 	          center: new L.LatLng(window.infoWindowLat, window.infoWindowLng),
 	          zoom: 15,
+	          //this is a ghetto way to solve all zoom issues...should be base layer specific
+	          //maxZoom: 18,
 	          infoWindow: true,
 	          attributionControl: false
 	        });
+	       
 
 	        var gglTerrain = new L.Google('TERRAIN');
 	        var gglHybrid = new L.Google('HYBRID');
@@ -185,7 +198,7 @@ window.gmd = {
 	        //var yanSatelite = new L.Yandex("satelliteMap", {traffic:true, opacity:0.8, overlay:true});
 	        
 	        window.nestedMap.addLayer(gglHybrid);
-
+	        //window.nestedMap.addLayer(L.tileLayer.provider('Esri.WorldImagery'));
 	        var customAccountString = window.g.mapConfig.nestedMapColumnName + ' = ' + window.g.mapRowData.queryVal;
 	        
 	        var tableName = window.g.mapConfig.countyNameConcat + "_" + window.g.mapConfig.stateAb;
@@ -206,9 +219,10 @@ window.gmd = {
 		        		    'Google Terrain' : gglTerrain, 
 		        		    'Google Hybrid' : gglHybrid,
 		        		    'Google Roadmap' : gglRoadmap,
-		        		    'Bing Satelite' : bing
-		        		    //,
-		        		    //'Yandex Satelite': yanSatelite
+		        		    'Bing Satelite' : bing,
+		        		    'MapQuest Aerial': L.tileLayer.provider('MapQuestOpen.Aerial'),
+		        		    'Esri WorldTopoMap': L.tileLayer.provider('Esri.WorldTopoMap'),
+							'Esri WorldImagery': L.tileLayer.provider('Esri.WorldImagery'),
 		        		},
 		        		{
 		        		    'Platlines' : layer	
@@ -217,7 +231,7 @@ window.gmd = {
 				);
 
 	            //zoom and pan so our platlines fall nicely in our map
-				thisScoped.queryAndPanToBounds(window.nestedMap, sql);
+				//thisScoped.queryAndPanToBounds(window.nestedMap, sql);
 
 	          }).on('error', function() {
 	            console.log("some error occurred");
@@ -226,6 +240,8 @@ window.gmd = {
 	        setTimeout(function(){ 
         		$(window).trigger('resize');
         		window.nestedMap.invalidateSize(true);
+        		//zoom and pan so our platlines fall nicely in our map
+				thisScoped.queryAndPanToBounds(window.nestedMap, sql);
         	}, 700);
 
 		}
@@ -314,12 +330,12 @@ window.gmd = {
             mainTileSublayer.on('featureClick', function(e, latlng, pos, data, layerNumber) {
                   //alert("Hey! You clicked " + data.cartodb_id);
                   //console.log(pos);
-                  console.log('latlng');
-                  console.log(latlng);
-                  console.log(data);
+                  //console.log('latlng');
+                  //console.log(latlng);
+                  //console.log(data);
                   infowindow_model.set('visibility', true);
-                  console.log(infowindow_model);
-    			  console.log(window.translations[window.g.mapConfig.countyNameConcat]['mapArr']);
+                  //console.log(infowindow_model);
+    			  //console.log(window.translations[window.g.mapConfig.countyNameConcat]['mapArr']);
                   
                   thisScoped.onClickTileManager(e, latlng, pos, data, layerNumber);
 
@@ -357,6 +373,7 @@ window.gmd = {
         //toggle layers based on zoom  
         window.map.on("zoomend", function(){
 			zoomLev = window.map.getZoom();
+			alert(zoomLev);
 			if (zoomLev < 13){
 				window.layerCountyBoundry.show();
 				window.mainTileSublayer.hide();

@@ -372,7 +372,7 @@
 <script src="http://libs.cartocdn.com/cartodb.js/v3/3.14/cartodb.js"></script>
 <script src="{{ URL::asset('dist/js/layer/tile/Google.js') }}"></script>
 <script src="{{ URL::asset('dist/js/layer/tile/Bing.js') }}"></script>
-<script src="{{ URL::asset('dist/js/layer/tile/Yandex.js') }}"></script>
+
 <!-- end new libs -->
 
 
@@ -393,6 +393,8 @@
 
 <script src="{{ URL::asset('dist/scroll/jquery.mCustomScrollbar.concat.min.js') }}"></script>
 <script src="{{ URL::asset('dist/js/jQuery.switchButton.js') }}"></script>
+
+<script src="{{ URL::asset('dist/js/layer/tile/Common.js') }}"></script>
 <!--$(selector).mCustomScrollbar("scrollTo",position,options);-->
 <!--//http://manos.malihu.gr/jquery-custom-content-scroller/-->
 
