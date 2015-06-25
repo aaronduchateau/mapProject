@@ -100,7 +100,6 @@ window.gmd = {
 	       		//chill for a sec and check the zoom level, some of the title providers can't handle 20 or greater
 	       		//ghetto solution for bing zoom level issue
 	       		setTimeout(function(){ 
-	       			alert(map.getZoom());
         			if(map.getZoom() > 18){
         				map.setZoom(18);
         			}
@@ -286,6 +285,7 @@ window.gmd = {
 	    window.g.mapRowData.lng = window.infoWindowLng;
 	    window.g.mapRowData.accountOwnerName = window.g.mapConfig.accountOwnerName;
 	    window.g.mapRowData.accountOwnerPhone = window.g.mapConfig.accountOwnerPhone;
+	    window.g.mapRowData.accountOwnerEmail = window.g.mapConfig.accountOwnerEmail;
 	    window.g.mapRowData.countyName = window.g.mapConfig.countyName;
 	},
 
@@ -373,7 +373,6 @@ window.gmd = {
         //toggle layers based on zoom  
         window.map.on("zoomend", function(){
 			zoomLev = window.map.getZoom();
-			alert(zoomLev);
 			if (zoomLev < 13){
 				window.layerCountyBoundry.show();
 				window.mainTileSublayer.hide();

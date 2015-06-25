@@ -425,6 +425,7 @@
     window.g.mapConfig.userId = {{Auth::user()->id}};
     window.g.mapConfig.accountOwnerName = '{{Auth::user()->firstname}} {{Auth::user()->lastname}}';
     window.g.mapConfig.accountOwnerPhone = '{{Auth::user()->phone}}';
+    window.g.mapConfig.accountOwnerEmail = '{{Auth::user()->email}}';
 
     console.log(window.g.mapConfig);
     $('#county-label').text(window.g.mapConfig.countyName);
@@ -560,7 +561,7 @@
           var leftDashTemplate = Handlebars.compile(source);
           //var indexTracker = $(event.target).attr('data-result-index');
           //var indexTracker = $(event.target).closest('div').attr('data-result-index');
-        
+          console.log(window.g.mapRowData);
           var templateResult = leftDashTemplate(window.g.mapRowData);
           $('.dash-left-full-margin').html(templateResult);
           //trigger Nested Map

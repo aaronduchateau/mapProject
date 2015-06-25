@@ -149,7 +149,7 @@
             <div style="clear:both;"></div>
             <div class="custom-well-info letter" contenteditable="true" style="padding-top:10px;padding-left:10px;padding-right:10px;padding-bottom: 10px;border-radius: 4px;">
 	            Dear @{{emptyCheck ownerName}}, <br/>
-	            my name is @{{emptyCheck accountOwnerName}} and I'm interested in your property in @{{emptyCheck countyName}} (please find the enclosed map). If you're interested in selling please let me know. My number is @{{emptyCheck accountOwnerPhone}}.
+	            My name is @{{emptyCheck accountOwnerName}} and I'm interested in purchasing your @{{emptyCheck acreage}} property in @{{emptyCheck countyName}} (please find the enclosed map). If you're interested in selling please let me know. My number is @{{emptyCheck accountOwnerPhone}}. If you can't reach me by phone, feel free to shoot me an email at @{{emptyCheck accountOwnerEmail}}.
 	            <br/><br/>
 				Thank you,
 				<br/>
@@ -259,8 +259,8 @@
             </div>
             <div style="width:100%;">
             	<div class="block-container-toggle-left">
-        			<div class="well custom-well-info">
-        				<span class="just-custom-font detail letter">
+        			<div class="well custom-well-info detail">
+        				<span class="just-custom-font">
         					Latitude:
         				</span>
         				<br/>
@@ -270,7 +270,7 @@
             				</span>	
         				</h5>
         			</div>
-        			<div class="well custom-well-info  detail letter">
+        			<div class="well custom-well-info detail">
         				<span class="just-custom-font">
         					Map Taxlot Number:
         				</span>
@@ -382,7 +382,7 @@
         			</div>
         		</div>	
         		<div class="block-container-toggle-left">
-        			<div class="well custom-well-info detail letter">
+        			<div class="well custom-well-info detail detail">
         				<span class="just-custom-font">
         					Longitude:
         				</span>
@@ -393,7 +393,7 @@
             				</span>	
         				</h5>
         			</div>
-        			<div class="well custom-well-info detail letter">
+        			<div class="well custom-well-info detail detail">
         				<span class="just-custom-font">
         				 	Map Number:
         				</span>
