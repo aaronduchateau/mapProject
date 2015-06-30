@@ -1,8 +1,6 @@
 window.translations = {
 	held: {},
-	//DouglasCountyMap: ["cartodb_id","acreage"],
-	//DouglasCountyMap: ["cartodb_id","the_geom_GEO","acreage","addr1","addr2","addr3","allaccount","alt_acct_n","assd_value","block","code_area","county_pro","csz","id","inst_no","legal","loc_code","lot","maint_area","mtl_acreag","name","nbhd_code","owner_id","prop_id","special_in","taxid","total_imp","total_land","total_mark","created_at","updated_at"],
-	DouglasCountyMap: ["cartodb_id","acreage","addr1","addr2","addr3","allaccount","alt_acct_n","assd_value","block","code_area","county_pro","csz","id","inst_no","legal","loc_code","lot","maint_area","mtl_acreag","name","nbhd_code","owner_id","prop_id","special_in","taxid","total_imp","total_land","total_mark","created_at","updated_at"],
+	//DouglasCountyMap: ["cartodb_id","acreage","addr1","addr2","addr3","allaccount","alt_acct_n","assd_value","block","code_area","county_pro","csz","id","inst_no","legal","loc_code","lot","maint_area","mtl_acreag","name","nbhd_code","owner_id","prop_id","special_in","taxid","total_imp","total_land","total_mark","created_at","updated_at"],
 
 	DouglasCounty: {
 		nameColumn: "name",
@@ -61,7 +59,8 @@ window.translations = {
 				fireDistrict: null,
 				schoolDistrict: null,
 				nieghborHood: o.nbhd_code,
-				queryVal: o.id
+				//queryVal: o.id
+				queryVal: {name: 'id', val: o.id, type: 'number'}
 			};
 
 			window.translations.held = tempJson;
@@ -70,7 +69,7 @@ window.translations = {
 		}
 	},
 
-	JacksonCountyMap: ["cartodb_id", "account", "acreage", "address1", "address2", "addressnum", "addsort", "assessimp", "assessland","buildcode", "city", "commsqft", "contract", "feeowner", "gis_area", "impvalue", "incareof", "landvalue", "lotdepth", "lottype", "lotwidth", "maintenanc", "maplot", "mapnum", "mapnumber", "neighborho", "ownersort", "propclass", "scheduleco", "shape_star", "shape_stle", "siteadd", "state", "streetname", "taxcode", "taxlot", "tm_maplot", "trssort", "yearblt", "zipcode", "created_at", "updated_at"], 
+	//JacksonCountyMap: ["cartodb_id", "account", "acreage", "address1", "address2", "addressnum", "addsort", "assessimp", "assessland","buildcode", "city", "commsqft", "contract", "feeowner", "gis_area", "impvalue", "incareof", "landvalue", "lotdepth", "lottype", "lotwidth", "maintenanc", "maplot", "mapnum", "mapnumber", "neighborho", "ownersort", "propclass", "scheduleco", "shape_star", "shape_stle", "siteadd", "state", "streetname", "taxcode", "taxlot", "tm_maplot", "trssort", "yearblt", "zipcode", "created_at", "updated_at"], 
 
 	JacksonCounty: {
 		nameColumn: "feeowner",
@@ -126,7 +125,60 @@ window.translations = {
 				fireDistrict: null,
 				schoolDistrict: null,
 				nieghborHood: o.neighborho,
-				queryVal: o.account
+				queryVal: {name: 'account', val: o.account, type: 'number'}
+			};
+
+			window.translations.held = tempJson;
+			return tempJson;
+
+		}
+	},
+
+	JosephineCounty: {
+		nameColumn: "name",
+		acreageColumn: "acreage",
+		mapTaxLotColumn: "taxlot",
+		mapArr: ["cartodb_id", "account", "acctstatus", "acreage", "addr1", "addr2", "addr3", "address", "appr_value", "assd_value", "bedrms", "bldg_class", "block", "city", "code", "comp_mtl", "csz", "deed_type", "exempt", "gis_zone", "imp_value", "inst_no", "land_appr", "land_mkt", "legal_acre", "living_are", "loc_desc", "lot", "maint", "mapnum", "mapnumx", "mh_make", "mh_value", "mnx", "name", "nbhd", "prop_class", "qq", "rmv", "rng", "sale_date", "sale_price", "sale_type", "sd", "sec", "situs", "situs_pref", "situs_suf0", "situs_suff", "sptb_codes", "sq_ft", "st_name", "st_no", "state", "taxes", "taxlot", "tl", "twn", "type", "yr_blt", "zip", "zone", "created_at", "updated_at"],
+		translate: function(o) {
+			//query on ACCOUNT, queryVal holds actual query val
+			var tempJson = {
+				mapNumber: o.mapnum,
+				account: o.account,
+				taxcode: o.code,
+				inCareOf: null,
+				ownerAddress1: o.addr1,
+				ownerAddress2: o.addr2,
+				ownerAddress3: o.addr3,
+				ownerCity: o.city,
+				ownerState: o.state,
+				ownerZip: o.zip,
+				numberOwners: null,
+				ownerName: o.name,
+				impValue: o.imp_value,
+				landValue: o.land_mkt,
+				totalValue: o.appr_value,
+				yearBuilt: o.yr_blt,
+				taxLot: o.taxlot,
+				buildingType: o.deed_type,
+				exemptDescription: o.exempt,
+				propertyClassCode: o.prop_class,
+				propertyClassDescription: null,
+				stateClassCodeOrBuildCode: o.bldg_class,
+				stateClassDescription: null,
+				acreage: o.acreage,
+				assesedtaxableValue: o.assd_value,
+				//could not find another db value for impvalue
+				assesedImpTaxable: o.impvalue,
+				assesedLandTaxable: o.land_appr,
+				mapTaxLotNumber: o.mapnumx,
+				zoning: o.zone,
+				landUseNumber: null,
+				planDescription: null,
+				fireDistrict: null,
+				schoolDistrict: null,
+				nieghborHood: o.nbhd,
+				queryVal: {name: 'account', val: o.account, type: 'string'}
+				//data also provides real market value, taxes paid last year, and other interesting data
 			};
 
 			window.translations.held = tempJson;
@@ -135,7 +187,7 @@ window.translations = {
 		}
 	},
 	
-	LaneCountyMap: ["cartodb_id", "mapnumber", "acctno", "taxcode", "addr1", "addr2", "addr3", "ownercity", "ownerprvst", "ownerzip", "numowners", "ownname", "impval", "landval", "yearblt", "taxlot", "bldgtype", "exemptdesc", "propcl", "propcldes", "statcl", "statcldes", "mapacres", "assdtotval", "maptaxlot", "zoning", "numlanduse", "plandes", "firedist", "schooldist", "neighbor", "created_at", "updated_at"],
+	//LaneCountyMap: ["cartodb_id", "mapnumber", "acctno", "taxcode", "addr1", "addr2", "addr3", "ownercity", "ownerprvst", "ownerzip", "numowners", "ownname", "impval", "landval", "yearblt", "taxlot", "bldgtype", "exemptdesc", "propcl", "propcldes", "statcl", "statcldes", "mapacres", "assdtotval", "maptaxlot", "zoning", "numlanduse", "plandes", "firedist", "schooldist", "neighbor", "created_at", "updated_at"],
 	LaneCounty: {
 		nameColumn: "ownname",
 		acreageColumn: "mapacres",
@@ -183,7 +235,7 @@ window.translations = {
 				fireDistrict: o.firedist,
 				schoolDistrict: o.schooldist,
 				nieghborHood: o.neighbor,
-				queryVal: o.maptaxlot
+				queryVal: {name: 'maptaxlot', val: o.maptaxlot, type: 'number'}
 			};
 
 			window.translations.held = tempJson;

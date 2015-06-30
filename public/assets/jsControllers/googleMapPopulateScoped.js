@@ -198,7 +198,15 @@ window.gmd = {
 	        
 	        window.nestedMap.addLayer(gglHybrid);
 	        //window.nestedMap.addLayer(L.tileLayer.provider('Esri.WorldImagery'));
-	        var customAccountString = window.g.mapConfig.nestedMapColumnName + ' = ' + window.g.mapRowData.queryVal;
+	        
+
+	        //we know look at the configuration file for these values
+	        if (window.g.mapRowData.queryVal.type === 'string'){
+	        	var customAccountString = window.g.mapRowData.queryVal.name + " = '" + window.g.mapRowData.queryVal.val + "'";
+	    	} else if (window.g.mapRowData.queryVal.type === 'number'){
+	    		var customAccountString = window.g.mapRowData.queryVal.name + " = " + window.g.mapRowData.queryVal.val;
+	    	}
+	       
 	        
 	        var tableName = window.g.mapConfig.countyNameConcat + "_" + window.g.mapConfig.stateAb;
 	        console.log(tableName);

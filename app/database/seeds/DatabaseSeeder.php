@@ -43,6 +43,11 @@ class userSeeder extends Seeder {
 
 }
 
+
+//note: below are NO longer used, to do, eliminate. 
+//'remoteTableId' => '1w27IrwI0eK0nr9_dXm70L56EnzGpb6t_4HC1XZ_a', 
+//'nestedMapColumnName' => 'ACCOUNT', 
+//Also countyName, countyNameConcat, and countyName Bare should be merged with underscores
 class countySeeder extends Seeder {
 
     public function run()
@@ -247,15 +252,15 @@ class countySeeder extends Seeder {
 
         	array('countyName' => 'Josephine County', 
       			  'countyNameConcat' => 'JosephineCounty', 
-              'countyNameBare' => 'Baker', 
+              'countyNameBare' => 'Josephine', 
       			  'stateId' => '38', 
       			  'stateAb' =>'OR', 
-      			  'startLat' =>'42.320921', 
-      			  'startLng' =>'-122.877734', 
+      			  'startLat' =>'42.410998', 
+      			  'startLng' =>'-123.314088999', 
       			  'remoteTableId' => '1w27IrwI0eK0nr9_dXm70L56EnzGpb6t_4HC1XZ_a', 
-      			  'nestedMapColumnName' => 'ACCOUNT', 
+      			  'nestedMapColumnName' => 'account', 
               'statefp' => '41', 
-      			  'active' => false),
+      			  'active' => true),
 
         	array('countyName' => 'Klamath County', 
       			  'countyNameConcat' => 'KlamathCounty', 
