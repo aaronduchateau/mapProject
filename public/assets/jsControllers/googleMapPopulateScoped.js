@@ -80,7 +80,10 @@ window.gmd = {
 			      
 			      $('#latMap').val(results[0].geometry.location.lat());
 			      $('#lngMap').val(results[0].geometry.location.lng());
-			      $('#search-click').click();
+			      var returnCoords = {mapLat: results[0].geometry.location.lat(), mapLng: results[0].geometry.location.lng()};
+			      //return returnCoords;
+			      console.log('after');
+			      //$('#search-click').click();
 			      
 			      //console.log(lat);
 			      //var lng = results[0].geometry.location.B;

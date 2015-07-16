@@ -83,12 +83,27 @@
           <table style="margin-left:10px;margin-right:5px;" data-attr-lat="@{{mapLat}}" data-attr-lng="@{{mapLng}}">
             <tr>
               <td style="width:18%;">
-               <img src="{{ URL::asset('images/icon-map-new.png') }}" style="margin-left:5px;margin-right:10px;width:40px;" class="small-user">
+                @{{#xIf mode "===" "single"}}
+                    <img src="{{ URL::asset('images/icon-map-new.png') }}" style="margin-left:5px;margin-right:10px;width:40px;" class="small-user">
+                @{{/xIf}}
+                @{{#xIf mode "===" "multi"}}
+                    <img src="{{ URL::asset('images/list.png') }}" style="margin-left:5px;margin-right:10px;width:40px;" class="small-user">
+                @{{/xIf}}
               </td>
               <td>
                 <div style='margin-top:10px;margin-bottom:10px;'>
                 <!--<span class="heading"></span> - -->
-                <span class="body"><b>lat:</b> @{{mapLat}} &nbsp;&nbsp;&nbsp;<b>lng:</b> @{{mapLng}}</span>
+                <span class="body">
+                    @{{#xIf searchType "===" "latLng"}}
+                       <b>lat:</b> @{{mapLat}} &nbsp;&nbsp;&nbsp;<b>lng:</b> @{{mapLng}}
+                    @{{/xIf}}
+                    @{{#xIf searchType "===" "address"}}
+                       @{{fullAddress}}
+                    @{{/xIf}}
+                    @{{#xIf searchType "===" "owner"}}
+                       <b>owned by:</b> @{{owner}}
+                    @{{/xIf}}
+                </span>
                 <p class="small">
                 <span class="pull-left">
                 <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
@@ -527,4 +542,43 @@ Handlebars.registerHelper('formatCurrency', function(value) {
 		return 'EMPTY';
 	}
 });
+Handlebars.registerHelper('xIf', function (lvalue, operator, rvalue, options) {
+
+    var operators, result;
+
+    if (arguments.length < 3) {
+        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+    }
+
+    if (options === undefined) {
+        options = rvalue;
+        rvalue = operator;
+        operator = "===";
+    }
+
+    operators = {
+        '==': function (l, r) { return l == r; },
+        '===': function (l, r) { return l === r; },
+        '!=': function (l, r) { return l != r; },
+        '!==': function (l, r) { return l !== r; },
+        '<': function (l, r) { return l < r; },
+        '>': function (l, r) { return l > r; },
+        '<=': function (l, r) { return l <= r; },
+        '>=': function (l, r) { return l >= r; },
+        'typeof': function (l, r) { return typeof l == r; }
+    };
+
+    if (!operators[operator]) {
+        throw new Error("'xIf' doesn't know the operator " + operator);
+    }
+
+    result = operators[operator](lvalue, rvalue);
+
+    if (result) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});
+//reference at https://github.com/wycats/handlebars.js/issues/616
 </script>

@@ -403,13 +403,75 @@
 @include('handlebarTemplates.globalTemplate')
 
 <script>
+  //load dash specific template
+  var rightDashTemplate;
+  var templateResult;
+
   function timeNow() {
     return moment().format('MMMM Do YYYY, h:mm a');
   }
 
-  function rightTemplateJson(){
-    var tempJson = {mapLat: $('#latMap').val(), mapLng: $('#lngMap').val(), mapTime: timeNow()};
-    return tempJson;
+  //create our jquery deferred object
+  var deferedAddressLookup = $.Deferred();
+
+  function rightTemplateJson( searchType ){
+    var tempJson = {};
+    tempJson.mapTime = timeNow();
+    if ( searchType === 'latLng' ){
+      tempJson.searchType = searchType;
+      tempJson.mapLat = $('#latMap').val();
+      tempJson.mapLng = $('#lngMap').val();
+      tempJson.mode = 'single';
+      return tempJson;
+    } else if ( searchType === 'address' ) {
+      tempJson.searchType = searchType;
+      tempJson.mode = 'single';
+
+      var address = $('#search-address').val();
+      var city = $('#search-city').val();
+      var state = $('#search-state').val();
+      var zip = $('#search-zip').val();
+      var fullAddy = address + ' ' + city + ' ' + state + ' ' + zip;
+
+      tempJson.fullAddress = fullAddy;
+
+      //architecturally this is strange, however i want to cheat a little so we have the lat and lng available without an additional lookup
+      //maybe i should consider not caring about that to make the code cleaner
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode( { 'address': fullAddy}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK)
+        {   
+            $('#latMap').val(results[0].geometry.location.lat());
+            $('#lngMap').val(results[0].geometry.location.lng());
+            var returnCoords = {mapLat: results[0].geometry.location.lat(), mapLng: results[0].geometry.location.lng()};
+            $.extend( tempJson, returnCoords );
+            console.log('important');
+            console.log(tempJson);
+            templateResult = rightDashTemplate(tempJson);
+            $('.dash-right-inter-margin').prepend(templateResult);
+            $( ".single-right-item" ).each(function() {
+              $( this ).removeClass('active-item-right');
+            });
+            $('.single-right-item:first').addClass('active-item-right');
+            window.gmd.interactMap.panToPosition('blueMarker', tempJson.mapLat, tempJson.mapLng );
+            window.g.communiqueClose();
+
+        } else {
+          window.g.communiqueClose();
+          alert('Sorry, looks like we could not find that address');
+        }
+      });
+      
+    }else if ( searchType === 'owner' ){
+      tempJson.searchType = searchType;
+      tempJson.owner = $('#search-owner').val();
+      tempJson.mode = 'multi';
+      return tempJson;
+    } else {
+      alert('issue!');
+    }
+    //console.log(tempJson);
+    
   }
 
   function myLocationCallback(position){
@@ -441,10 +503,7 @@
       { menu: {class: "", link: "{{ URL::asset('/users/menu') }}", action: ""},
         dash: {class: " active", link: "javascript:void(0);", action: ""},
         emailHeld: $('#client-email-holder').val() });
-    
-    //load dash specific template
-    var rightDashTemplate;
-    var templateResult;
+
 
     //this loads our template for the left pain
     var loadLeftBar = function(data){
@@ -466,7 +525,8 @@
     //this load our template for the right pain 
     source = $("#dash-right-template").html();
     rightDashTemplate = Handlebars.compile(source);
-    templateResult = rightDashTemplate(rightTemplateJson());
+    //may get rid of this, but here we start with a marker
+    templateResult = rightDashTemplate(rightTemplateJson( 'latLng' ));
     $('.dash-right-inter-margin').append(templateResult);
     $('.single-right-item:first').addClass('active-item-right');
 
@@ -687,25 +747,26 @@
     });
 
     $(document).on('click', '#search-click', function() {
-       templateResult = rightDashTemplate(rightTemplateJson());
+       //templateResult = rightDashTemplate(rightTemplateJson());
+       //var tempJson = {searchType: 'latLng', mapLat: $('#latMap').val(), mapLng: $('#lngMap').val(), mapTime: timeNow()};
+       templateResult = rightDashTemplate(rightTemplateJson('latLng'));
        $('.dash-right-inter-margin').prepend(templateResult);
        $( ".single-right-item" ).each(function() {
          $( this ).removeClass('active-item-right');
        });
        $('.single-right-item:first').addClass('active-item-right');
        window.gmd.interactMap.panToPosition('blueMarker', $('#latMap').val(), $('#lngMap').val() );
-       goBack();
+       //goBack();
     });
 
     $(document).on('click', '#search-all-address', function() {
       window.g.communiqueOpen("Give us a second to find that address for you");
-      var address = $('#search-address').val();
-      var city = $('#search-city').val();
-      var state = $('#search-state').val();
-      var zip = $('#search-zip').val();
-      var fullAddy = address + ' ' + city + ' ' + state + ' ' + zip;
-      window.gmd.interactMap.addressLookup(fullAddy);
-      goBack();
+
+      //this function below also handles latlng lookup
+      rightTemplateJson('address');
+
+      
+      //goBack();
     });
 
     $(document).on('click', '#search-all-acreage', function() {
@@ -727,14 +788,14 @@
       //window.gmd.interactMap.userQuery();
       var owner = $('#search-owner').val();
       window.gmd.interactMap.multiQueryApplyToMap('owner', { 'owner': owner }); 
-       //templateResult = rightDashTemplate(rightTemplateJson());
-       //$('.dash-right-inter-margin').prepend(templateResult);
-       //$( ".single-right-item" ).each(function() {
-       //  $( this ).removeClass('active-item-right');
-       //});
-       //$('.single-right-item:first').addClass('active-item-right');
-       //window.gmd.interactMap.panToPosition('blueMarker', $('#latMap').val(), $('#lngMap').val() );
-       //goBack();
+
+      templateResult = rightDashTemplate(rightTemplateJson('owner'));
+      $('.dash-right-inter-margin').prepend(templateResult);
+      $( ".single-right-item" ).each(function() {
+        $( this ).removeClass('active-item-right');
+      });
+      $('.single-right-item:first').addClass('active-item-right');
+
     });
 
     $(document).on('click', '#current-loc-click', function() {
