@@ -115,9 +115,10 @@ window.gmd = {
 
 		},
 		//not yet used but should be used for list view later
-		userQuery: function(){ 
+		userQuery: function(sqlString){ 
 			var table = window.g.mapConfig.dashTableName;
-			window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
+			//window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
+			window.gmd.cartoSqlConfig.execute(sqlString)
 			  .done(function(data) {
 			    console.log(data.rows);
 			  })
@@ -135,14 +136,17 @@ window.gmd = {
 				return sql;
 			} else if (type == 'acreage'){
 				var acreageColumn = window.translations[window.g.mapConfig.countyNameConcat]['acreageColumn'];
-				var sql = "SELECT * FROM devtest." + table + " WHERE " + acreageColumn + " BETWEEN " + params.first + " AND " + params.second;
+				var sql = "SELECT * FROM devtest." + table + " WHERE " + acreageColumn + " BETWEEN " + params.acreageFirst + " AND " + params.acreageSecond;
 				console.log(sql);
 				return sql;
 			} else if (type == 'taxlot'){
 				var mapTaxLotColumn = window.translations[window.g.mapConfig.countyNameConcat]['mapTaxLotColumn'];
 				//add quotes to fix issue, consider CAST to string for column
-				var sql = "SELECT * FROM devtest." + table + " WHERE " + mapTaxLotColumn + " = " + params.mapTaxLot;
+				var sql = "SELECT * FROM devtest." + table + " WHERE " + mapTaxLotColumn + " = " + params.mapTaxLotId;
 				console.log(sql);
+				return sql;
+			} else if (type === 'latLng'){
+				var sql = "SELECT * FROM devtest." + table + " WHERE ST_Contains(the_geom, ST_GeomFromText('POINT(" + params.mapLat + " " + params.mapLng + ")', 4326)";
 				return sql;
 			}
 
@@ -163,12 +167,13 @@ window.gmd = {
 
 	    	var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.0; line-color: #8a0002; line-width: 4; line-opacity: 1;}'
 			var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
-
+			var thisHeld = this;
 			cartodb.createLayer(window.map, LayerConfig)
 	         .addTo(window.map)
 	         .on('done', function(layer) {
 	         	window.layerOwnerResults = layer;
-					  
+				//query data results owner
+				thisHeld.userQuery(sql);	  
 
 	          }).on('error', function() {
 	            console.log("some error occurred");

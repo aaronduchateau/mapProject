@@ -462,10 +462,21 @@
         }
       });
       
-    }else if ( searchType === 'owner' ){
+    } else if ( searchType === 'owner' ){
       tempJson.searchType = searchType;
       tempJson.owner = $('#search-owner').val();
       tempJson.mode = 'multi';
+      return tempJson;
+    } else if ( searchType === 'acreage' ){
+      tempJson.searchType = searchType;
+      tempJson.acreageFirst = $('#acreage-between-1').val();
+      tempJson.acreageSecond = $('#acreage-between-2').val();
+      tempJson.mode = 'multi';
+      return tempJson;
+    } else if ( searchType === 'taxlot' ){
+      tempJson.searchType = searchType;
+      tempJson.mapTaxLotId = $('#search-taxlot-field').val();
+      tempJson.mode = 'single';
       return tempJson;
     } else {
       alert('issue!');
@@ -735,6 +746,17 @@
       window.g.communiqueClose();
     }
 
+    function populateRightMenuWithResults(linkMode){
+      //start: populates right menu with correct data and highlights 
+      templateResult = rightDashTemplate(rightTemplateJson(linkMode));
+      $('.dash-right-inter-margin').prepend(templateResult);
+      $( ".single-right-item" ).each(function() {
+        $( this ).removeClass('active-item-right');
+      });
+      $('.single-right-item:first').addClass('active-item-right');
+      //end: populates right menu with correct data and highlights 
+    }
+
     $(document).on('click', '#config', function() {
        //$(".container-dash").css('left','0px');
        $('#config').hide();
@@ -749,13 +771,10 @@
     $(document).on('click', '#search-click', function() {
        //templateResult = rightDashTemplate(rightTemplateJson());
        //var tempJson = {searchType: 'latLng', mapLat: $('#latMap').val(), mapLng: $('#lngMap').val(), mapTime: timeNow()};
-       templateResult = rightDashTemplate(rightTemplateJson('latLng'));
-       $('.dash-right-inter-margin').prepend(templateResult);
-       $( ".single-right-item" ).each(function() {
-         $( this ).removeClass('active-item-right');
-       });
-       $('.single-right-item:first').addClass('active-item-right');
+       
        window.gmd.interactMap.panToPosition('blueMarker', $('#latMap').val(), $('#lngMap').val() );
+
+       populateRightMenuWithResults('latLng');
        //goBack();
     });
 
@@ -773,29 +792,25 @@
       //window.gmd.interactMap.userQuery();
       var first = $('#acreage-between-1').val();
       var second = $('#acreage-between-2').val();
-      window.gmd.interactMap.multiQueryApplyToMap('acreage', { 'first': first, 'second': second }); 
+      window.gmd.interactMap.multiQueryApplyToMap('acreage', { 'acreageFirst': first, 'acreageSecond': second }); 
+
+      populateRightMenuWithResults('acreage');
     });
 
     $(document).on('click', '#search-all-taxlots', function() {
       var mapTaxLot = $('#search-taxlot-field').val();
-      window.gmd.interactMap.multiQueryApplyToMap('taxlot', { 'mapTaxLot': mapTaxLot }); 
+      window.gmd.interactMap.multiQueryApplyToMap('taxlot', { 'mapTaxLotId': mapTaxLot }); 
+
+      populateRightMenuWithResults('taxlot');
     });
 
-
-    
 
     $(document).on('click', '#search-all-owners', function() {
       //window.gmd.interactMap.userQuery();
       var owner = $('#search-owner').val();
       window.gmd.interactMap.multiQueryApplyToMap('owner', { 'owner': owner }); 
 
-      templateResult = rightDashTemplate(rightTemplateJson('owner'));
-      $('.dash-right-inter-margin').prepend(templateResult);
-      $( ".single-right-item" ).each(function() {
-        $( this ).removeClass('active-item-right');
-      });
-      $('.single-right-item:first').addClass('active-item-right');
-
+      populateRightMenuWithResults('owner');
     });
 
     $(document).on('click', '#current-loc-click', function() {
@@ -805,11 +820,30 @@
 
     //this manages lat lng results on the right
     $(document).on('click', '.single-right-item', function(event) {
-       var latMap = $(event.target).closest('table').attr('data-attr-lat');
-       var lngMap = $(event.target).closest('table').attr('data-attr-lng');
+        var latMap = $(event.target).closest('table').attr('data-attr-lat');
+        var lngMap = $(event.target).closest('table').attr('data-attr-lng');
+
+       var tempJson = {};
+
+       tempJson.mapLat = $(event.target).closest('table').attr('data-attr-lat');
+       tempJson.mapLng = $(event.target).closest('table').attr('data-attr-lng');
+       tempJson.address = $(event.target).closest('table').attr('data-address');
+       tempJson.owner = $(event.target).closest('table').attr('data-owner');
+       tempJson.acreageFirst = $(event.target).closest('table').attr('data-acreage-first');
+       tempJson.acreageSecond = $(event.target).closest('table').attr('data-acreage-second');
+       tempJson.mapTaxLotId = $(event.target).closest('table').attr('data-taxlot-id');
+       tempJson.searchType = $(event.target).closest('table').attr('data-search-type');
+
+
        window.g.highlightLastItem('.single-right-item', event, 'active-item-right');
-       window.gmd.interactMap.panToPosition('blueMarker', latMap, lngMap );
-      
+
+       /*
+       if( tempJson.searchType == 'latLng' ){
+          window.gmd.interactMap.panToPosition('blueMarker', latMap, lngMap );
+       } else {
+          window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson); 
+       }*/
+       window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson);
     });
 
 

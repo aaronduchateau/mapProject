@@ -80,7 +80,16 @@
 	
 	<!--start item-->
         <div class="custom-well-dash-left single-right-item">
-          <table style="margin-left:10px;margin-right:5px;" data-attr-lat="@{{mapLat}}" data-attr-lng="@{{mapLng}}">
+          <table style="margin-left:10px;margin-right:5px;" 
+            data-attr-lat="@{{mapLat}}" 
+            data-attr-lng="@{{mapLng}}"
+            data-address="@{{fullAddress}}"
+            data-owner="@{{owner}}"
+            data-acreage-first="@{{acreageFirst}}"
+            data-acreage-second="@{{acreageSecond}}"
+            data-taxlot-id="@{{mapTaxLotId}}"
+            data-search-type="@{{searchType}}"
+            >
             <tr>
               <td style="width:18%;">
                 @{{#xIf mode "===" "single"}}
@@ -102,6 +111,12 @@
                     @{{/xIf}}
                     @{{#xIf searchType "===" "owner"}}
                        <b>owned by:</b> @{{owner}}
+                    @{{/xIf}}
+                    @{{#xIf searchType "===" "taxlot"}}
+                       <b>map taxlot #:</b> @{{mapTaxLotId}}
+                    @{{/xIf}}
+                    @{{#xIf searchType "===" "acreage"}}
+                       <b>acreage between:</b> @{{acreageFirst}} and @{{acreageSecond}} acres
                     @{{/xIf}}
                 </span>
                 <p class="small">
