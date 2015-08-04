@@ -194,11 +194,11 @@ window.translations = {
 		mapTaxLotColumn: "maptaxlot",
 		mapArr: ["cartodb_id", "mapnumber", "acctno", "taxcode", "addr1", "addr2", "addr3", "ownercity", "ownerprvst", "ownerzip", "numowners", "ownname", "impval", "landval", "yearblt", "taxlot", "bldgtype", "exemptdesc", "propcl", "propcldes", "statcl", "statcldes", "mapacres", "assdtotval", "maptaxlot", "zoning", "numlanduse", "plandes", "firedist", "schooldist", "neighbor", "created_at", "updated_at"],
 		translate: function(o) {
-			if (o.impval && o.landval){
+			//if (o.impval && o.landval){
 				var totalValue = parseInt(o.impval) + parseInt(o.landval);
-			} else {
-				var totalValue = null;
-			}
+			//} else {
+			//	var totalValue = null;
+			//}
 			//query on maptaxlot, queryVal holds actual query val
 			var tempJson = {
 				mapNumber: o.mapnumber,

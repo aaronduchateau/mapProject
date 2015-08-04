@@ -118,6 +118,36 @@ border-bottom: 0px solid #e5e5e5;
 	color:white;
 }
 
+/*start: list query view hover states*/
+.query-table-row {
+	margin-bottom:1px;
+	height:30px;
+	border:0px;
+	color:white;
+}
+
+.query-table-row:hover {
+	//margin-top:1px;
+	margin-bottom:1px;
+	background-color: #337ab7;
+	border:0px;
+	color:white;
+	cursor:pointer;
+}
+
+.active-query-table-row {
+	//margin-top:1px;
+	margin-bottom:1px;
+	background-color: #337ab7;
+	border:0px;
+	color:white;
+}
+/*end: list query view hover states*/
+
+.dash-list-query-area {
+	background-color:#0d6a92;
+}
+
 
 
 .dash-left-inter-margin {

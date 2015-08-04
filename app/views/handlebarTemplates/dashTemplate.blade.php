@@ -27,6 +27,48 @@
 	<!--end item--> 
 	@{{/userReviews}} 
 </script>
+<script id="dash-list-query-table-template" type="text/x-handlebars-template">
+    <table style="width:100%;padding-bottom:15px;">
+        @{{#listData}} 
+        <tr class="query-table-row">
+            <td style="padding-left:10px;width:25%;">
+                <span class="just-custom-font">
+                    total value:
+                </span><br/>
+                <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                    $@{{formatCurrency totalValue}}
+                </span>
+            </td>  
+            <td style="max-width:225px;">
+                <span class="just-custom-font">
+                    owner name:
+                </span><br/>
+                <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                    @{{ownerName}}
+                </span>
+            </td>
+            <td style="width:25%;">
+                <span class="just-custom-font">
+                    acreage:
+                </span><br/>
+                <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                    @{{formatAcreage acreage}}
+                </span>
+            </td>
+            <td style="padding-right:10px;width:25%;">
+                <span class="just-custom-font">
+                    map taxlot #:
+                </span><br/>
+                <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                    @{{mapTaxLotNumber}}
+                </span>
+            </td>
+            <td>
+            </td>
+        </tr>
+        @{{/listData}} 
+    </table>
+</script>
 <script id="job-description" type="text/x-handlebars-template">
 	@{{#jobDescription}} 
 	<!--start item-->
@@ -556,6 +598,13 @@ Handlebars.registerHelper('formatCurrency', function(value) {
 	} else {
 		return 'EMPTY';
 	}
+});
+Handlebars.registerHelper('formatAcreage', function(value) {
+    if (value){
+        return parseFloat(Math.round(value * 100) / 100).toFixed(2);
+    } else {
+        return 'EMPTY';
+    }
 });
 Handlebars.registerHelper('xIf', function (lvalue, operator, rvalue, options) {
 

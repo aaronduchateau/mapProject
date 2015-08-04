@@ -9,6 +9,9 @@ window.g = {
 	adjustedWindowHeight: function(){
 		return $( window ).height() - 100;
 	},
+	adjustedWindowHeightLarge: function(){
+		return $( window ).height() - 58;
+	},
 	windowWidth: function(){
 		return $( window ).width();
 	},
@@ -26,6 +29,7 @@ window.g = {
 
 		var windowHeight = this.windowHeight();
 		var adjustedWindowHeight = this.adjustedWindowHeight();
+		var adjustedWindowHeightLarge = this.adjustedWindowHeightLarge();
 		var windowWidth = this.windowWidth();
 		var oneQuarterWidth = this.oneQuarterWidth();
 		var halfWidth = this.halfWidth();
@@ -68,6 +72,15 @@ window.g = {
 	    $(".dash-options").css("position", "absolute");
 	    $(".dash-options").css("top", "0px");
 	    $(".dash-options").css("left", windowWidth + oneQuarterWidth + "px");
+
+	    //flyout for multi-query support
+	    $(".dash-list-query-area").css("position", "absolute");
+	    $(".dash-list-query-area").css("z-index", "90000");
+	    $(".dash-list-query-area").css("height", adjustedWindowHeightLarge + "px");
+	    $(".dash-list-query-table-area").css("height", (adjustedWindowHeightLarge - 80) + "px")
+	    $(".dash-list-query-area").css("top", "57px");
+	    $(".dash-list-query-area").css("left", windowLargeWidth + "px");
+	    $(".dash-list-query-area").css("width", halfWidth + "px");
 
 	    //set width for header
 	    $('.left-action-buttons').css("width", halfWidth + "px");

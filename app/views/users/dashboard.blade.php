@@ -1,3 +1,45 @@
+<!--list query area chills here-->
+<div id="dash-list-query-area" class="dash-list-query-area" style="">
+  <div style="height:40px;background-color:#337ab7;">
+    <h5 style="color:white;padding-top:5px;" class="left-result-heading dash-heading-4 pull-left">
+      &nbsp;&nbsp;&nbsp;Results for Acreage Between 2 and 4 Acres
+    </h5>
+  <button class="btn btn-primary pull-right back-right-list-query" style="margin-right:10px;margin-top:3px;">
+    <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+  </button>
+  </div>
+  <div class="dash-list-query-table-area">
+    <div class="dash-list-query-table-area-list">
+    asdfasdfasdfasdfasdfa
+    </div>
+  </div>
+  <div style="height:40px;background-color:#337ab7;padding-left:10px;">
+    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
+      1
+    </a>
+    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
+      2
+    </a>
+    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
+      3
+    </a>
+    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
+      4
+    </a>
+    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
+      5
+    </a>
+    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
+      6
+    </a>
+    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
+      7
+    </a>
+    <h5 style="color:white;padding-top:5px;margin-right:10px;" class="left-result-heading dash-heading-4 pull-right">
+      &nbsp;&nbsp;&nbsp;Showing 1-100 of 2500 results
+    </h5>
+  </div>  
+</div>
 <!--top menu goes here-->
 <div class="options-area" style="margin-left:5px;margin-right:10px;">
   <h5 style="color:white;" class="left-result-heading dash-heading-4 pull-left">
@@ -414,9 +456,10 @@
   //create our jquery deferred object
   var deferedAddressLookup = $.Deferred();
 
-  function rightTemplateJson( searchType ){
+  function rightTemplateJson( searchType, numResults){
     var tempJson = {};
     tempJson.mapTime = timeNow();
+    tempJson.numResults = numResults;
     if ( searchType === 'latLng' ){
       tempJson.searchType = searchType;
       tempJson.mapLat = $('#latMap').val();
@@ -537,7 +580,7 @@
     source = $("#dash-right-template").html();
     rightDashTemplate = Handlebars.compile(source);
     //may get rid of this, but here we start with a marker
-    templateResult = rightDashTemplate(rightTemplateJson( 'latLng' ));
+    templateResult = rightDashTemplate(rightTemplateJson( 'latLng', 1 ));
     $('.dash-right-inter-margin').append(templateResult);
     $('.single-right-item:first').addClass('active-item-right');
 
@@ -554,8 +597,13 @@
       $(".dash-right-list").mCustomScrollbar({
         theme:"minimal"
       });
+
+      $(".dash-list-query-table-area-list").mCustomScrollbar({
+        theme:"minimal"
+      });
       
     });
+
 
     //print the left dash pain
     $(document).on('click', '#print-me', function(event) {
@@ -728,6 +776,32 @@
        }, 4000);
     });
 
+    window.showListQueryAreaWithResults = function(paginatedResults){
+      $( ".dash-list-query-area" ).animate({
+        left: window.g.halfWidth()
+      }, 400, function() {
+        console.log('paginatedResults');
+        console.log(paginatedResults);
+        var source = $("#dash-list-query-table-template").html();
+        var listQueryTemplate = Handlebars.compile(source);
+        var templateResult = listQueryTemplate({listData: paginatedResults});
+        $('.dash-list-query-table-area-list').html(templateResult);
+        
+      });
+    }
+
+    window.hideListQueryArea = function(){
+      $( ".dash-list-query-area" ).animate({
+        left: window.g.windowLargeWidth()
+      }, 400, function() {
+        $('.dash-left-inter-margin').slideDown('slow');
+          // Animation complete.
+      });
+    }
+
+    $(document).on('click', '.back-right-list-query', function(event) {
+      window.hideListQueryArea();
+    });
 
     function goBack(){
       $('.back-right').hide();
@@ -746,9 +820,9 @@
       window.g.communiqueClose();
     }
 
-    function populateRightMenuWithResults(linkMode){
+    window.populateRightMenuWithResults = function(linkMode, numResults){
       //start: populates right menu with correct data and highlights 
-      templateResult = rightDashTemplate(rightTemplateJson(linkMode));
+      templateResult = rightDashTemplate(rightTemplateJson(linkMode), numResults);
       $('.dash-right-inter-margin').prepend(templateResult);
       $( ".single-right-item" ).each(function() {
         $( this ).removeClass('active-item-right');
@@ -774,7 +848,7 @@
        
        window.gmd.interactMap.panToPosition('blueMarker', $('#latMap').val(), $('#lngMap').val() );
 
-       populateRightMenuWithResults('latLng');
+       //window.populateRightMenuWithResults('latLng');
        //goBack();
     });
 
@@ -792,25 +866,27 @@
       //window.gmd.interactMap.userQuery();
       var first = $('#acreage-between-1').val();
       var second = $('#acreage-between-2').val();
-      window.gmd.interactMap.multiQueryApplyToMap('acreage', { 'acreageFirst': first, 'acreageSecond': second }); 
 
-      populateRightMenuWithResults('acreage');
+      //type, params, shouldPopulateRightList, shouldPerformListQuery
+      window.gmd.interactMap.multiQueryApplyToMap('acreage', { 'acreageFirst': first, 'acreageSecond': second }, true, true); 
+
+      //window.populateRightMenuWithResults('acreage');
     });
 
     $(document).on('click', '#search-all-taxlots', function() {
       var mapTaxLot = $('#search-taxlot-field').val();
-      window.gmd.interactMap.multiQueryApplyToMap('taxlot', { 'mapTaxLotId': mapTaxLot }); 
+      window.gmd.interactMap.multiQueryApplyToMap('taxlot', { 'mapTaxLotId': mapTaxLot }, true, true); 
 
-      populateRightMenuWithResults('taxlot');
+      //window.populateRightMenuWithResults('taxlot');
     });
 
 
     $(document).on('click', '#search-all-owners', function() {
       //window.gmd.interactMap.userQuery();
       var owner = $('#search-owner').val();
-      window.gmd.interactMap.multiQueryApplyToMap('owner', { 'owner': owner }); 
+      window.gmd.interactMap.multiQueryApplyToMap('owner', { 'owner': owner }, true, true); 
 
-      populateRightMenuWithResults('owner');
+      //window.populateRightMenuWithResults('owner');
     });
 
     $(document).on('click', '#current-loc-click', function() {
@@ -818,7 +894,7 @@
        navigator.geolocation.getCurrentPosition(myLocationCallback);
     });
 
-    //this manages lat lng results on the right
+    //this manages ALL responses to Serach Results from Right column. 
     $(document).on('click', '.single-right-item', function(event) {
         var latMap = $(event.target).closest('table').attr('data-attr-lat');
         var lngMap = $(event.target).closest('table').attr('data-attr-lng');
@@ -843,7 +919,7 @@
        } else {
           window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson); 
        }*/
-       window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson);
+       window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson, false, true);
     });
 
 

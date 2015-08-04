@@ -114,13 +114,58 @@ window.gmd = {
 	       });
 
 		},
-		//not yet used but should be used for list view later
-		userQuery: function(sqlString){ 
-			var table = window.g.mapConfig.dashTableName;
+		//this calls back to dom
+		listTableQueryResultHandler: function(type, sqlString, data, count){
+			var sanitizedResults = [];
+			
+			$.each(data.rows, function( index, value ) {
+			  sanitizedResults.push(window.translations[window.g.mapConfig.countyNameConcat].translate(value));
+			});
+
+			window.showListQueryAreaWithResults(sanitizedResults);
+			console.log('sanitizedResults');
+			console.log(sanitizedResults);
+		},
+
+		listLimitedQuery: function(type, sqlString, count){ 
+			thisHeld = this;
+			//var table = window.g.mapConfig.dashTableName;
 			//window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
-			window.gmd.cartoSqlConfig.execute(sqlString)
+			countSqlString = "SELECT *" + sqlString;
+			window.gmd.cartoSqlConfig.execute(countSqlString)
 			  .done(function(data) {
+			  	console.log('BIG FAT RESULTS');
 			    console.log(data.rows);
+			    thisHeld.listTableQueryResultHandler(type, sqlString, data, count);
+			  })
+			  .error(function(errors) {
+			    // errors contains a list of errors
+			    console.log("errors:" + errors);
+			  });
+		},
+		listCountQueryResultHandler: function(type, sqlString, listCountQueryResult, shouldPopulateRightMenu, shouldPerformListQuery){
+			
+			var count = listCountQueryResult.rows[0].count;
+			if (listCountQueryResult.total_rows === 0 ){
+				alert('no results found');
+			} else if (shouldPopulateRightMenu) {
+				//populates our right menu, and passes in count 
+				window.populateRightMenuWithResults(type, count);
+			} else if(shouldPerformListQuery) {
+				this.listLimitedQuery(type, sqlString, count);
+			}
+			
+		},
+
+		listCountQuery: function(type, sqlString, shouldPopulateRightMenu, shouldPerformListQuery){ 
+			thisHeld = this;
+			//var table = window.g.mapConfig.dashTableName;
+			//window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
+			countSqlString = "SELECT COUNT(*)" + sqlString;
+			window.gmd.cartoSqlConfig.execute(countSqlString)
+			  .done(function(data) {
+			    //console.log(data.rows);
+			    thisHeld.listCountQueryResultHandler(type, sqlString, data, shouldPopulateRightMenu, shouldPerformListQuery);
 			  })
 			  .error(function(errors) {
 			    // errors contains a list of errors
@@ -132,28 +177,28 @@ window.gmd = {
 			if (type == 'owner'){
 				var userColumn = window.translations[window.g.mapConfig.countyNameConcat]['nameColumn'];
 				//select * from table where value  like any (array['%foo%', '%bar%', '%baz%']);
-				var sql = "SELECT * FROM devtest." + table + " WHERE " + userColumn + " ILIKE '%" + params.owner + "%'";
+				var sql = " FROM devtest." + table + " WHERE " + userColumn + " ILIKE '%" + params.owner + "%'";
 				return sql;
 			} else if (type == 'acreage'){
 				var acreageColumn = window.translations[window.g.mapConfig.countyNameConcat]['acreageColumn'];
-				var sql = "SELECT * FROM devtest." + table + " WHERE " + acreageColumn + " BETWEEN " + params.acreageFirst + " AND " + params.acreageSecond;
+				var sql = " FROM devtest." + table + " WHERE " + acreageColumn + " BETWEEN " + params.acreageFirst + " AND " + params.acreageSecond;
 				console.log(sql);
 				return sql;
 			} else if (type == 'taxlot'){
 				var mapTaxLotColumn = window.translations[window.g.mapConfig.countyNameConcat]['mapTaxLotColumn'];
 				//add quotes to fix issue, consider CAST to string for column
-				var sql = "SELECT * FROM devtest." + table + " WHERE " + mapTaxLotColumn + " = " + params.mapTaxLotId;
+				var sql = " FROM devtest." + table + " WHERE " + mapTaxLotColumn + " = " + params.mapTaxLotId;
 				console.log(sql);
 				return sql;
 			} else if (type === 'latLng'){
-				var sql = "SELECT * FROM devtest." + table + " WHERE ST_Contains(the_geom, ST_GeomFromText('POINT(" + params.mapLat + " " + params.mapLng + ")', 4326)";
+				var sql = " FROM devtest." + table + " WHERE ST_Contains(the_geom, ST_GeomFromText('POINT(" + params.mapLat + " " + params.mapLng + ")', 4326)";
 				return sql;
 			}
 
 		},
 		//this calls the function above it to build our query
 		//handle sql count and multi result vs single result here
-		multiQueryApplyToMap: function(type, params){
+		multiQueryApplyToMap: function(type, params, shouldPopulateRightMenu, shouldPerformListQuery){
 
 			//if the layer exists, nuke the old results
 			if (window.layerOwnerResults){
@@ -161,19 +206,22 @@ window.gmd = {
 			}
 		
 			var sql = this.multiResultQueryBuilder(type, params);
+			var sqlAsSelect = "SELECT *" + sql; 
 	
-			var boundingBox = this.queryAndPanToBounds(window.map, sql);
+			var boundingBox = this.queryAndPanToBounds(window.map, sqlAsSelect);
 			//view-source:http://andrew.hedges.name/experiments/haversine/
 
 	    	var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.0; line-color: #8a0002; line-width: 4; line-opacity: 1;}'
-			var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
+			var LayerConfig = window.gmd.cartoLayerConfig(sqlAsSelect, styles);
 			var thisHeld = this;
 			cartodb.createLayer(window.map, LayerConfig)
 	         .addTo(window.map)
 	         .on('done', function(layer) {
 	         	window.layerOwnerResults = layer;
 				//query data results owner
-				thisHeld.userQuery(sql);	  
+				if (shouldPerformListQuery){
+					thisHeld.listCountQuery(type, sql, shouldPopulateRightMenu, shouldPerformListQuery);
+				}	  
 
 	          }).on('error', function() {
 	            console.log("some error occurred");
