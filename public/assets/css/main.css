@@ -399,6 +399,18 @@ border-bottom: 0px solid #e5e5e5;
 	display:none;
 }
 
+.arrow-left {
+	width: 0; 
+	height: 0; 
+	border-top: 30px solid transparent;
+	border-bottom: 30px solid transparent; 
+	border-right:30px solid #337ab7; 
+	z-index:9999999999;
+  	top: 50px;
+  	left: 999px;
+  	position: absolute;
+}
+
 /*bootstrap overrides */
 @media print {
   *,
@@ -425,6 +437,20 @@ border-bottom: 0px solid #e5e5e5;
     content: "";
   }
 }
+
+.pagination {
+  display: inline; 
+  padding-left: 0;
+  margin: 0px 0; 
+  border-radius: 4px;
+}
+
+.pagination ul {
+  margin-top: 0;
+  margin-bottom: 0px; 
+}
+
+
 
 
 

@@ -30,7 +30,7 @@
 <script id="dash-list-query-table-template" type="text/x-handlebars-template">
     <table style="width:100%;padding-bottom:15px;">
         @{{#listData}} 
-        <tr class="query-table-row">
+        <tr class="query-table-row" data-result-index="@{{@index}}">
             <td style="padding-left:10px;width:25%;">
                 <span class="just-custom-font">
                     total value:

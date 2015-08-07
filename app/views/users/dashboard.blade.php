@@ -1,7 +1,8 @@
+<div class="arrow-left"></div>
 <!--list query area chills here-->
 <div id="dash-list-query-area" class="dash-list-query-area" style="">
   <div style="height:40px;background-color:#337ab7;">
-    <h5 style="color:white;padding-top:5px;" class="left-result-heading dash-heading-4 pull-left">
+    <h5 style="color:white;padding-top:5px;padding-left:10px;" class="paginatedTitleHolder left-result-heading dash-heading-4 pull-left">
       &nbsp;&nbsp;&nbsp;Results for Acreage Between 2 and 4 Acres
     </h5>
   <button class="btn btn-primary pull-right back-right-list-query" style="margin-right:10px;margin-top:3px;">
@@ -13,29 +14,9 @@
     asdfasdfasdfasdfasdfa
     </div>
   </div>
-  <div style="height:40px;background-color:#337ab7;padding-left:10px;">
-    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
-      1
-    </a>
-    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
-      2
-    </a>
-    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
-      3
-    </a>
-    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
-      4
-    </a>
-    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
-      5
-    </a>
-    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
-      6
-    </a>
-    <a class="btn btn-primary pull-left" style="margin-right:2px;margin-top:3px;">
-      7
-    </a>
-    <h5 style="color:white;padding-top:5px;margin-right:10px;" class="left-result-heading dash-heading-4 pull-right">
+  <div style="height:40px;background-color:#337ab7;padding:5px 0px 5px 10px;">
+    <ul id="pagination" class="pagination-sm"></ul>
+    <h5 style="color:white;margin-right:10px;" class="left-result-heading dash-heading-4 pull-right">
       &nbsp;&nbsp;&nbsp;Showing 1-100 of 2500 results
     </h5>
   </div>  
@@ -424,6 +405,7 @@
 <script src="{{ URL::asset('dist/js/bootstrap.min.js') }}"></script>
 <script src="{{ URL::asset('dist/js/handlebars-v2.0.0.js') }}"></script>
 <script src="{{ URL::asset('dist/js/jQuery.print.js') }}"></script>
+<script src="{{ URL::asset('dist/js/jQuery.pagination.js') }}"></script>
 <script src="{{ URL::asset('dist/js/moment.js') }}"></script>
 
 <script src="{{ URL::asset('assets/jsModels/avatarDashboardModel.js') }}"></script>
@@ -598,7 +580,7 @@
         theme:"minimal"
       });
 
-      $(".dash-list-query-table-area-list").mCustomScrollbar({
+      $(".dash-list-query-table-area").mCustomScrollbar({
         theme:"minimal"
       });
       
@@ -776,16 +758,45 @@
        }, 4000);
     });
 
+    //activate pagination
+    window.activatePagination = function(count, resultsPerPage){
+      var totalPages = Math.floor(count / resultsPerPage);
+      if (totalPages < 1){
+        totalPages = 1;
+      }
+      
+      var pageData = $('#pagination').data();
+      console.log(pageData);
+      if ( !jQuery.isEmptyObject(pageData) ){
+          $('#pagination').twbsPagination('destroy'); 
+      } 
+
+      $('#pagination').twbsPagination({
+          totalPages: totalPages,
+          visiblePages: 5,
+          startPage: 1,
+          loop: true,
+          onPageClick: function (event, page) {
+            window.gmd.paginatedResultsData.currentOffset = window.gmd.paginatedResultsData.resultsPerPage * page;
+            window.gmd.interactMap.listLimitedQuery(null, window.gmd.paginatedResultsData.sqlString, null);
+          }
+      });
+    }
+
     window.showListQueryAreaWithResults = function(paginatedResults){
       $( ".dash-list-query-area" ).animate({
         left: window.g.halfWidth()
       }, 400, function() {
         console.log('paginatedResults');
         console.log(paginatedResults);
+        //compile result into template
         var source = $("#dash-list-query-table-template").html();
         var listQueryTemplate = Handlebars.compile(source);
         var templateResult = listQueryTemplate({listData: paginatedResults});
         $('.dash-list-query-table-area-list').html(templateResult);
+        //update query title 
+        var title = window.gmd.paginatedResultsData.totalResultCount + " " + window.gmd.paginatedResultsData.readableQueryTitle;
+        $('.paginatedTitleHolder').html(title);
         
       });
     }
@@ -878,6 +889,34 @@
       window.gmd.interactMap.multiQueryApplyToMap('taxlot', { 'mapTaxLotId': mapTaxLot }, true, true); 
 
       //window.populateRightMenuWithResults('taxlot');
+    });
+
+    function moveSelectionLeftArrow(domElementToMatch){
+      var x = $(domElementToMatch).offset().left;
+      var y = $(domElementToMatch).offset().top;
+      var h = $(domElementToMatch).height();
+      var h2 = (h * .5);
+      $('.arrow-left').css('left', (x - h2 +1) + 'px');
+      $('.arrow-left').css('top', y + 'px');
+      $('.arrow-left').css('border-top', h2 + 'px solid transparent');
+      $('.arrow-left').css('border-bottom', h2 + 'px solid transparent');
+      $('.arrow-left').css('border-right', h2 + 'px solid #337ab7');
+    }
+
+    //this handles tr clicks for our list flyout menu
+    $(document).on('click', '.query-table-row', function() {
+      //used for grabbing our last result set index
+      var resultIndex = $(event.target).closest('tr').attr('data-result-index');
+      console.log('resultIndex', resultIndex);
+      var resultQueryData = window.paginatedResults[resultIndex].queryVal;
+      console.log(resultQueryData);
+      window.gmd.interactMap.multiQueryApplyToMap('custom', resultQueryData, false, false);
+      
+      moveSelectionLeftArrow($(event.target).closest('tr'));
+      $( ".query-table-row" ).each(function() {
+        $( this ).removeClass('active-query-table-row');
+      });
+      $(event.target).closest('tr').addClass('active-query-table-row');
     });
 
 

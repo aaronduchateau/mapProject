@@ -33,6 +33,16 @@ window.gmd = {
 	  	return layerConfig;
 
 	},
+	paginatedResultsData: {
+		readableQueryTitle: "Showing Results X in y",
+		sqlString: "Select * FROM x",
+		totalPages: 15,
+		visiblePages: 5,
+		totalResultCount: 0,
+		currentPage: 1,
+		resultsPerPage: 50,
+		currentOffset: 0
+	},
 	interactMap: {
 		panToPosition: function(iconType, latMap, lngMap){
 			/*
@@ -122,6 +132,7 @@ window.gmd = {
 			  sanitizedResults.push(window.translations[window.g.mapConfig.countyNameConcat].translate(value));
 			});
 
+			window.paginatedResults = sanitizedResults;
 			window.showListQueryAreaWithResults(sanitizedResults);
 			console.log('sanitizedResults');
 			console.log(sanitizedResults);
@@ -131,7 +142,9 @@ window.gmd = {
 			thisHeld = this;
 			//var table = window.g.mapConfig.dashTableName;
 			//window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
-			countSqlString = "SELECT *" + sqlString;
+			var limit = window.gmd.paginatedResultsData.resultsPerPage;
+			var offset = (window.gmd.paginatedResultsData.currentOffset === 0) ? 0 : (window.gmd.paginatedResultsData.currentOffset -1);
+			countSqlString = "SELECT *" + sqlString + " LIMIT " + limit + " OFFSET " + offset;
 			window.gmd.cartoSqlConfig.execute(countSqlString)
 			  .done(function(data) {
 			  	console.log('BIG FAT RESULTS');
@@ -146,6 +159,9 @@ window.gmd = {
 		listCountQueryResultHandler: function(type, sqlString, listCountQueryResult, shouldPopulateRightMenu, shouldPerformListQuery){
 			
 			var count = listCountQueryResult.rows[0].count;
+			window.gmd.paginatedResultsData.totalResultCount = count;
+			window.gmd.paginatedResultsData.currentOffset = 0;
+			window.activatePagination(count, window.gmd.paginatedResultsData.resultsPerPage);
 			if (listCountQueryResult.total_rows === 0 ){
 				alert('no results found');
 			} else if (shouldPopulateRightMenu) {
@@ -177,21 +193,37 @@ window.gmd = {
 			if (type == 'owner'){
 				var userColumn = window.translations[window.g.mapConfig.countyNameConcat]['nameColumn'];
 				//select * from table where value  like any (array['%foo%', '%bar%', '%baz%']);
+				window.gmd.paginatedResultsData.readableQueryTitle = "Results with owner name like '" + params.owner +"'";
 				var sql = " FROM devtest." + table + " WHERE " + userColumn + " ILIKE '%" + params.owner + "%'";
+				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type == 'acreage'){
 				var acreageColumn = window.translations[window.g.mapConfig.countyNameConcat]['acreageColumn'];
+
+				window.gmd.paginatedResultsData.readableQueryTitle = "Results between " + params.acreageFirst + " and " + params.acreageSecond + " acres";
 				var sql = " FROM devtest." + table + " WHERE " + acreageColumn + " BETWEEN " + params.acreageFirst + " AND " + params.acreageSecond;
-				console.log(sql);
+				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type == 'taxlot'){
 				var mapTaxLotColumn = window.translations[window.g.mapConfig.countyNameConcat]['mapTaxLotColumn'];
-				//add quotes to fix issue, consider CAST to string for column
+				
+				window.gmd.paginatedResultsData.readableQueryTitle = "Results where Assesor Parcel Number = '" + params.mapTaxLotId + "'";
 				var sql = " FROM devtest." + table + " WHERE " + mapTaxLotColumn + " = " + params.mapTaxLotId;
-				console.log(sql);
+				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'latLng'){
+
+				window.gmd.paginatedResultsData.readableQueryTitle = "Results for Lat & Lng at '" + params.mapTaxLotId + "' " + params.mapLat + "'" + params.mapLng + "'";
 				var sql = " FROM devtest." + table + " WHERE ST_Contains(the_geom, ST_GeomFromText('POINT(" + params.mapLat + " " + params.mapLng + ")', 4326)";
+				window.gmd.paginatedResultsData.sqlString = sql;
+				return sql;
+			} else if (type === 'custom'){
+				if (params.type === 'string'){
+		        	var customAccountString = params.name + " = '" + params.val + "'";
+		    	} else if (params.type === 'number'){
+		    		var customAccountString = params.name + " = " + params.val;
+		    	}
+				var sql = " FROM devtest." + table + " WHERE " + customAccountString;
 				return sql;
 			}
 
