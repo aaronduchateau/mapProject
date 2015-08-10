@@ -50,16 +50,27 @@ window.g = {
 	    $(".dash-right-list").css("width", oneQuarterWidth + "px");
 	    $(".dash-options").css("width", oneQuarterWidth + "px");
 
-	    $(".dash-left-inter-margin").css("margin-left", oneQuarterWidth + "px");
-
 	    $(".dash-left-list").css("height", adjustedWindowHeight + "px");
 	    $(".dash-center").css("height", adjustedWindowHeight + "px");
 	    $(".dash-right-list").css("height", adjustedWindowHeight + "px");
+	    $(".dash-options").css("height", adjustedWindowHeight + "px");
+	    $(".dash-search-options").css("height", (adjustedWindowHeight - 40) + "px");
+
+	    //special handling for this guy
+	    $(".dash-left-inter-margin").css("margin-left", "0px");
+	    $(".dash-left-inter-margin").css("width", oneQuarterWidth + "px");
+
+	    //also this guy
+	    $(".dash-search-controls").css("top", (adjustedWindowHeight - 40) + "px");
+	    $(".dash-search-controls").css("width", oneQuarterWidth + "px");
+
+	    //width for serach top action items
+	    $("#search-top-action-holder").css("width", oneQuarterWidth + "px");
 
 	    //absolute positioning for elements
 	    $(".dash-left-list").css("position", "absolute");
 	    $(".dash-left-list").css("top", "0px");
-	    $(".dash-left-list").css("left", "0px");
+	    $(".dash-left-list").css("left", windowWidth + "px");
 
 	    $(".dash-center").css("position", "absolute");
 	    $(".dash-center").css("top", "0px");
@@ -67,11 +78,11 @@ window.g = {
 
 	    $(".dash-right-list").css("position", "absolute");
 	    $(".dash-right-list").css("top", "0px");
-	    $(".dash-right-list").css("left", windowWidth + "px");
+	    $(".dash-right-list").css("left", oneQuarterWidth + "px");
 
 	    $(".dash-options").css("position", "absolute");
 	    $(".dash-options").css("top", "0px");
-	    $(".dash-options").css("left", windowWidth + oneQuarterWidth + "px");
+	    $(".dash-options").css("left", "0px");
 
 	    //flyout for multi-query support
 	    $(".dash-list-query-area").css("position", "absolute");

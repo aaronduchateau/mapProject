@@ -41,7 +41,8 @@ window.gmd = {
 		totalResultCount: 0,
 		currentPage: 1,
 		resultsPerPage: 50,
-		currentOffset: 0
+		currentOffset: 0,
+		shouldShowListResults: false
 	},
 	interactMap: {
 		panToPosition: function(iconType, latMap, lngMap){
@@ -162,6 +163,7 @@ window.gmd = {
 			window.gmd.paginatedResultsData.totalResultCount = count;
 			window.gmd.paginatedResultsData.currentOffset = 0;
 			window.activatePagination(count, window.gmd.paginatedResultsData.resultsPerPage);
+			console.log('shouldPopulateRightMenu', shouldPopulateRightMenu);
 			if (listCountQueryResult.total_rows === 0 ){
 				alert('no results found');
 			} else if (shouldPopulateRightMenu) {
@@ -174,6 +176,8 @@ window.gmd = {
 		},
 
 		listCountQuery: function(type, sqlString, shouldPopulateRightMenu, shouldPerformListQuery){ 
+			alert('in list count');
+			console.log('lq-shouldPopulateRightMenu', shouldPopulateRightMenu);
 			thisHeld = this;
 			//var table = window.g.mapConfig.dashTableName;
 			//window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
@@ -251,9 +255,12 @@ window.gmd = {
 	         .on('done', function(layer) {
 	         	window.layerOwnerResults = layer;
 				//query data results owner
-				if (shouldPerformListQuery){
+				//alert(shouldPopulateRightMenu);
+				//if (shouldPerformListQuery){
+				//if(shouldPopulateRightMenu){	
+					//alert(shouldPopulateRightMenu);
 					thisHeld.listCountQuery(type, sql, shouldPopulateRightMenu, shouldPerformListQuery);
-				}	  
+				//}	  
 
 	          }).on('error', function() {
 	            console.log("some error occurred");
@@ -510,12 +517,14 @@ window.gmd = {
 
 	    setTimeout(function(){
 	    	window.map = L.map('map-canvas', { 
-	          zoomControl: true,
+	          zoomControl: false,
 	          center: new L.LatLng(latMap, lngMap),
 	          zoom: 16,
 	          infoWindow: true,
 	          attributionControl: false
 	        });
+
+	        new L.Control.Zoom({ position: 'topright' }).addTo(map);
 
 	        //var ggl2 = new L.Google('TERRAIN');
 	        var ggl2 = new L.Google('HYBRID');

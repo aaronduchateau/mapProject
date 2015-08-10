@@ -214,7 +214,7 @@ border-bottom: 0px solid #e5e5e5;
 }
 
 .options-inter-margin{
-	margin:10px;
+	margin: 0px 10px 10px 10px;
 }
 
 .options-inter-margin input{
@@ -268,6 +268,18 @@ border-bottom: 0px solid #e5e5e5;
 	background-color: rgb(51, 122, 183);
 	padding-top: 5px;
 	padding-bottom:5px;
+}
+
+.custom-well-info-dark-blue {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-left: 1px;
+  margin-right: 1px;
+  border: 0px;
+  color: white;
+  background-color: #0d6a92;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .left-action-buttons-title{

@@ -23,10 +23,10 @@
 </div>
 <!--top menu goes here-->
 <div class="options-area" style="margin-left:5px;margin-right:10px;">
-  <h5 style="color:white;" class="left-result-heading dash-heading-4 pull-left">
+  <h5 style="color:white;margin-right:10px;" class="left-result-heading dash-heading-4 pull-right">
     &nbsp;&nbsp;&nbsp;Welcome! you are viewing taxlot data for <span id="county-label"></span>, <span id="state-label"></span>
   </h5>
-  <div class="pull-left left-action-buttons" style="display:none;">
+  <div class="pull-right left-action-buttons" style="display:none;">
     <span class="left-action-buttons-title">
       <input type="checkbox" class="letter-toggle" value="1" checked>
     </span>
@@ -60,15 +60,17 @@
       <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
     </a>-->
   </div>
-  <button id="config" class="btn btn-primary pull-right" style="margin-right:10px;">
-    <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 
-  </button>
-  <button class="btn btn-primary pull-right back-right" style="margin-right:10px;display:none;">
-    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-  </button>
-   <button id="current-loc-click" class="btn btn-primary pull-right" style="margin-right:10px;">
-    <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
-  </button>
+  <span id="search-top-action-holder" class="pull-left">
+    <button id="config" class="btn btn-primary pull-left" style="margin-left:5px;">
+      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 
+    </button>
+    <button class="btn btn-primary pull-left back-right" style="margin-left:5px;display:none;">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    </button>
+    <span class="right-switch-detail-results-holder pull-right" style="margin-right:15px;margin-top:5px;display:none;">
+      <input type="checkbox" class="toggle-list-mode" value="1" checked>
+    </span>
+  </span>
 </div>
 <div class="container-dash">
   <div class="dash-left-list" style="background-color:rgba(13,106,146,0.9);">
@@ -91,252 +93,264 @@
     </div>
   </div>
   <div class="dash-options" style="background-color:rgba(13,106,146,0.0);">
-    <div class="search-dropdown-holder">
-      <div class="search-dropdown-nested-holder">
-        <div class="dropdown">
-          Search by:&nbsp;
-          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-            <span id="search-but-label-shown">Address</span>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation"><a class="dropdown-search-selection" data-action="address-div" role="menuitem" tabindex="-1" href="#">Address</a></li>
-            <li role="presentation"><a class="dropdown-search-selection" data-action="owner-div" role="menuitem" tabindex="-1" href="#">Owner</a></li>
-            <li role="presentation"><a class="dropdown-search-selection" data-action="latLon-div" role="menuitem" tabindex="-1" href="#">Lat and lon</a></li>
-            <li role="presentation"><a class="dropdown-search-selection" data-action="acreage-div" role="menuitem" tabindex="-1" href="#">Acreage</a></li>
-            <li role="presentation"><a class="dropdown-search-selection" data-action="taxlot-div" role="menuitem" tabindex="-1" href="#">Taxlot id</a></li>
-          </ul>
-        </div>
-      </div>
-      <div style="clear:both"></div>
-    </div>
-    <div class="options-inter-margin" style="display:none;">
-      <!--content-->
-      <form role="form">
-        <!--<div class="form-group">
-          <label for="exampleInputEmail1">Search by Keyword:</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Filter by Keywords">
-        </div>-->
-        <div class="form-group">
-          <div class="search-field-holder latLon-div" style="display:none;">
-            <label for="exampleInputEmail1">Search by Lat & Long:</label>
-            <input type="text" class="form-control" id="lngMap" placeholder="longitude" value="-122.877734">
-            <input type="text" class="form-control" id="latMap" placeholder="lattitude" value="42.320921">
-            <a href="javascript:void(0);" id="search-click"class="btn btn-default" >Search</a>
-          </div>
-          <div class="search-field-holder address-div">
-            <label for="exampleInputEmail1">Search Location:</label>
-            <input type="text" class="form-control" placeholder="Address" id="search-address">
-            <input type="text" class="form-control" placeholder="City" id="search-city">
-            <input type="text" class="form-control" placeholder="State" id="search-state">
-            <input type="text" class="form-control" placeholder="Zip" id="search-zip">
-            <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-            <a href="javascript:void(0);" class="btn btn-default" id="search-all-address">Search By Address</a>
-          </div>
-
-          <div class="search-field-holder owner-div" style="display:none;">
-            <label for="exampleInputEmail1">Search By Owner:</label>
-            <input type="text" class="form-control" placeholder="Full Ownner Name" id="search-owner">
-
-            <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-            <a href="javascript:void(0);" class="btn btn-default" id="search-all-owners">Search</a>
-          </div>
-
-          <div class="search-field-holder acreage-div" style="display:none;">
-            <label for="exampleInputEmail1">Search Between Acreage:</label>
-            <select id="acreage-between-1" class="form-control">
-              <option value=".01">.01 acres</option>
-              <option value=".02">.02 acres</option>
-              <option value=".03">.03 acres</option>
-              <option value=".04">.04 acres</option>
-              <option value=".05">.05 acres</option>
-              <option value=".06">.06 acres</option>
-              <option value=".07">.07 acres</option>
-              <option value=".08">.08 acres</option>
-              <option value=".09">.09 acres</option>
-              <option value="1">.1 acres</option>
-              <option value="1.5">1.5 acres</option>
-              <option value="2">2 acres</option>
-              <option value="2.5">2.5 acres</option>
-              <option value="3">3 acres</option>
-              <option value="3.5">3.5 acres</option>
-              <option value="4">4 acres</option>
-              <option value="5">5 acres</option>
-              <option value="6">6 acres</option>
-              <option value="7">7 acres</option>
-              <option value="8">8 acres</option>
-              <option value="9">9 acres</option>
-              <option value="10">10 acres</option>
-              <option value="15">15 acres</option>
-              <option value="20">20 acres</option>
-              <option value="25">25 acres</option>
-              <option value="30">30 acres</option>
-              <option value="40">40 acres</option>
-              <option value="50">50 acres</option>
-              <option value="60">60 acres</option>
-              <option value="70">70 acres</option>
-              <option value="80">80 acres</option>
-              <option value="90">90 acres</option>
-              <option value="100">100 acres</option>
-              <option value="130">130 acres</option>
-              <option value="160">160 acres</option>
-              <option value="190">190 acres</option>
-              <option value="200">200 acres</option>
-              <option value="225">225 acres</option>
-              <option value="250">250 acres</option>
-              <option value="275">275 acres</option>
-              <option value="300">300 acres</option>
-              <option value="325">325 acres</option>
-              <option value="350">350 acres</option>
-              <option value="375">375 acres</option>
-              <option value="400">400 acres</option>
-              <option value="425">425 acres</option>
-              <option value="450">450 acres</option>
-              <option value="475">475 acres</option>
-              <option value="500">500 acres</option>
-              <option value="525">525 acres</option>
-              <option value="550">550 acres</option>
-              <option value="575">575 acres</option>
-              <option value="600">600 acres</option>
-              <option value="625">625 acres</option>
-              <option value="650">650 acres</option>
-              <option value="675">675 acres</option>
-              <option value="700">700 acres</option>
-              <option value="750">750 acres</option>
-              <option value="800">800 acres</option>
-              <option value="850">850 acres</option>
-              <option value="900">900 acres</option>
-              <option value="950">950 acres</option>
-              <option value="1000">1000 acres</option>
-              <option value="1500">1500 acres</option>
-              <option value="2000">2000 acres</option>
-              <option value="2500">2500 acres</option>
-              <option value="3000">3000 acres</option>
-              <option value="3500">3500 acres</option>
-              <option value="4000">4000 acres</option>
-              <option value="4500">4500 acres</option>
-              <option value="5000">5000 acres</option>
-              <option value="10000">10000 acres</option>
-              <option value="20000">20000 acres</option>
-              <option value="30000">30000 acres</option>
-              <option value="40000">40000 acres</option>
-            </select>
-            <select id="acreage-between-2" class="form-control">
-              <option value=".01">.01 acres</option>
-              <option value=".02" selected="selected">.02 acres</option>
-              <option value=".03">.03 acres</option>
-              <option value=".04">.04 acres</option>
-              <option value=".05">.05 acres</option>
-              <option value=".06">.06 acres</option>
-              <option value=".07">.07 acres</option>
-              <option value=".08">.08 acres</option>
-              <option value=".09">.09 acres</option>
-              <option value="1">.1 acres</option>
-              <option value="1.5">1.5 acres</option>
-              <option value="2">2 acres</option>
-              <option value="2.5">2.5 acres</option>
-              <option value="3">3 acres</option>
-              <option value="3.5">3.5 acres</option>
-              <option value="4">4 acres</option>
-              <option value="5">5 acres</option>
-              <option value="6">6 acres</option>
-              <option value="7">7 acres</option>
-              <option value="8">8 acres</option>
-              <option value="9">9 acres</option>
-              <option value="10">10 acres</option>
-              <option value="15">15 acres</option>
-              <option value="20">20 acres</option>
-              <option value="25">25 acres</option>
-              <option value="30">30 acres</option>
-              <option value="40">40 acres</option>
-              <option value="50">50 acres</option>
-              <option value="60">60 acres</option>
-              <option value="70">70 acres</option>
-              <option value="80">80 acres</option>
-              <option value="90">90 acres</option>
-              <option value="100">100 acres</option>
-              <option value="130">130 acres</option>
-              <option value="160">160 acres</option>
-              <option value="190">190 acres</option>
-              <option value="200">200 acres</option>
-              <option value="225">225 acres</option>
-              <option value="250">250 acres</option>
-              <option value="275">275 acres</option>
-              <option value="300">300 acres</option>
-              <option value="325">325 acres</option>
-              <option value="350">350 acres</option>
-              <option value="375">375 acres</option>
-              <option value="400">400 acres</option>
-              <option value="425">425 acres</option>
-              <option value="450">450 acres</option>
-              <option value="475">475 acres</option>
-              <option value="500">500 acres</option>
-              <option value="525">525 acres</option>
-              <option value="550">550 acres</option>
-              <option value="575">575 acres</option>
-              <option value="600">600 acres</option>
-              <option value="625">625 acres</option>
-              <option value="650">650 acres</option>
-              <option value="675">675 acres</option>
-              <option value="700">700 acres</option>
-              <option value="750">750 acres</option>
-              <option value="800">800 acres</option>
-              <option value="850">850 acres</option>
-              <option value="900">900 acres</option>
-              <option value="950">950 acres</option>
-              <option value="1000">1000 acres</option>
-              <option value="1500">1500 acres</option>
-              <option value="2000">2000 acres</option>
-              <option value="2500">2500 acres</option>
-              <option value="3000">3000 acres</option>
-              <option value="3500">3500 acres</option>
-              <option value="4000">4000 acres</option>
-              <option value="4500">4500 acres</option>
-              <option value="5000">5000 acres</option>
-              <option value="10000">10000 acres</option>
-              <option value="20000">20000 acres</option>
-              <option value="30000">30000 acres</option>
-              <option value="40000">40000 acres</option>
-            </select>
-
-            <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-            <a href="javascript:void(0);" class="btn btn-default" id="search-all-acreage">Search</a>
-          </div>
-
-          <div class="search-field-holder taxlot-div" style="display:none;">
-            <label for="exampleInputEmail1">Search By Map Taxlot #:</label>
-            <input type="text" class="form-control" placeholder="Taxlot number" id="search-taxlot-field">
-
-            <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-            <a href="javascript:void(0);" class="btn btn-default" id="search-all-taxlots">Search</a>
+    <div class="dash-search-options">
+      <!--<div class="search-dropdown-holder">
+        <div class="search-dropdown-nested-holder">
+          <div class="dropdown">
+            Search by:&nbsp;
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+              <span id="search-but-label-shown">Address</span>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation"><a class="dropdown-search-selection" data-action="address-div" role="menuitem" tabindex="-1" href="#">Address</a></li>
+              <li role="presentation"><a class="dropdown-search-selection" data-action="owner-div" role="menuitem" tabindex="-1" href="#">Owner</a></li>
+              <li role="presentation"><a class="dropdown-search-selection" data-action="latLon-div" role="menuitem" tabindex="-1" href="#">Lat and lon</a></li>
+              <li role="presentation"><a class="dropdown-search-selection" data-action="acreage-div" role="menuitem" tabindex="-1" href="#">Acreage</a></li>
+              <li role="presentation"><a class="dropdown-search-selection" data-action="taxlot-div" role="menuitem" tabindex="-1" href="#">Taxlot id</a></li>
+            </ul>
           </div>
         </div>
-        <!--<div class="form-group">
-           <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                filter within 50 miles
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">10 miles</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">25 miles</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">50 miles</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">75 miles</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">100 miles</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">200 miles</a></li>
-              </ul>
+        <div style="clear:both"></div>
+      </div>-->
+      <div class="options-inter-margin" style="display:none;">
+        <!--content-->
+        <form role="form">
+          <!--<div class="form-group">
+            <label for="exampleInputEmail1">Search by Keyword:</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Filter by Keywords">
+          </div>-->
+          <div class="form-group">
+            <!--Search By Owner-->
+            <div class="search-field-holder owner-div well custom-well-info-dark-blue" style="margin-top:0px;">
+              <!--<label for="exampleInputEmail1">Search By Owner:</label>-->
+              <input type="text" class="form-control" placeholder="Full Owner Name" id="search-owner">
+
+              <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
+              <a href="javascript:void(0);" class="btn btn-default" id="search-all-owners">Search</a>
             </div>
-        </div>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Day Range:</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Start Date:">
-          <input type="text" class="form-control" id="exampleInputPassword1" placeholder="End Date:">
-        </div>
-        <button type="submit" class="btn btn-default">Update Search Results</button>
-      </form>-->
-      <!--content-->
+            <!--Search Location-->
+            <div class="search-field-holder address-div well custom-well-info-dark-blue">
+              <!--<label for="exampleInputEmail1">Search Location:</label>-->
+              <input type="text" class="form-control" placeholder="Address" id="search-address">
+              <input type="text" class="form-control" placeholder="City" id="search-city">
+              <input type="text" class="form-control" placeholder="State" id="search-state">
+              <input type="text" class="form-control" placeholder="Zip" id="search-zip">
+              <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
+              <a href="javascript:void(0);" class="btn btn-default" id="search-all-address">Search</a>
+            </div>
+            <!--Search Between Acreage-->
+            <div class="search-field-holder acreage-div well custom-well-info-dark-blue">
+              <!--<label for="exampleInputEmail1">Search Between Acreage:</label>-->
+              <select id="acreage-between-1" class="form-control">
+                <option value=".01">.01 acres</option>
+                <option value=".02">.02 acres</option>
+                <option value=".03">.03 acres</option>
+                <option value=".04">.04 acres</option>
+                <option value=".05">.05 acres</option>
+                <option value=".06">.06 acres</option>
+                <option value=".07">.07 acres</option>
+                <option value=".08">.08 acres</option>
+                <option value=".09">.09 acres</option>
+                <option value="1">.1 acres</option>
+                <option value="1.5">1.5 acres</option>
+                <option value="2">2 acres</option>
+                <option value="2.5">2.5 acres</option>
+                <option value="3">3 acres</option>
+                <option value="3.5">3.5 acres</option>
+                <option value="4">4 acres</option>
+                <option value="5">5 acres</option>
+                <option value="6">6 acres</option>
+                <option value="7">7 acres</option>
+                <option value="8">8 acres</option>
+                <option value="9">9 acres</option>
+                <option value="10">10 acres</option>
+                <option value="15">15 acres</option>
+                <option value="20">20 acres</option>
+                <option value="25">25 acres</option>
+                <option value="30">30 acres</option>
+                <option value="40">40 acres</option>
+                <option value="50">50 acres</option>
+                <option value="60">60 acres</option>
+                <option value="70">70 acres</option>
+                <option value="80">80 acres</option>
+                <option value="90">90 acres</option>
+                <option value="100">100 acres</option>
+                <option value="130">130 acres</option>
+                <option value="160">160 acres</option>
+                <option value="190">190 acres</option>
+                <option value="200">200 acres</option>
+                <option value="225">225 acres</option>
+                <option value="250">250 acres</option>
+                <option value="275">275 acres</option>
+                <option value="300">300 acres</option>
+                <option value="325">325 acres</option>
+                <option value="350">350 acres</option>
+                <option value="375">375 acres</option>
+                <option value="400">400 acres</option>
+                <option value="425">425 acres</option>
+                <option value="450">450 acres</option>
+                <option value="475">475 acres</option>
+                <option value="500">500 acres</option>
+                <option value="525">525 acres</option>
+                <option value="550">550 acres</option>
+                <option value="575">575 acres</option>
+                <option value="600">600 acres</option>
+                <option value="625">625 acres</option>
+                <option value="650">650 acres</option>
+                <option value="675">675 acres</option>
+                <option value="700">700 acres</option>
+                <option value="750">750 acres</option>
+                <option value="800">800 acres</option>
+                <option value="850">850 acres</option>
+                <option value="900">900 acres</option>
+                <option value="950">950 acres</option>
+                <option value="1000">1000 acres</option>
+                <option value="1500">1500 acres</option>
+                <option value="2000">2000 acres</option>
+                <option value="2500">2500 acres</option>
+                <option value="3000">3000 acres</option>
+                <option value="3500">3500 acres</option>
+                <option value="4000">4000 acres</option>
+                <option value="4500">4500 acres</option>
+                <option value="5000">5000 acres</option>
+                <option value="10000">10000 acres</option>
+                <option value="20000">20000 acres</option>
+                <option value="30000">30000 acres</option>
+                <option value="40000">40000 acres</option>
+              </select>
+              <select id="acreage-between-2" class="form-control">
+                <option value=".01">.01 acres</option>
+                <option value=".02" selected="selected">.02 acres</option>
+                <option value=".03">.03 acres</option>
+                <option value=".04">.04 acres</option>
+                <option value=".05">.05 acres</option>
+                <option value=".06">.06 acres</option>
+                <option value=".07">.07 acres</option>
+                <option value=".08">.08 acres</option>
+                <option value=".09">.09 acres</option>
+                <option value="1">.1 acres</option>
+                <option value="1.5">1.5 acres</option>
+                <option value="2">2 acres</option>
+                <option value="2.5">2.5 acres</option>
+                <option value="3">3 acres</option>
+                <option value="3.5">3.5 acres</option>
+                <option value="4">4 acres</option>
+                <option value="5">5 acres</option>
+                <option value="6">6 acres</option>
+                <option value="7">7 acres</option>
+                <option value="8">8 acres</option>
+                <option value="9">9 acres</option>
+                <option value="10">10 acres</option>
+                <option value="15">15 acres</option>
+                <option value="20">20 acres</option>
+                <option value="25">25 acres</option>
+                <option value="30">30 acres</option>
+                <option value="40">40 acres</option>
+                <option value="50">50 acres</option>
+                <option value="60">60 acres</option>
+                <option value="70">70 acres</option>
+                <option value="80">80 acres</option>
+                <option value="90">90 acres</option>
+                <option value="100">100 acres</option>
+                <option value="130">130 acres</option>
+                <option value="160">160 acres</option>
+                <option value="190">190 acres</option>
+                <option value="200">200 acres</option>
+                <option value="225">225 acres</option>
+                <option value="250">250 acres</option>
+                <option value="275">275 acres</option>
+                <option value="300">300 acres</option>
+                <option value="325">325 acres</option>
+                <option value="350">350 acres</option>
+                <option value="375">375 acres</option>
+                <option value="400">400 acres</option>
+                <option value="425">425 acres</option>
+                <option value="450">450 acres</option>
+                <option value="475">475 acres</option>
+                <option value="500">500 acres</option>
+                <option value="525">525 acres</option>
+                <option value="550">550 acres</option>
+                <option value="575">575 acres</option>
+                <option value="600">600 acres</option>
+                <option value="625">625 acres</option>
+                <option value="650">650 acres</option>
+                <option value="675">675 acres</option>
+                <option value="700">700 acres</option>
+                <option value="750">750 acres</option>
+                <option value="800">800 acres</option>
+                <option value="850">850 acres</option>
+                <option value="900">900 acres</option>
+                <option value="950">950 acres</option>
+                <option value="1000">1000 acres</option>
+                <option value="1500">1500 acres</option>
+                <option value="2000">2000 acres</option>
+                <option value="2500">2500 acres</option>
+                <option value="3000">3000 acres</option>
+                <option value="3500">3500 acres</option>
+                <option value="4000">4000 acres</option>
+                <option value="4500">4500 acres</option>
+                <option value="5000">5000 acres</option>
+                <option value="10000">10000 acres</option>
+                <option value="20000">20000 acres</option>
+                <option value="30000">30000 acres</option>
+                <option value="40000">40000 acres</option>
+              </select>
+
+              <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
+              <a href="javascript:void(0);" class="btn btn-default" id="search-all-acreage">Search</a>
+            </div>
+            <!--Search By Map Taxlot-->
+            <div class="search-field-holder taxlot-div well custom-well-info-dark-blue">
+              <!--<label for="exampleInputEmail1">Search By Map Taxlot #:</label>-->
+              <input type="text" class="form-control" placeholder="Taxlot number" id="search-taxlot-field">
+
+              <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
+              <a href="javascript:void(0);" class="btn btn-default" id="search-all-taxlots">Search</a>
+            </div>
+            <!--Search by Lat & Long-->
+            <div class="search-field-holder latLon-div well custom-well-info-dark-blue">
+              <!--<label for="exampleInputEmail1">Search by Lat & Long:</label>-->
+              <input type="text" class="form-control" id="lngMap" placeholder="longitude" value="-122.877734">
+              <input type="text" class="form-control" id="latMap" placeholder="lattitude" value="42.320921">
+              <a href="javascript:void(0);" id="search-click"class="btn btn-default" >Search</a>
+            </div>
+          </div>
+          <!--<div class="form-group">
+             <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                  filter within 50 miles
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">10 miles</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">25 miles</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">50 miles</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">75 miles</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">100 miles</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">200 miles</a></li>
+                </ul>
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Day Range:</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Start Date:">
+            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="End Date:">
+          </div>
+          <button type="submit" class="btn btn-default">Update Search Results</button>
+        </form>-->
+        <!--content-->
+      </div>
     </div>
   </div>
+  <div class="dash-search-controls" style="height:40px;position:relative;">
+    <button id="current-loc-click" class="btn btn-primary pull-left" style="margin-left:10px;margin-top:5px;">
+      <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Current Location
+    </button>
+    <button id="advanced-options" class="btn btn-primary pull-right" style="margin-right:10px;margin-top:5px;">
+      Advanced Options
+    </button>
+  </div>  
 </div>
 
 <div class="modal fade bs-example-modal-lg blue-background" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -583,6 +597,10 @@
       $(".dash-list-query-table-area").mCustomScrollbar({
         theme:"minimal"
       });
+
+      $(".dash-search-options").mCustomScrollbar({
+        theme:"minimal"
+      });
       
     });
 
@@ -632,9 +650,23 @@
       }
     }
 
+    function toggleListMode(){
+      if ( $('.toggle-list-mode').prop('checked') ){
+        window.gmd.paginatedResultsData.shouldShowListResults = true;
+        console.log(window.gmd.paginatedResultsData.shouldShowListResults);
+      } else {
+        window.gmd.paginatedResultsData.shouldShowListResults = false;
+        console.log(window.gmd.paginatedResultsData.shouldShowListResults);
+      }
+    }
+
     //toggle letter view vs detail view
     $(document).on('change', '.letter-toggle', function(event) {
       toggleLetter();
+    });
+
+    $(document).on('change', '.toggle-list-mode', function(event) {
+      toggleListMode();
     });
 
     
@@ -653,7 +685,7 @@
         $('.dash-left-inter-margin').slideUp('slow');
         $('.dash-left-full-margin').slideUp('slow');
         $( ".container-dash" ).animate({
-          left: "0"
+          left: - window.g.halfWidth()
         }, 400, function() {
           // Animation complete.
           
@@ -817,6 +849,7 @@
     function goBack(){
       $('.back-right').hide();
       $('#config').show();
+      $('.right-switch-detail-results-holder').hide();
         //start: toggle heading area
       $('.left-result-heading').show();
       $('.left-action-buttons').hide();
@@ -846,8 +879,10 @@
        //$(".container-dash").css('left','0px');
        $('#config').hide();
        $('.back-right').show();
+       $('.right-switch-detail-results-holder').show('fast');
+  
         $( ".container-dash" ).animate({
-          left: - window.g.halfWidth()
+          left: "0"
         }, 400, function() {
           // Animation complete.
         });
@@ -923,7 +958,7 @@
     $(document).on('click', '#search-all-owners', function() {
       //window.gmd.interactMap.userQuery();
       var owner = $('#search-owner').val();
-      window.gmd.interactMap.multiQueryApplyToMap('owner', { 'owner': owner }, true, true); 
+      window.gmd.interactMap.multiQueryApplyToMap('owner', { 'owner': owner }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
       //window.populateRightMenuWithResults('owner');
     });
@@ -933,7 +968,7 @@
        navigator.geolocation.getCurrentPosition(myLocationCallback);
     });
 
-    //this manages ALL responses to Serach Results from Right column. 
+    //this manages ALL responses to Search Results from Right column. 
     $(document).on('click', '.single-right-item', function(event) {
         var latMap = $(event.target).closest('table').attr('data-attr-lat');
         var lngMap = $(event.target).closest('table').attr('data-attr-lng');
@@ -958,17 +993,26 @@
        } else {
           window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson); 
        }*/
-       window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson, false, true);
+       window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson, false, window.gmd.paginatedResultsData.shouldShowListResults);
     });
 
 
     //set up our checkbox slider for letter view vs detail view
-    $("input[type=checkbox]").switchButton({
+    $(".left-action-buttons-title input[type=checkbox]").switchButton({
       width: 30,
       height: 15,
       button_width: 15,
       on_label: 'Letter',
       off_label: 'Detail',
+      checked: false
+    });
+
+    $(".right-switch-detail-results-holder input[type=checkbox]").switchButton({
+      width: 30,
+      height: 15,
+      button_width: 15,
+      on_label: 'List Results',
+      off_label: 'Map Results',
       checked: false
     });
     
