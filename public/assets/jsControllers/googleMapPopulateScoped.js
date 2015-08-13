@@ -166,6 +166,9 @@ window.gmd = {
 			console.log('shouldPopulateRightMenu', shouldPopulateRightMenu);
 			if (listCountQueryResult.total_rows === 0 ){
 				alert('no results found');
+			} else if (shouldPopulateRightMenu && shouldPerformListQuery) {
+				window.populateRightMenuWithResults(type, count);
+				this.listLimitedQuery(type, sqlString, count);
 			} else if (shouldPopulateRightMenu) {
 				//populates our right menu, and passes in count 
 				window.populateRightMenuWithResults(type, count);
@@ -176,7 +179,6 @@ window.gmd = {
 		},
 
 		listCountQuery: function(type, sqlString, shouldPopulateRightMenu, shouldPerformListQuery){ 
-			alert('in list count');
 			console.log('lq-shouldPopulateRightMenu', shouldPopulateRightMenu);
 			thisHeld = this;
 			//var table = window.g.mapConfig.dashTableName;
@@ -254,13 +256,11 @@ window.gmd = {
 	         .addTo(window.map)
 	         .on('done', function(layer) {
 	         	window.layerOwnerResults = layer;
-				//query data results owner
-				//alert(shouldPopulateRightMenu);
-				//if (shouldPerformListQuery){
-				//if(shouldPopulateRightMenu){	
-					//alert(shouldPopulateRightMenu);
+				//custom is type used by mult result single clicks, and we don't want 
+				//that to blow our count out, or interfere with pagination	
+				if (type !== 'custom'){	
 					thisHeld.listCountQuery(type, sql, shouldPopulateRightMenu, shouldPerformListQuery);
-				//}	  
+				}
 
 	          }).on('error', function() {
 	            console.log("some error occurred");

@@ -416,10 +416,10 @@ border-bottom: 0px solid #e5e5e5;
 	height: 0; 
 	border-top: 30px solid transparent;
 	border-bottom: 30px solid transparent; 
-	border-right:30px solid #337ab7; 
+	border-left:30px solid #337ab7; 
 	z-index:9999999999;
   	top: 50px;
-  	left: 999px;
+  	left: -999px;
   	position: absolute;
 }
 
@@ -460,6 +460,24 @@ border-bottom: 0px solid #e5e5e5;
 .pagination ul {
   margin-top: 0;
   margin-bottom: 0px; 
+}
+
+.label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: 300;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+  width: 99%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
 }
 
 

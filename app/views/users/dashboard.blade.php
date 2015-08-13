@@ -6,7 +6,7 @@
       &nbsp;&nbsp;&nbsp;Results for Acreage Between 2 and 4 Acres
     </h5>
   <button class="btn btn-primary pull-right back-right-list-query" style="margin-right:10px;margin-top:3px;">
-    <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
   </button>
   </div>
   <div class="dash-list-query-table-area">
@@ -16,9 +16,9 @@
   </div>
   <div style="height:40px;background-color:#337ab7;padding:5px 0px 5px 10px;">
     <ul id="pagination" class="pagination-sm"></ul>
-    <h5 style="color:white;margin-right:10px;" class="left-result-heading dash-heading-4 pull-right">
+    <!--<h5 style="color:white;margin-right:10px;" class="left-result-heading dash-heading-4 pull-right">
       &nbsp;&nbsp;&nbsp;Showing 1-100 of 2500 results
-    </h5>
+    </h5>-->
   </div>  
 </div>
 <!--top menu goes here-->
@@ -62,12 +62,12 @@
   </div>
   <span id="search-top-action-holder" class="pull-left">
     <button id="config" class="btn btn-primary pull-left" style="margin-left:5px;">
-      <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 
+      <span class="glyphicon glyphicon glyphicon-search" aria-hidden="true"></span> 
     </button>
     <button class="btn btn-primary pull-left back-right" style="margin-left:5px;display:none;">
-      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
     </button>
-    <span class="right-switch-detail-results-holder pull-right" style="margin-right:15px;margin-top:5px;display:none;">
+    <span class="right-switch-detail-results-holder pull-right" style="margin-right:15px;margin-top:5px;">
       <input type="checkbox" class="toggle-list-mode" value="1" checked>
     </span>
   </span>
@@ -555,7 +555,11 @@
         emailHeld: $('#client-email-holder').val() });
 
 
+    //left arrow states, 1) default state, 2) full_search state (two pains) 3) multi_result state 
+    window.g.visualDashState = 'default'; 
+
     //this loads our template for the left pain
+    //ACTUALLY RIGHT pain after changes, rename this later
     var loadLeftBar = function(data){
       var source = $("#dash-left-template").html();
       var leftDashTemplate = Handlebars.compile(source);
@@ -591,11 +595,33 @@
       });
 
       $(".dash-right-list").mCustomScrollbar({
-        theme:"minimal"
+        theme:"minimal",
+        callbacks:{
+            //scroll begins
+            onScrollStart:function(){
+                moveSelectionLeftArrow(true);
+                //alert(c);
+            },
+            //scroll ends
+            onScroll:function(){
+                moveSelectionLeftArrow(false);
+            }
+        }
       });
 
       $(".dash-list-query-table-area").mCustomScrollbar({
-        theme:"minimal"
+        theme:"minimal",
+        callbacks:{
+            //scroll begins
+            onScrollStart:function(){
+                moveSelectionLeftArrow(true);
+                //alert(c);
+            },
+            //scroll ends
+            onScroll:function(){
+                moveSelectionLeftArrow(false);
+            }
+        }
       });
 
       $(".dash-search-options").mCustomScrollbar({
@@ -653,10 +679,8 @@
     function toggleListMode(){
       if ( $('.toggle-list-mode').prop('checked') ){
         window.gmd.paginatedResultsData.shouldShowListResults = true;
-        console.log(window.gmd.paginatedResultsData.shouldShowListResults);
       } else {
         window.gmd.paginatedResultsData.shouldShowListResults = false;
-        console.log(window.gmd.paginatedResultsData.shouldShowListResults);
       }
     }
 
@@ -809,6 +833,7 @@
           startPage: 1,
           loop: true,
           onPageClick: function (event, page) {
+            moveSelectionLeftArrow(true);
             window.gmd.paginatedResultsData.currentOffset = window.gmd.paginatedResultsData.resultsPerPage * page;
             window.gmd.interactMap.listLimitedQuery(null, window.gmd.paginatedResultsData.sqlString, null);
           }
@@ -817,7 +842,7 @@
 
     window.showListQueryAreaWithResults = function(paginatedResults){
       $( ".dash-list-query-area" ).animate({
-        left: window.g.halfWidth()
+        left: 0 
       }, 400, function() {
         console.log('paginatedResults');
         console.log(paginatedResults);
@@ -835,21 +860,29 @@
 
     window.hideListQueryArea = function(){
       $( ".dash-list-query-area" ).animate({
-        left: window.g.windowLargeWidth()
+        left: -(window.g.halfWidth())
       }, 400, function() {
+        //emp
+        $('.dash-list-query-table-area-list').html();
         $('.dash-left-inter-margin').slideDown('slow');
+
           // Animation complete.
       });
+
+      window.g.visualDashState = 'full_search';
+      moveSelectionLeftArrow();
     }
 
     $(document).on('click', '.back-right-list-query', function(event) {
       window.hideListQueryArea();
     });
 
+
+
     function goBack(){
       $('.back-right').hide();
       $('#config').show();
-      $('.right-switch-detail-results-holder').hide();
+      //$('.right-switch-detail-results-holder').hide();
         //start: toggle heading area
       $('.left-result-heading').show();
       $('.left-action-buttons').hide();
@@ -861,6 +894,10 @@
         $('.dash-left-inter-margin').slideDown('slow');
           // Animation complete.
       });
+      
+       window.g.visualDashState = 'default';
+       moveSelectionLeftArrow();
+      
       window.g.communiqueClose();
     }
 
@@ -872,6 +909,16 @@
         $( this ).removeClass('active-item-right');
       });
       $('.single-right-item:first').addClass('active-item-right');
+      
+
+      //start: prep arrow crap 
+      if (window.gmd.paginatedResultsData.shouldShowListResults){
+          window.g.visualDashState = 'multi_result';
+      } else {
+          window.g.visualDashState = 'full_search';
+      }
+      moveSelectionLeftArrow();
+      //end: prep arrow crap 
       //end: populates right menu with correct data and highlights 
     }
 
@@ -886,6 +933,9 @@
         }, 400, function() {
           // Animation complete.
         });
+        
+        window.g.visualDashState = 'full_search';
+        moveSelectionLeftArrow();
     });
 
     $(document).on('click', '#search-click', function() {
@@ -914,28 +964,76 @@
       var second = $('#acreage-between-2').val();
 
       //type, params, shouldPopulateRightList, shouldPerformListQuery
-      window.gmd.interactMap.multiQueryApplyToMap('acreage', { 'acreageFirst': first, 'acreageSecond': second }, true, true); 
+      window.gmd.interactMap.multiQueryApplyToMap('acreage', { 'acreageFirst': first, 'acreageSecond': second }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
+      window.g.visualDashState = 'full_search';
+      moveSelectionLeftArrow();
       //window.populateRightMenuWithResults('acreage');
     });
 
     $(document).on('click', '#search-all-taxlots', function() {
       var mapTaxLot = $('#search-taxlot-field').val();
-      window.gmd.interactMap.multiQueryApplyToMap('taxlot', { 'mapTaxLotId': mapTaxLot }, true, true); 
+      window.gmd.interactMap.multiQueryApplyToMap('taxlot', { 'mapTaxLotId': mapTaxLot }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
       //window.populateRightMenuWithResults('taxlot');
     });
+   
+    function moveSelectionLeftArrow(forceBlowOut){
+      if (forceBlowOut){
+        $('.arrow-left').css('opacity', 0.0);
+        return false;
+      }
+      //left arrow states, 1) default state, 2) full_search state (two pains) 3) multi_result state 
+      //window.g.visualDashState = 'default'; 
+      var domElementToMatch = undefined;
+      var leftHeld = -9999;
 
-    function moveSelectionLeftArrow(domElementToMatch){
+      if (window.g.visualDashState === 'default'){
+        domElementToMatch = $('.single-right-item').closest('.active-item-right');
+        leftHeld = window.g.oneQuarterWidth();
+      } else if (window.g.visualDashState === 'full_search'){
+        domElementToMatch = $('.single-right-item').closest('.active-item-right');
+        leftHeld = window.g.halfWidth();
+      } else if (window.g.visualDashState === 'multi_result'){
+        domElementToMatch = $('.query-table-row').closest('.active-query-table-row');
+        console.log('in multi');
+        console.log(domElementToMatch);
+        leftHeld = window.g.halfWidth(); 
+      } 
+
+      //if no active item is available, blow her away
+      if (!domElementToMatch.length) {
+        $('.arrow-left').css('opacity', 0.0);
+        return false;
+      }
+
       var x = $(domElementToMatch).offset().left;
       var y = $(domElementToMatch).offset().top;
       var h = $(domElementToMatch).height();
       var h2 = (h * .5);
-      $('.arrow-left').css('left', (x - h2 +1) + 'px');
-      $('.arrow-left').css('top', y + 'px');
+
+      //if our arrow is out of scroll view, blow her away
+      if (y < 95) {
+        $('.arrow-left').css('opacity', 0.0);
+        return false;
+      }
+
       $('.arrow-left').css('border-top', h2 + 'px solid transparent');
       $('.arrow-left').css('border-bottom', h2 + 'px solid transparent');
-      $('.arrow-left').css('border-right', h2 + 'px solid #337ab7');
+      $('.arrow-left').css('border-left', h2 + 'px solid #337ab7');
+
+      $( ".arrow-left" ).animate({
+        opacity: 1,
+        left: (leftHeld - 1)
+      }, 400, function() {
+        // Animation complete.
+        $( ".arrow-left" ).animate({
+          opacity: 1,
+          top: y
+        }, 400, function() {
+          // Animation complete.
+        });
+      });
     }
 
     //this handles tr clicks for our list flyout menu
@@ -947,17 +1045,20 @@
       console.log(resultQueryData);
       window.gmd.interactMap.multiQueryApplyToMap('custom', resultQueryData, false, false);
       
-      moveSelectionLeftArrow($(event.target).closest('tr'));
       $( ".query-table-row" ).each(function() {
         $( this ).removeClass('active-query-table-row');
       });
       $(event.target).closest('tr').addClass('active-query-table-row');
+
+      window.g.visualDashState = 'multi_result';
+      moveSelectionLeftArrow();
     });
 
 
     $(document).on('click', '#search-all-owners', function() {
       //window.gmd.interactMap.userQuery();
       var owner = $('#search-owner').val();
+      //alert(window.gmd.paginatedResultsData.shouldShowListResults);
       window.gmd.interactMap.multiQueryApplyToMap('owner', { 'owner': owner }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
       //window.populateRightMenuWithResults('owner');
@@ -986,6 +1087,24 @@
 
 
        window.g.highlightLastItem('.single-right-item', event, 'active-item-right');
+      
+       //start: prep arrow crap 
+       if (window.gmd.paginatedResultsData.shouldShowListResults){
+          window.g.visualDashState = 'multi_result';
+       } else {
+          window.g.visualDashState = 'full_search';
+       }
+       moveSelectionLeftArrow();
+       //end: prep arrow crap 
+
+       $('#config').hide();
+       $('.back-right').show();
+       $('.right-switch-detail-results-holder').show('fast');
+        $( ".container-dash" ).animate({
+          left: "0"
+        }, 400, function() {
+          // Animation complete.
+        });
 
        /*
        if( tempJson.searchType == 'latLng' ){

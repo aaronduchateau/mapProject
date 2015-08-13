@@ -90,7 +90,7 @@ window.g = {
 	    $(".dash-list-query-area").css("height", adjustedWindowHeightLarge + "px");
 	    $(".dash-list-query-table-area").css("height", (adjustedWindowHeightLarge - 80) + "px")
 	    $(".dash-list-query-area").css("top", "57px");
-	    $(".dash-list-query-area").css("left", windowLargeWidth + "px");
+	    $(".dash-list-query-area").css("left", "-" + halfWidth + "px");
 	    $(".dash-list-query-area").css("width", halfWidth + "px");
 
 	    //set width for header
