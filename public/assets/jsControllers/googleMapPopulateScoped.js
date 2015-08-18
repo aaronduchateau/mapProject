@@ -374,7 +374,7 @@ window.gmd = {
 	    infoWindowHtml = "<div><h5>" + feeOwner + "</h5>";
   		infoWindowHtml += "<div style='padding:10px;'><b>Acreage: </b>" + acreage + "<br/>";
   		infoWindowHtml += "<b>Total Value: </b>$" + totalValue + "</div>";
-  		infoWindowHtml += "<a href='javascript:void(0);' onclick='leftPainOpenFromInfoWindow()' class='btn btn-primary left-open pull-right' style='color:white;margin-top:-3px;'>Full Information</a>";
+  		infoWindowHtml += "<a href='javascript:void(0);' onclick='leftPainOpenFromInfoWindow()' class='btn btn-primary left-open pull-right' style='color:white;margin-top:-3px;'>Full Report</a>";
   		infoWindowHtml += "</div>";
 
   		console.log(infoWindowHtml);

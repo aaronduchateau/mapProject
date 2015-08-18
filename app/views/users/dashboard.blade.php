@@ -2,11 +2,11 @@
 <!--list query area chills here-->
 <div id="dash-list-query-area" class="dash-list-query-area" style="">
   <div style="height:40px;background-color:#337ab7;">
-    <h5 style="color:white;padding-top:5px;padding-left:10px;" class="paginatedTitleHolder left-result-heading dash-heading-4 pull-left">
+    <h5 style="color:white;padding-top:5px;padding-left:10px;" class="paginatedTitleHolder dash-heading-4 pull-left">
       &nbsp;&nbsp;&nbsp;Results for Acreage Between 2 and 4 Acres
     </h5>
   <button class="btn btn-primary pull-right back-right-list-query" style="margin-right:10px;margin-top:3px;">
-    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close results
   </button>
   </div>
   <div class="dash-list-query-table-area">
@@ -31,7 +31,7 @@
       <input type="checkbox" class="letter-toggle" value="1" checked>
     </span>
     <a class="btn btn-primary pull-right back" style="margin-right: 20px;">
-      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> 
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close report 
     </a>
     <div class="dropdown pull-right" style="margin-right:20px;">
       <a class="btn btn-primary" style="" id="print-me">
@@ -64,12 +64,12 @@
     <button id="config" class="btn btn-primary pull-left" style="margin-left:5px;">
       <span class="glyphicon glyphicon glyphicon-search" aria-hidden="true"></span> 
     </button>
-    <button class="btn btn-primary pull-left back-right" style="margin-left:5px;display:none;">
-      <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+    <button class="btn btn-primary pull-right back-right" style="margin-right:15px;display:none;">
+      <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span> Close Search
     </button>
-    <span class="right-switch-detail-results-holder pull-right" style="margin-right:15px;margin-top:5px;">
+    <!--<span class="right-switch-detail-results-holder pull-right" style="margin-right:15px;margin-top:5px;">
       <input type="checkbox" class="toggle-list-mode" value="1" checked>
-    </span>
+    </span>-->
   </span>
 </div>
 <div class="container-dash">
@@ -121,8 +121,16 @@
             <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Filter by Keywords">
           </div>-->
           <div class="form-group">
-            <!--Search By Owner-->
+            <!--result configuration-->
             <div class="search-field-holder owner-div well custom-well-info-dark-blue" style="margin-top:0px;">
+              Show my results as:
+              <span class="right-switch-detail-results-holder pull-left">
+                <input type="checkbox" class="toggle-list-mode" value="1" checked>
+              </span>
+              <div style="clear:both;"></div>
+            </div>
+            <!--Search By Owner-->
+            <div class="search-field-holder owner-div well custom-well-info-dark-blue">
               <!--<label for="exampleInputEmail1">Search By Owner:</label>-->
               <input type="text" class="form-control" placeholder="Full Owner Name" id="search-owner">
 
@@ -557,6 +565,7 @@
 
     //left arrow states, 1) default state, 2) full_search state (two pains) 3) multi_result state 
     window.g.visualDashState = 'default'; 
+    window.g.isInFullDetail = false; 
 
     //this loads our template for the left pain
     //ACTUALLY RIGHT pain after changes, rename this later
@@ -699,7 +708,7 @@
     //$(document).on('click', '.left-open', function(event) {  
     window.leftPainOpenFromInfoWindow = function(event){  
       
-        $('#config').hide();
+        //$('#config').hide();
         $('.back').show();
         $('.back-right').hide()
         //start: toggle heading area
@@ -708,6 +717,13 @@
         //end: toggle heading area
         $('.dash-left-inter-margin').slideUp('slow');
         $('.dash-left-full-margin').slideUp('slow');
+
+        window.g.isInFullDetail = true;
+        //if we are in expanded Query view, blow out our arrow
+        if( window.g.visualDashState != 'multi_result'){
+          moveSelectionLeftArrow(true);
+        }
+        
         $( ".container-dash" ).animate({
           left: - window.g.halfWidth()
         }, 400, function() {
@@ -863,14 +879,21 @@
         left: -(window.g.halfWidth())
       }, 400, function() {
         //emp
-        $('.dash-list-query-table-area-list').html();
-        $('.dash-left-inter-margin').slideDown('slow');
+        $('.dash-list-query-table-area-list').html('');
+        //$('.dash-left-inter-margin').slideDown('slow');
 
           // Animation complete.
       });
 
+      //window.g.visualDashState = 'full_search';
       window.g.visualDashState = 'full_search';
-      moveSelectionLeftArrow();
+      //if in full report mode, blow out the arrow
+      if (window.g.isInFullDetail){
+        moveSelectionLeftArrow(true);
+      } else {
+        moveSelectionLeftArrow();
+      }
+      
     }
 
     $(document).on('click', '.back-right-list-query', function(event) {
@@ -880,23 +903,63 @@
 
 
     function goBack(){
-      $('.back-right').hide();
-      $('#config').show();
+      
       //$('.right-switch-detail-results-holder').hide();
-        //start: toggle heading area
+      
+      //start: toggle heading area
       $('.left-result-heading').show();
       $('.left-action-buttons').hide();
       //end: toggle heading area
       $('.dash-left-full-margin').slideUp('slow');
+
+      var goBackWidth = window.g.oneQuarterWidth();
+      //going back from full detail with multi result
+      if (window.g.isInFullDetail){
+    
+        //going back from full detail without multi result
+        if (window.g.visualDashState !== 'multi_result'){
+          $('.back-right').hide();
+          $('#config').show();
+          window.g.visualDashState = 'default';
+          moveSelectionLeftArrow();
+          goBackWidth = window.g.oneQuarterWidth();
+
+        //we are in multi result  
+        } else {
+          goBackWidth = 0;
+          $('.back-right').show();
+          $('#config').hide();
+          window.g.visualDashState = 'multi_result';
+          moveSelectionLeftArrow();
+        }
+      } else {
+        $('.back-right').hide();
+        $('#config').show();
+        window.g.visualDashState = 'default';
+        moveSelectionLeftArrow();
+
+      }
+    
+
+
       $( ".container-dash" ).animate({
-        left: - window.g.oneQuarterWidth()
+        left: - goBackWidth
       }, 400, function() {
         $('.dash-left-inter-margin').slideDown('slow');
           // Animation complete.
       });
+
+      /*if (!window.g.isInFullDetail){
+        window.g.visualDashState = 'default';
+        moveSelectionLeftArrow();
+      } else if (window.g.visualDashState !== 'multi_result'){
+        window.g.visualDashState = 'full_search';
+        moveSelectionLeftArrow();
+      }
+      */
+      window.g.isInFullDetail = false;
       
-       window.g.visualDashState = 'default';
-       moveSelectionLeftArrow();
+       
       
       window.g.communiqueClose();
     }
@@ -967,7 +1030,7 @@
       window.gmd.interactMap.multiQueryApplyToMap('acreage', { 'acreageFirst': first, 'acreageSecond': second }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
       window.g.visualDashState = 'full_search';
-      moveSelectionLeftArrow();
+      //moveSelectionLeftArrow();
       //window.populateRightMenuWithResults('acreage');
     });
 
@@ -1130,8 +1193,8 @@
       width: 30,
       height: 15,
       button_width: 15,
-      on_label: 'List Results',
-      off_label: 'Map Results',
+      on_label: 'List & Map',
+      off_label: 'Map Only',
       checked: false
     });
     

@@ -215,10 +215,10 @@
 <script id="dash-expanded-info-template" type="text/x-handlebars-template">
 	<div class="content-info">
 		<div id="bodyContentInfo">
-			<div class="dash-expanded-info-title pull-left" style="width:50%;">
+			<!--<div class="dash-expanded-info-title pull-left" style="width:50%;">
 				<h4 class="just-custom-font-header white-class" style="margin-top:0px;">@{{ORIGINALSOURCE}}</h4>
 			</div>
-            <div style="clear:both;"></div>
+            <div style="clear:both;"></div>-->
             <div class="custom-well-info letter" contenteditable="true" style="padding-top:10px;padding-left:10px;padding-right:10px;padding-bottom: 10px;border-radius: 4px;">
 	            Dear @{{emptyCheck ownerName}}, <br/>
 	            My name is @{{emptyCheck accountOwnerName}} and I'm interested in purchasing your @{{emptyCheck acreage}} property in @{{emptyCheck countyName}} (please find the enclosed map). If you're interested in selling please let me know. My number is @{{emptyCheck accountOwnerPhone}}. If you can't reach me by phone, feel free to shoot me an email at @{{emptyCheck accountOwnerEmail}}.
@@ -227,107 +227,106 @@
 				<br/>
 				@{{emptyCheck accountOwnerName}}
             </div>
+            <div class="custom-well-info" style="margin-top:0px;padding-top: 10px;padding-bottom: 10px;border-radius: 4px;">
+	            <div id="nested-map" style="height:325px;">
+	            </div>
+            </div>
             <div style="width:100%;">
-            	<div class="block-container-toggle-left">
-        			<div class="well custom-well-info detail">
-        				<span class="just-custom-font">
-        					Owner Name / In Care of:
-        				</span>
-        				<br/>
-        				<h5>
-            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            					@{{emptyCheck ownerName}} / @{{emptyCheck inCareOf}}
-            				</span>	
-        				</h5>
-        			</div>
-        			<div class="well custom-well-info detail">
-        				<span class="just-custom-font">
-        				 	Estimated Land Value / Improvment Value:
-        				</span>
-        				<br/>
-        				<h5>
-        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-        						$@{{formatCurrency landValue}} / $@{{formatCurrency impValue}}
-    						</span>
-						</h5>
-					</div>
-        			<div class="well custom-well-info detail">
-        				<span class="just-custom-font">
-							Measurment in Acres:
-						</span>
-						<br/>
-						<h5>
-							<span class="label label-primary darker-blue-backgroud-class text-overflow">
-							@{{emptyCheck acreage}}
-							</span>
-						</h5>
-        			</div>
-        			<div class="well custom-well-info detail">
-        				<span class="just-custom-font">
-							County Account Reference:
-						</span>
-						<br/>
-						<h5>
-							<span class="label label-primary darker-blue-backgroud-class text-overflow">
-							#@{{emptyCheck account}}
-							</span>
-						</h5>
-        			</div>
-            	</div>
-            	<div class="block-container-toggle-right">
-        			<div class="well custom-well-info detail">
-        				<span class="just-custom-font">
-        				 	Contact Mailing Address 1:
-        				</span>
-        				<br/>
-        				<h5>
-        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-        						@{{emptyCheck ownerAddress1}}
-    						</span>
-						</h5>
-					</div>
-            		<div class="well custom-well-info detail">
-        				<span class="just-custom-font">
-        					Contact Mailing Address 2:
-        				</span>
-        				<br/>
-        				<h5>
-            				<span class="label label-primary darker-blue-backgroud-class text-overflow">
-            					@{{emptyCheck ownerAddress2}}
-            				</span>	
-        				</h5>
-        			</div>
-        			<div class="well custom-well-info detail">
-        				<span class="just-custom-font">
-        				 	Contact Mailing Address 3:
-        				</span>
-        				<br/>
-        				<h5>
-        					<span class="label label-primary darker-blue-backgroud-class text-overflow">
-        						@{{emptyCheck ownerAddress2}}
-    						</span>
-						</h5>
-					</div>
-        			<div class="well custom-well-info detail">
-        				<span class="just-custom-font">
-							City, State, ZIP
-						</span>
-						<br/>
-						<h5>
-							<span class="label label-primary darker-blue-backgroud-class text-overflow">
-							@{{emptyCheck ownerCity}}, @{{emptyCheck ownerState}} @{{emptyCheck ownerZip}} 
-							</span>
-						</h5>
-        			</div>
-        		</div>
-        	</div>	
+                <div class="block-container-toggle-left">
+                    <div class="well custom-well-info detail">
+                        <span class="just-custom-font">
+                            Owner Name / In Care of:
+                        </span>
+                        <br/>
+                        <h5>
+                            <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                                @{{emptyCheck ownerName}} / @{{emptyCheck inCareOf}}
+                            </span> 
+                        </h5>
+                    </div>
+                    <div class="well custom-well-info detail">
+                        <span class="just-custom-font">
+                            Estimated Land Value / Improvment Value:
+                        </span>
+                        <br/>
+                        <h5>
+                            <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                                $@{{formatCurrency landValue}} / $@{{formatCurrency impValue}}
+                            </span>
+                        </h5>
+                    </div>
+                    <div class="well custom-well-info detail">
+                        <span class="just-custom-font">
+                            Measurment in Acres:
+                        </span>
+                        <br/>
+                        <h5>
+                            <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                            @{{emptyCheck acreage}}
+                            </span>
+                        </h5>
+                    </div>
+                    <div class="well custom-well-info detail">
+                        <span class="just-custom-font">
+                            County Account Reference:
+                        </span>
+                        <br/>
+                        <h5>
+                            <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                            #@{{emptyCheck account}}
+                            </span>
+                        </h5>
+                    </div>
+                </div>
+                <div class="block-container-toggle-right">
+                    <div class="well custom-well-info detail">
+                        <span class="just-custom-font">
+                            Contact Mailing Address 1:
+                        </span>
+                        <br/>
+                        <h5>
+                            <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                                @{{emptyCheck ownerAddress1}}
+                            </span>
+                        </h5>
+                    </div>
+                    <div class="well custom-well-info detail">
+                        <span class="just-custom-font">
+                            Contact Mailing Address 2:
+                        </span>
+                        <br/>
+                        <h5>
+                            <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                                @{{emptyCheck ownerAddress2}}
+                            </span> 
+                        </h5>
+                    </div>
+                    <div class="well custom-well-info detail">
+                        <span class="just-custom-font">
+                            Contact Mailing Address 3:
+                        </span>
+                        <br/>
+                        <h5>
+                            <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                                @{{emptyCheck ownerAddress2}}
+                            </span>
+                        </h5>
+                    </div>
+                    <div class="well custom-well-info detail">
+                        <span class="just-custom-font">
+                            City, State, ZIP
+                        </span>
+                        <br/>
+                        <h5>
+                            <span class="label label-primary darker-blue-backgroud-class text-overflow">
+                            @{{emptyCheck ownerCity}}, @{{emptyCheck ownerState}} @{{emptyCheck ownerZip}} 
+                            </span>
+                        </h5>
+                    </div>
+                </div>
+            </div>  
 
             <div style="clear:both;">
-            </div>
-
-            <div class="custom-well-info" style="margin-top: 10px;padding-top: 10px;padding-bottom: 10px;border-radius: 4px;">
-	            <div id="nested-map" style="height:400px;">
-	            </div>
             </div>
             <div style="width:100%;">
             	<div class="block-container-toggle-left">

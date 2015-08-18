@@ -65,7 +65,7 @@ window.g = {
 	    $(".dash-search-controls").css("width", oneQuarterWidth + "px");
 
 	    //width for serach top action items
-	    $("#search-top-action-holder").css("width", oneQuarterWidth + "px");
+	    $("#search-top-action-holder").css("width", halfWidth + "px");
 
 	    //absolute positioning for elements
 	    $(".dash-left-list").css("position", "absolute");

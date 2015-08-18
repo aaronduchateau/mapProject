@@ -358,6 +358,19 @@ border-bottom: 0px solid #e5e5e5;
     color: #0D6A92;
 }
 
+.right-switch-detail-results-holder .switch-button-label.off {
+  color: #F0F0F0!important;
+}
+
+.right-switch-detail-results-holder{
+  margin-right: 15px;
+  /* margin-top: 5px; */
+  background-color: #337ab7;
+  padding: 3px 10px 3px 10px;
+  /* padding-right: 10px; */
+  border-radius: 3px;
+}
+
 .switch-button-label.on {
     color: white;
 }
@@ -465,11 +478,12 @@ border-bottom: 0px solid #e5e5e5;
 .label {
   display: inline;
   padding: .2em .6em .3em;
-  font-size: 75%;
+  /*font-size: 75%;*/
   font-weight: 300;
   line-height: 1;
   color: #fff;
-  text-align: center;
+  /*text-align: center;*/
+  text-align:left;
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: .25em;
