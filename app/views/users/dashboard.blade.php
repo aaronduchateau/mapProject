@@ -144,6 +144,8 @@
               <input type="text" class="form-control" placeholder="City" id="search-city">
               <input type="text" class="form-control" placeholder="State" id="search-state">
               <input type="text" class="form-control" placeholder="Zip" id="search-zip">
+              <input type="hidden" id="latMapAddressHidden">
+              <input type="hidden" id="lngMapAddressHidden">
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
               <a href="javascript:void(0);" class="btn btn-default" id="search-all-address">Search</a>
             </div>
@@ -481,34 +483,9 @@
       var fullAddy = address + ' ' + city + ' ' + state + ' ' + zip;
 
       tempJson.fullAddress = fullAddy;
-
-      //architecturally this is strange, however i want to cheat a little so we have the lat and lng available without an additional lookup
-      //maybe i should consider not caring about that to make the code cleaner
-      var geocoder = new google.maps.Geocoder();
-      geocoder.geocode( { 'address': fullAddy}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK)
-        {   
-            $('#latMap').val(results[0].geometry.location.lat());
-            $('#lngMap').val(results[0].geometry.location.lng());
-            var returnCoords = {mapLat: results[0].geometry.location.lat(), mapLng: results[0].geometry.location.lng()};
-            $.extend( tempJson, returnCoords );
-            console.log('important');
-            console.log(tempJson);
-            templateResult = rightDashTemplate(tempJson);
-            $('.dash-right-inter-margin').prepend(templateResult);
-            $( ".single-right-item" ).each(function() {
-              $( this ).removeClass('active-item-right');
-            });
-            $('.single-right-item:first').addClass('active-item-right');
-            window.gmd.interactMap.panToPosition('blueMarker', tempJson.mapLat, tempJson.mapLng );
-            window.g.communiqueClose();
-
-        } else {
-          window.g.communiqueClose();
-          alert('Sorry, looks like we could not find that address');
-        }
-      });
-      
+      var returnCoords = {mapLat: $('#latMapAddressHidden').val(), mapLng: $('#lngMapAddressHidden').val()};
+      $.extend( tempJson, returnCoords );
+      return tempJson;
     } else if ( searchType === 'owner' ){
       tempJson.searchType = searchType;
       tempJson.owner = $('#search-owner').val();
@@ -965,6 +942,7 @@
     }
 
     window.populateRightMenuWithResults = function(linkMode, numResults){
+      console.log('populateRightMenuWithResults');
       //start: populates right menu with correct data and highlights 
       templateResult = rightDashTemplate(rightTemplateJson(linkMode), numResults);
       $('.dash-right-inter-margin').prepend(templateResult);
@@ -1002,23 +980,36 @@
     });
 
     $(document).on('click', '#search-click', function() {
-       //templateResult = rightDashTemplate(rightTemplateJson());
-       //var tempJson = {searchType: 'latLng', mapLat: $('#latMap').val(), mapLng: $('#lngMap').val(), mapTime: timeNow()};
-       
-       window.gmd.interactMap.panToPosition('blueMarker', $('#latMap').val(), $('#lngMap').val() );
-
-       //window.populateRightMenuWithResults('latLng');
-       //goBack();
+       var lat = $('#latMap').val();
+       var lng = $('#lngMap').val();
+       window.gmd.interactMap.multiQueryApplyToMap('latLng', { 'mapLat': lat, 'mapLng': lng }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
     });
 
     $(document).on('click', '#search-all-address', function() {
-      window.g.communiqueOpen("Give us a second to find that address for you");
+        window.g.communiqueOpen("Give us a second to find that address for you");
 
-      //this function below also handles latlng lookup
-      rightTemplateJson('address');
+        var address = $('#search-address').val();
+        var city = $('#search-city').val();
+        var state = $('#search-state').val();
+        var zip = $('#search-zip').val();
+        var fullAddy = address + ' ' + city + ' ' + state + ' ' + zip;
+       
+        //special use case here as we need to let the geocoder translate our address into lat and lng
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode( { 'address': fullAddy}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK){
+              var lat = results[0].geometry.location.lat();
+              var lng = results[0].geometry.location.lng();
+              $('#latMapAddressHidden').val(lat);
+              $('#lngMapAddressHidden').val(lng);
+              
+              window.gmd.interactMap.multiQueryApplyToMap('address', { 'mapLat': lat, 'mapLng': lng }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
-      
-      //goBack();
+          } else {
+            window.g.communiqueClose();
+            alert('Sorry, looks like we could not find that address');
+          }
+        });
     });
 
     $(document).on('click', '#search-all-acreage', function() {
@@ -1029,7 +1020,7 @@
       //type, params, shouldPopulateRightList, shouldPerformListQuery
       window.gmd.interactMap.multiQueryApplyToMap('acreage', { 'acreageFirst': first, 'acreageSecond': second }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
-      window.g.visualDashState = 'full_search';
+      //window.g.visualDashState = 'full_search';
       //moveSelectionLeftArrow();
       //window.populateRightMenuWithResults('acreage');
     });
@@ -1175,6 +1166,8 @@
        } else {
           window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson); 
        }*/
+       console.log('WHAAT');
+       console.log(tempJson);
        window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson, false, window.gmd.paginatedResultsData.shouldShowListResults);
     });
 

@@ -218,9 +218,19 @@ window.gmd = {
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'latLng'){
-
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results for Lat & Lng at '" + params.mapTaxLotId + "' " + params.mapLat + "'" + params.mapLng + "'";
-				var sql = " FROM devtest." + table + " WHERE ST_Contains(the_geom, ST_GeomFromText('POINT(" + params.mapLat + " " + params.mapLng + ")', 4326)";
+				//var sql = " FROM devtest." + table + " WHERE ST_Contains(the_geom, ST_GeomFromText('POINT(" + params.mapLat + " " + params.mapLng + ")', 4326)";
+				//SELECT * FROM tm_world_borders_simpl_0_6 WHERE ST_Intersects(the_geom,CDB_LatLng(30,0))
+				var sql = " FROM devtest." + table + " WHERE ST_Intersects(the_geom,CDB_LatLng(" + params.mapLat + "," + params.mapLng + "))";
+				console.log(sql);
+				window.gmd.paginatedResultsData.sqlString = sql;
+				return sql;
+			} else if (type === 'address'){
+				alert('d');
+				window.gmd.paginatedResultsData.readableQueryTitle = "Result for '" + params.fullAddress + "'";
+				//var sql = " FROM devtest." + table + " WHERE ST_Contains(the_geom, ST_GeomFromText('POINT(" + params.mapLat + " " + params.mapLng + ")', 4326)";
+				//SELECT * FROM tm_world_borders_simpl_0_6 WHERE ST_Intersects(the_geom,CDB_LatLng(30,0))
+				var sql = " FROM devtest." + table + " WHERE ST_Intersects(the_geom,CDB_LatLng(" + params.mapLat + "," + params.mapLng + "))";
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'custom'){
