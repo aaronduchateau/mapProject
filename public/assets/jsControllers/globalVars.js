@@ -99,6 +99,8 @@ window.g = {
 	    //set up communique
 	    $("#communique").css("width", windowWidth + "px");
 
+	    $('#dash-list-query-area').show();
+
 	},
 	twoLeftPageSetup: function(){
 

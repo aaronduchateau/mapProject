@@ -15,7 +15,6 @@ window.gmd = {
 		crossDomain: true
 	}),
 	cartoLayerConfig: function(sql, styles){
-
 		var layerConfig = {
 	    	user_name: 'devtest', // Required
 	    	type: 'cartodb', // Required
@@ -42,7 +41,26 @@ window.gmd = {
 		currentPage: 1,
 		resultsPerPage: 50,
 		currentOffset: 0,
-		shouldShowListResults: false
+		shouldShowListResults: false,
+		orderBy: 'acreage'
+	},
+	helper: {
+		//look at our translation to find relevent column name
+		findLocalColumn: function(columnKeyWord){
+			var column = window.translations[window.g.mapConfig.countyNameConcat]['nameColumn'];
+			switch (columnKeyWord) {
+			    case 'acreage':
+			        column = window.translations[window.g.mapConfig.countyNameConcat]['acreageColumn'];
+			        break;
+			    case 'name':
+			        column = window.translations[window.g.mapConfig.countyNameConcat]['nameColumn'];
+			        break;
+			    case 'mapTaxlot':
+			        column = window.translations[window.g.mapConfig.countyNameConcat]['mapTaxLotColumn'];
+			        break;
+			}
+			return column;
+		}
 	},
 	interactMap: {
 		panToPosition: function(iconType, latMap, lngMap){
@@ -92,14 +110,6 @@ window.gmd = {
 			      $('#latMap').val(results[0].geometry.location.lat());
 			      $('#lngMap').val(results[0].geometry.location.lng());
 			      var returnCoords = {mapLat: results[0].geometry.location.lat(), mapLng: results[0].geometry.location.lng()};
-			      //return returnCoords;
-			      console.log('after');
-			      //$('#search-click').click();
-			      
-			      //console.log(lat);
-			      //var lng = results[0].geometry.location.B;
-			      //console.log(lng);
-			      //holdThis.panToPosition (lat, lng);
 			      
 			  } else {
 			  	alert('Sorry, looks like we could not find that address');
@@ -107,11 +117,11 @@ window.gmd = {
 			});
 		},
 		queryAndPanToBounds: function(map, query) {
-			//window.gmd.cartoSqlConfig
 			return window.gmd.cartoSqlConfig.getBounds(query).done(function(bounds) {
 	       		//fit map to bounds
 	       		map.fitBounds(bounds);
-	       		//chill for a sec and check the zoom level, some of the title providers can't handle 20 or greater
+	       		//chill for a sec and check the zoom level, some of the third party tile providers can't handle 
+	       		//zoom level 20 or greater
 	       		//ghetto solution for bing zoom level issue
 	       		setTimeout(function(){ 
         			if(map.getZoom() > 18){
@@ -144,12 +154,15 @@ window.gmd = {
 			//var table = window.g.mapConfig.dashTableName;
 			//window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
 			var limit = window.gmd.paginatedResultsData.resultsPerPage;
-			var offset = (window.gmd.paginatedResultsData.currentOffset === 0) ? 0 : (window.gmd.paginatedResultsData.currentOffset -1);
-			countSqlString = "SELECT *" + sqlString + " LIMIT " + limit + " OFFSET " + offset;
+			var offset = window.gmd.paginatedResultsData.currentOffset;
+			var orderColumn = window.gmd.helper.findLocalColumn(window.gmd.paginatedResultsData.orderBy);
+
+			countSqlString = "SELECT *" + sqlString + " ORDER BY " + orderColumn + " LIMIT " + limit + " OFFSET " + offset;
+	
 			window.gmd.cartoSqlConfig.execute(countSqlString)
 			  .done(function(data) {
-			  	console.log('BIG FAT RESULTS');
-			    console.log(data.rows);
+			  	//console.log('BIG FAT RESULTS');
+			    //console.log(data.rows);
 			    thisHeld.listTableQueryResultHandler(type, sqlString, data, count);
 			  })
 			  .error(function(errors) {
@@ -163,8 +176,8 @@ window.gmd = {
 			window.gmd.paginatedResultsData.totalResultCount = count;
 			window.gmd.paginatedResultsData.currentOffset = 0;
 			window.activatePagination(count, window.gmd.paginatedResultsData.resultsPerPage);
-			console.log('shouldPopulateRightMenu', shouldPopulateRightMenu);
-			if (listCountQueryResult.total_rows === 0 ){
+			if (listCountQueryResult.rows[0].count === 0 ){
+				//should use communique here rather than alert
 				alert('no results found');
 			} else if (shouldPopulateRightMenu && shouldPerformListQuery) {
 				window.populateRightMenuWithResults(type, count);
@@ -179,11 +192,9 @@ window.gmd = {
 		},
 
 		listCountQuery: function(type, sqlString, shouldPopulateRightMenu, shouldPerformListQuery){ 
-			console.log('lq-shouldPopulateRightMenu', shouldPopulateRightMenu);
 			thisHeld = this;
-			//var table = window.g.mapConfig.dashTableName;
-			//window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
 			countSqlString = "SELECT COUNT(*)" + sqlString;
+
 			window.gmd.cartoSqlConfig.execute(countSqlString)
 			  .done(function(data) {
 			    //console.log(data.rows);
@@ -197,21 +208,20 @@ window.gmd = {
 		multiResultQueryBuilder: function(type, params){
 			var table = window.g.mapConfig.dashTableName;
 			if (type == 'owner'){
-				var userColumn = window.translations[window.g.mapConfig.countyNameConcat]['nameColumn'];
-				//select * from table where value  like any (array['%foo%', '%bar%', '%baz%']);
+				var userColumn = window.gmd.helper.findLocalColumn('name');
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results with owner name like '" + params.owner +"'";
 				var sql = " FROM devtest." + table + " WHERE " + userColumn + " ILIKE '%" + params.owner + "%'";
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type == 'acreage'){
-				var acreageColumn = window.translations[window.g.mapConfig.countyNameConcat]['acreageColumn'];
+				var acreageColumn = window.gmd.helper.findLocalColumn('acreage');
 
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results between " + params.acreageFirst + " and " + params.acreageSecond + " acres";
 				var sql = " FROM devtest." + table + " WHERE " + acreageColumn + " BETWEEN " + params.acreageFirst + " AND " + params.acreageSecond;
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type == 'taxlot'){
-				var mapTaxLotColumn = window.translations[window.g.mapConfig.countyNameConcat]['mapTaxLotColumn'];
+				var mapTaxLotColumn = window.gmd.helper.findLocalColumn('mapTaxlot');
 				
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results where Assesor Parcel Number = '" + params.mapTaxLotId + "'";
 				var sql = " FROM devtest." + table + " WHERE " + mapTaxLotColumn + " = " + params.mapTaxLotId;
@@ -219,17 +229,12 @@ window.gmd = {
 				return sql;
 			} else if (type === 'latLng'){
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results for Lat & Lng at '" + params.mapTaxLotId + "' " + params.mapLat + "'" + params.mapLng + "'";
-				//var sql = " FROM devtest." + table + " WHERE ST_Contains(the_geom, ST_GeomFromText('POINT(" + params.mapLat + " " + params.mapLng + ")', 4326)";
-				//SELECT * FROM tm_world_borders_simpl_0_6 WHERE ST_Intersects(the_geom,CDB_LatLng(30,0))
 				var sql = " FROM devtest." + table + " WHERE ST_Intersects(the_geom,CDB_LatLng(" + params.mapLat + "," + params.mapLng + "))";
 				console.log(sql);
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'address'){
-				alert('d');
 				window.gmd.paginatedResultsData.readableQueryTitle = "Result for '" + params.fullAddress + "'";
-				//var sql = " FROM devtest." + table + " WHERE ST_Contains(the_geom, ST_GeomFromText('POINT(" + params.mapLat + " " + params.mapLng + ")', 4326)";
-				//SELECT * FROM tm_world_borders_simpl_0_6 WHERE ST_Intersects(the_geom,CDB_LatLng(30,0))
 				var sql = " FROM devtest." + table + " WHERE ST_Intersects(the_geom,CDB_LatLng(" + params.mapLat + "," + params.mapLng + "))";
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
@@ -449,19 +454,15 @@ window.gmd = {
                   infowindow_model.set('visibility', true);
                   //console.log(infowindow_model);
     			  //console.log(window.translations[window.g.mapConfig.countyNameConcat]['mapArr']);
-                  
                   thisScoped.onClickTileManager(e, latlng, pos, data, layerNumber);
-
             });
-
             //lets keep this commented out for now
             //mainTileSublayer.on('featureOver', function(e, latlng, pos, data, layerNumber) {
            	//});
-
             var configurationArray = window.translations[window.g.mapConfig.countyNameConcat]['mapArr'];
-            console.log('configuration array');
-            console.log(window.translations);
-            console.log(configurationArray);
+            //console.log('configuration array');
+            //console.log(window.translations);
+            //console.log(configurationArray);
             cdb.vis.Vis.addInfowindow(window.map, layer.getSubLayer(0), configurationArray, {'infowindowTemplate': $('#infowindow_template').html(), 'templateType': 'mustache'})
 
           }).on('error', function() {
