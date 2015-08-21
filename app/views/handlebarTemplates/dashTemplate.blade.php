@@ -84,25 +84,25 @@
 	@{{#dashLeftArrayData}} 
 	<!--start item-->
 	    <div class="custom-well-dash-left left-saved-open" data-result-index="@{{@index}}" data-result-lat="@{{lat}}" data-result-lng="@{{lng}}" data-result-owner="@{{ownerName}}">
-	      <table style="margin-left:15px;margin-right:5px;width:95%;padding-bottom:15px;">
+	      <table style="margin-left:5px;margin-right:15px;width:95%;padding-bottom:15px;">
 	        <tr>
-	          <td style="width:90%;">
-	            <p class="heading">@{{ownerName}}</p>
-	            <p class="body">total value: $@{{formatCurrency totalValue}}</p>
-	            <p class="body">lat: @{{lat}}</p>
-	            <p class="body">lng: @{{lng}}</p>
-	            <p class="small">
-	            <span class="pull-right">
-	            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-	            <span class="date-holder">@{{passedDatePretty created_at}}</span>
-	            </span>
-	            <br/>
-	            </p>
-	          </td>
 	          <td style="width:10%;">
-	          <span class="glyphicon glyphicon-chevron-right pull-right arrow-hide" aria-hidden="true" style="color:white;margin-right:10px;"></span>
+	          <span class="glyphicon glyphicon-chevron-left pull-right arrow-hide" aria-hidden="true" style="color:white;margin-right:10px;"></span>
 	          <span class="glyphicon glyphicon-trash pull-right trash-hide" data-result-index="@{{id}}" aria-hidden="true" style="color:white;margin-right:10px;"></span>
 	          </td>
+              <td style="width:90%;">
+                <p class="heading">@{{ownerName}}</p>
+                <p class="body" style="padding-left:15px;">total value: $@{{formatCurrency totalValue}}</p>
+                <p class="body" style="padding-left:15px;">lat: @{{lat}}</p>
+                <p class="body" style="padding-left:15px;">lng: @{{lng}}</p>
+                <p class="small">
+                <span class="pull-left">
+                    <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                    <span class="date-holder">@{{passedDatePretty created_at}}</span>
+                </span>
+                <br/>
+                </p>
+              </td>
 	        </tr>
 	      </table>
 	    </div>

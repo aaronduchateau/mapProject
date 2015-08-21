@@ -441,6 +441,7 @@
 <script src="{{ URL::asset('assets/jsModels/dashModel.js') }}"></script>
 <script src="{{ URL::asset('assets/jsControllers/googleMapPopulateScoped.js') }}"></script>
 <script src="{{ URL::asset('assets/jsControllers/globalVars.js') }}"></script>
+<script src="{{ URL::asset('assets/jsControllers/dashControllerHelpers.js') }}"></script>
 
 <script src="{{ URL::asset('assets/jsTranslations/OR.js') }}"></script>
 
@@ -456,69 +457,6 @@
 @include('handlebarTemplates.globalTemplate')
 
 <script>
-  //load dash specific template
-  var rightDashTemplate;
-  var templateResult;
-
-  //move to helper file
-  function timeNow() {
-    return moment().format('MMMM Do YYYY, h:mm a');
-  }
-
-  //move to helper file
-  function rightTemplateJson( searchType, numResults){
-    var tempJson = {};
-    tempJson.mapTime = timeNow();
-    tempJson.numResults = numResults;
-    if ( searchType === 'latLng' ){
-      tempJson.searchType = searchType;
-      tempJson.mapLat = $('#latMap').val();
-      tempJson.mapLng = $('#lngMap').val();
-      tempJson.mode = 'single';
-      return tempJson;
-    } else if ( searchType === 'address' ) {
-      tempJson.searchType = searchType;
-      tempJson.mode = 'single';
-
-      var address = $('#search-address').val();
-      var city = $('#search-city').val();
-      var state = $('#search-state').val();
-      var zip = $('#search-zip').val();
-      var fullAddy = address + ' ' + city + ' ' + state + ' ' + zip;
-
-      tempJson.fullAddress = fullAddy;
-      var returnCoords = {mapLat: $('#latMapAddressHidden').val(), mapLng: $('#lngMapAddressHidden').val()};
-      $.extend( tempJson, returnCoords );
-      return tempJson;
-    } else if ( searchType === 'owner' ){
-      tempJson.searchType = searchType;
-      tempJson.owner = $('#search-owner').val();
-      tempJson.mode = 'multi';
-      return tempJson;
-    } else if ( searchType === 'acreage' ){
-      tempJson.searchType = searchType;
-      tempJson.acreageFirst = $('#acreage-between-1').val();
-      tempJson.acreageSecond = $('#acreage-between-2').val();
-      tempJson.mode = 'multi';
-      return tempJson;
-    } else if ( searchType === 'taxlot' ){
-      tempJson.searchType = searchType;
-      tempJson.mapTaxLotId = $('#search-taxlot-field').val();
-      tempJson.mode = 'single';
-      return tempJson;
-    } else {
-      alert('issue!');
-    }
-    //console.log(tempJson);
-    
-  }
-
-  //move to helper file, or remove
-  function myLocationCallback(position){
-    $('#latMap').val(position.coords.latitude);
-    $('#lngMap').val(position.coords.longitude);
-    $('#search-click').click();
-  }
 
   $( document ).ready(function() {
     
@@ -528,6 +466,12 @@
     window.g.mapConfig.accountOwnerName = '{{Auth::user()->firstname}} {{Auth::user()->lastname}}';
     window.g.mapConfig.accountOwnerPhone = '{{Auth::user()->phone}}';
     window.g.mapConfig.accountOwnerEmail = '{{Auth::user()->email}}';
+
+    //VISUAL DASH STATES, 1) default state, 2) full_search state (two pains) 3) multi_result state 
+    window.g.visualDashState = 'default'; 
+    window.g.isInFullDetail = false; 
+
+    var listOrGridToggleState = 'list';
 
     //console.log(window.g.mapConfig);
     $('#county-label').text(window.g.mapConfig.countyName);
@@ -545,75 +489,66 @@
         emailHeld: $('#client-email-holder').val() });
 
 
-    //left arrow states, 1) default state, 2) full_search state (two pains) 3) multi_result state 
-    window.g.visualDashState = 'default'; 
-    window.g.isInFullDetail = false; 
 
-    //this loads our template for the left pain
-    //ACTUALLY RIGHT pain after changes, rename this later
-    var loadLeftBar = function(data){
-      var source = $("#dash-left-template").html();
-      var leftDashTemplate = Handlebars.compile(source);
-      templateResult = leftDashTemplate({dashLeftArrayData: data});
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //start: interactions related to SAVED TAXLOTS
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    
+    //compile save list area template
+    var leftDashTemplate = Handlebars.compile($("#dash-left-template").html());
+    
+    //***Start: helper functions relating to save
+    var populateSavedTaxlots = function(data){
+      var templateResult = leftDashTemplate({dashLeftArrayData: data});
       $('.dash-left-inter-margin').prepend(templateResult);
     }
 
-    window.dashModel.getSavedTaxlots(loadLeftBar);
+    var removeSavedItemCallback = function(data){
+      window.g.communiqueClose();
+    }
 
-    //this load our template for the right pain 
-    source = $("#dash-right-template").html();
-    rightDashTemplate = Handlebars.compile(source);
-    //may get rid of this, but here we start with a marker
-    templateResult = rightDashTemplate(rightTemplateJson( 'latLng', 1 ));
-    $('.dash-right-inter-margin').append(templateResult);
-    $('.single-right-item:first').addClass('active-item-right');
+    var removeSavedItem = function(item){
+      var removeIndex = item.attr('data-result-index');
+      var userIndex = window.g.mapConfig.userId;
+      window.dashModel.unsetSavedLeft(removeIndex, userIndex, removeSavedItemCallback);
+      window.g.communiqueOpen('removing this item from your saved list...');
+      item.closest('div').slideUp();
+    }
+    //***End: helper functions relating to save
 
-    //populate the map
-    window.gmd.populateMap( $('#latMap').val(), $('#lngMap').val() );
-   
-
-    $(window).load(function(){
-        
-      $(".dash-left-list").mCustomScrollbar({
-        theme:"minimal"
-      });
-
-      $(".dash-right-list").mCustomScrollbar({
-        theme:"minimal",
-        callbacks:{
-            //scroll begins
-            onScrollStart:function(){
-                moveSelectionLeftArrow(true);
-                //alert(c);
-            },
-            //scroll ends
-            onScroll:function(){
-                moveSelectionLeftArrow(false);
-            }
-        }
-      });
-
-      $(".dash-list-query-table-area").mCustomScrollbar({
-        theme:"minimal",
-        callbacks:{
-            //scroll begins
-            onScrollStart:function(){
-                moveSelectionLeftArrow(true);
-                //alert(c);
-            },
-            //scroll ends
-            onScroll:function(){
-                moveSelectionLeftArrow(false);
-            }
-        }
-      });
-
-      $(".dash-search-options").mCustomScrollbar({
-        theme:"minimal"
-      });
-      
+    window.dashModel.getSavedTaxlots(populateSavedTaxlots);
+    
+    //save taxlot data
+    $(document).on('click', '#save-me', function() {
+      window.dashModel.saveTaxlot(populateSavedTaxlots);
+      window.g.communiqueOpen('Taxlot saved! click the back button to see it in your left hand pane');
+      setTimeout(function(){ 
+         window.g.communiqueClose();
+      }, 4000);
+       
     });
 
+    //add map marker and pan to saved taxlot
+    $(document).on('click', '.left-saved-open', function(event) {
+       //check for remove click
+       if( $(event.target).hasClass('trash-hide') ){
+          removeSavedItem($(event.target));
+          return false;
+       }
+       window.g.highlightLastItem('.left-saved-open', event, 'active-item-right');
+       window.g.toggleClickedItem('.arrow-hide', event, '.trash-hide');
+       var lat = $(event.target).closest('div').attr('data-result-lat');
+       var lng = $(event.target).closest('div').attr('data-result-lng');
+       var owner = $(event.target).closest('div').attr('data-result-owner');
+       window.g.communiqueOpen('Adding marker, and centering map, for taxlot owned by ' + owner);
+       window.gmd.interactMap.panToPosition('tree', lat, lng);
+       setTimeout(function(){ 
+         window.g.communiqueClose();
+       }, 4000);
+    });
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //end: interactions related to SAVED TAXLOTS
+    ////////////////////////////////////////////////////////////////////////////////////////////
 
     //print the left dash pain
     $(document).on('click', '#print-me', function(event) {
@@ -629,8 +564,6 @@
       });
     });
 
-    //instantiate this at top of file
-    var listOrGridToggleState = 'list';
     //list v grid toggle
     $(document).on('click', '#list-v-grid', function(event) {
       if (listOrGridToggleState == 'list'){
@@ -682,9 +615,13 @@
       toggleListMode();
     });
 
-    //opens *report* mode
+    //////////////////////////////////////////////////////////////////////////////
+    //start: opens *report* mode
+    //////////////////////////////////////////////////////////////////////////////
+    var expandedInfoTemplate = Handlebars.compile($("#dash-expanded-info-template").html());
+
     window.leftPainOpenFromInfoWindow = function(event){  
-      
+        window.g.isInFullDetail = true;
         $('.back').show();
         $('.back-right').hide()
         //start: toggle heading area
@@ -693,23 +630,18 @@
         //end: toggle heading area
         $('.dash-left-inter-margin').slideUp('slow');
         $('.dash-left-full-margin').slideUp('slow');
-
-        //*report* mode, i.e. full detail
-        window.g.isInFullDetail = true;
-        //if we are in expanded (multi-result) Query view, blow out our arrow
-        if( window.g.visualDashState != 'multi_result'){
-          moveSelectionLeftArrow(true);
-        }
         
+        //if we are NOT in expanded (multi-result) Query view, blow out our arrow
+        if( window.g.visualDashState != 'multi_result'){
+          window.dashHelp.moveSelectionLeftArrow(true);
+        }
         $( ".container-dash" ).animate({
           left: - window.g.halfWidth()
-        }, 400, function() {
+          }, 400, function() {
           // Animation complete.
           
           //this loads our template for the expanded info view in the left pain
-          var source = $("#dash-expanded-info-template").html();
-          var leftDashTemplate = Handlebars.compile(source);
-          var templateResult = leftDashTemplate(window.g.mapRowData);
+          var templateResult = expandedInfoTemplate(window.g.mapRowData);
           $('.dash-left-full-margin').html(templateResult);
           //trigger Nested Map
           window.gmd.interactMap.nestedMap();
@@ -721,26 +653,16 @@
           //console.log(window.g.mapRowData);
           //////////////////////////////////////
         });
-    //});
     };
+    //////////////////////////////////////////////////////////////////////////////
+    //end: opens *report* mode
+    //////////////////////////////////////////////////////////////////////////////
 
     $("#order-by-select").change(function() {
       $("#order-by-select").each(function() {
         window.gmd.paginatedResultsData.orderBy = $(this).val();
       });
     });
-
-    /* //used to handle toggleing search fields, remove this soon//
-    $(document).on('click', '.dropdown-search-selection', function(event) {
-        console.log(event);
-        var insideText = $(event.target).text();
-        $('#search-but-label-shown').text(insideText);
-        $('.search-field-holder').hide();
-        var currentAction = $(event.target).attr('data-action');
-        $('.' + currentAction).slideDown('fast');
-        console.log(currentAction);
-    });
-    */
 
 
     /////////////////////////////////////////////////
@@ -756,57 +678,6 @@
 
     $(document).on('click', '.back-right', function() {
        goBack();
-    });
-
-    //move to helper file
-    //handle response from save taxlot event
-    var afterSaveTaxlot = function(data){
-      loadLeftBar(data);
-    };
-
-    //save taxlot data
-    $(document).on('click', '#save-me', function() {
-      window.dashModel.saveTaxlot(afterSaveTaxlot);
-      window.g.communiqueOpen('Taxlot saved! click the back button to see it in your left hand pane');
-      setTimeout(function(){ 
-         window.g.communiqueClose();
-      }, 4000);
-       
-    });
-
-    //move to helper file
-    function removeSavedItemCallback(data){
-      console.log(data);
-      window.g.communiqueClose();
-    }
-
-    //move to helper file
-    function removeSavedItem(item){
-      var removeIndex = item.attr('data-result-index');
-      var userIndex = window.g.mapConfig.userId;
-      window.dashModel.unsetSavedLeft(removeIndex, userIndex, removeSavedItemCallback);
-      window.g.communiqueOpen('removing this item from your saved list...');
-      item.closest('div').slideUp();
-    }
-
-    //add map marker and pan to saved taxlot
-    $(document).on('click', '.left-saved-open', function(event) {
-       //check for remove click
-       if( $(event.target).hasClass('trash-hide') ){
-          removeSavedItem($(event.target));
-          return false;
-       }
-
-       window.g.highlightLastItem('.left-saved-open', event, 'active-item-right');
-       window.g.toggleClickedItem('.arrow-hide', event, '.trash-hide');
-       var lat = $(event.target).closest('div').attr('data-result-lat');
-       var lng = $(event.target).closest('div').attr('data-result-lng');
-       var owner = $(event.target).closest('div').attr('data-result-owner');
-       window.g.communiqueOpen('Adding marker, and centering map, for taxlot owned by ' + owner);
-       window.gmd.interactMap.panToPosition('tree', lat, lng);
-       setTimeout(function(){ 
-         window.g.communiqueClose();
-       }, 4000);
     });
 
     //activate pagination
@@ -832,7 +703,7 @@
           startPage: 1,
           loop: true,
           onPageClick: function (event, page) {
-            moveSelectionLeftArrow(true);
+            window.dashHelp.moveSelectionLeftArrow(true);
             window.gmd.paginatedResultsData.currentOffset = window.gmd.paginatedResultsData.resultsPerPage * (page - 1);
             window.gmd.interactMap.listLimitedQuery(null, window.gmd.paginatedResultsData.sqlString, null);
           }
@@ -872,9 +743,9 @@
       window.g.visualDashState = 'full_search';
       //if in full report mode, blow out the arrow
       if (window.g.isInFullDetail){
-        moveSelectionLeftArrow(true);
+        window.dashHelp.moveSelectionLeftArrow(true);
       } else {
-        moveSelectionLeftArrow();
+        window.dashHelp.moveSelectionLeftArrow();
       }
       
     }
@@ -900,7 +771,7 @@
           $('.back-right').hide();
           $('#config').show();
           window.g.visualDashState = 'default';
-          moveSelectionLeftArrow();
+          window.dashHelp.moveSelectionLeftArrow();
           goBackWidth = window.g.oneQuarterWidth();
 
         //we are in multi result  
@@ -909,13 +780,13 @@
           $('.back-right').show();
           $('#config').hide();
           window.g.visualDashState = 'multi_result';
-          moveSelectionLeftArrow();
+          window.dashHelp.moveSelectionLeftArrow();
         }
       } else {
         $('.back-right').hide();
         $('#config').show();
         window.g.visualDashState = 'default';
-        moveSelectionLeftArrow();
+        window.dashHelp.moveSelectionLeftArrow();
       }
     
       //slide our pain the appropriate distance based off of state
@@ -929,11 +800,13 @@
       window.g.isInFullDetail = false;
     }
 
+    //load dash specific template
+    var rightDashTemplate = Handlebars.compile($("#dash-right-template").html());
+
     //move to helper file, rename to left
     window.populateRightMenuWithResults = function(linkMode, numResults){
-      console.log('populateRightMenuWithResults');
       //start: populates right menu with correct data and highlights 
-      templateResult = rightDashTemplate(rightTemplateJson(linkMode), numResults);
+      var templateResult = rightDashTemplate(window.dashHelp.rightTemplateJson(linkMode, numResults));
       $('.dash-right-inter-margin').prepend(templateResult);
       $( ".single-right-item" ).each(function() {
         $( this ).removeClass('active-item-right');
@@ -946,7 +819,7 @@
       } else {
           window.g.visualDashState = 'full_search';
       }
-      moveSelectionLeftArrow();
+      window.dashHelp.moveSelectionLeftArrow();
       //end: prep arrow crap 
       //end: populates right menu with correct data and highlights 
     }
@@ -964,7 +837,7 @@
         });
         
         window.g.visualDashState = 'full_search';
-        moveSelectionLeftArrow();
+        window.dashHelp.moveSelectionLeftArrow();
     });
 
     $(document).on('click', '#search-click', function() {
@@ -1014,65 +887,6 @@
       var mapTaxLot = $('#search-taxlot-field').val();
       window.gmd.interactMap.multiQueryApplyToMap('taxlot', { 'mapTaxLotId': mapTaxLot }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
     });
-   
-    //move to helper file
-    function moveSelectionLeftArrow(forceBlowOut){
-      if (forceBlowOut){
-        $('.arrow-left').css('opacity', 0.0);
-        return false;
-      }
-      //left arrow states, 1) default state, 2) full_search state (two pains) 3) multi_result state 
-      //window.g.visualDashState = 'default'; 
-      var domElementToMatch = undefined;
-      var leftHeld = -9999;
-
-      if (window.g.visualDashState === 'default'){
-        domElementToMatch = $('.single-right-item').closest('.active-item-right');
-        leftHeld = window.g.oneQuarterWidth();
-      } else if (window.g.visualDashState === 'full_search'){
-        domElementToMatch = $('.single-right-item').closest('.active-item-right');
-        leftHeld = window.g.halfWidth();
-      } else if (window.g.visualDashState === 'multi_result'){
-        domElementToMatch = $('.query-table-row').closest('.active-query-table-row');
-        console.log('in multi');
-        console.log(domElementToMatch);
-        leftHeld = window.g.halfWidth(); 
-      } 
-
-      //if no active item is available, blow her away
-      if (!domElementToMatch.length) {
-        $('.arrow-left').css('opacity', 0.0);
-        return false;
-      }
-
-      var x = $(domElementToMatch).offset().left;
-      var y = $(domElementToMatch).offset().top;
-      var h = $(domElementToMatch).height();
-      var h2 = (h * .5);
-
-      //if our arrow is out of scroll view, blow her away
-      if (y < 95) {
-        $('.arrow-left').css('opacity', 0.0);
-        return false;
-      }
-
-      $('.arrow-left').css('border-top', h2 + 'px solid transparent');
-      $('.arrow-left').css('border-bottom', h2 + 'px solid transparent');
-      $('.arrow-left').css('border-left', h2 + 'px solid #337ab7');
-
-      $( ".arrow-left" ).animate({
-        opacity: 1,
-        left: (leftHeld - 1)
-      }, 400, function() {
-        // Animation complete.
-        $( ".arrow-left" ).animate({
-          opacity: 1,
-          top: y
-        }, 400, function() {
-          // Animation complete.
-        });
-      });
-    }
 
     //this handles tr clicks for our list flyout menu
     $(document).on('click', '.query-table-row', function() {
@@ -1089,22 +903,17 @@
       $(event.target).closest('tr').addClass('active-query-table-row');
 
       window.g.visualDashState = 'multi_result';
-      moveSelectionLeftArrow();
+      window.dashHelp.moveSelectionLeftArrow();
     });
 
-
     $(document).on('click', '#search-all-owners', function() {
-      //window.gmd.interactMap.userQuery();
       var owner = $('#search-owner').val();
-      //alert(window.gmd.paginatedResultsData.shouldShowListResults);
       window.gmd.interactMap.multiQueryApplyToMap('owner', { 'owner': owner }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
-
-      //window.populateRightMenuWithResults('owner');
     });
 
     $(document).on('click', '#current-loc-click', function() {
        window.g.communiqueOpen("Please wait while we find your location");
-       navigator.geolocation.getCurrentPosition(myLocationCallback);
+       navigator.geolocation.getCurrentPosition(window.dashHelp.myLocationCallback);
     });
 
     //this manages ALL responses to Search Results from Right column. 
@@ -1128,14 +937,14 @@
       
        ////////////////////////////////////////////////////////////////
        //Everytime we populate our right menu with a search result we can 
-       //expect either full search, or multi viz state...regardless offset left 0
+       //expect either full search, or multi viz state...regardless we set offset left 0
        ////////////////////////////////////////////////////////////////
        if (window.gmd.paginatedResultsData.shouldShowListResults){
           window.g.visualDashState = 'multi_result';
        } else {
           window.g.visualDashState = 'full_search';
        }
-       moveSelectionLeftArrow();
+       window.dashHelp.moveSelectionLeftArrow();
 
        $('#config').hide();
        $('.back-right').show();
@@ -1146,12 +955,13 @@
           // Animation complete.
         });
         ////////////////////////////////////////////////////////////////
-
        window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson, false, window.gmd.paginatedResultsData.shouldShowListResults);
     });
 
-
-    //set up our checkbox slider for letter view vs detail view
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //Start: Slider Checkbox setup
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //letter view vs detail switch
     $(".left-action-buttons-title input[type=checkbox]").switchButton({
       width: 30,
       height: 15,
@@ -1161,6 +971,7 @@
       checked: false
     });
 
+    //multi-result vs map result switch
     $(".right-switch-detail-results-holder input[type=checkbox]").switchButton({
       width: 30,
       height: 15,
@@ -1169,6 +980,31 @@
       off_label: 'Map Only',
       checked: false
     });
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //End: Slider Checkbox setup
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //Kick off our first map function, populate and center at saved lat lng
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    window.gmd.populateMap( $('#latMap').val(), $('#lngMap').val() );
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //Kick off scrolling
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    window.dashHelp.instantiateScrollers();
+
+
+    /* //used to handle toggleing search fields, remove this soon//
+    $(document).on('click', '.dropdown-search-selection', function(event) {
+        console.log(event);
+        var insideText = $(event.target).text();
+        $('#search-but-label-shown').text(insideText);
+        $('.search-field-holder').hide();
+        var currentAction = $(event.target).attr('data-action');
+        $('.' + currentAction).slideDown('fast');
+        console.log(currentAction);
+    });
+    */
     
   });
 
