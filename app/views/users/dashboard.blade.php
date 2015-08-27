@@ -23,8 +23,8 @@
 </div>
 <!--top menu goes here-->
 <div class="options-area" style="margin-left:5px;margin-right:10px;">
-  <h5 style="color:white;margin-right:10px;" class="left-result-heading dash-heading-4 pull-right">
-    &nbsp;&nbsp;&nbsp;Welcome! you are viewing taxlot data for <span id="county-label"></span>, <span id="state-label"></span>
+  <h5 style="color:white;margin-right:15px;" class="left-result-heading dash-heading-4 pull-right">
+    &nbsp;&nbsp;&nbsp;<span id="county-label"></span>, <span id="state-label"></span>
   </h5>
   <div class="pull-right left-action-buttons" style="display:none;">
     <span class="left-action-buttons-title">
@@ -86,7 +86,25 @@
   </div>
   <div class="dash-right-list" style="background-color:rgba(13,106,146,0.9);">
     <div class="dash-right-inter-margin" style="display:none;">
-      <!--this is populated using avatarTemplate-->
+      <div id="first-search-suggestion" class="well custom-well-search-suggestion">
+        <p class="heading">Get started!</p>
+        <p class="body">You have automatically been centered in <b class="county-name-start"></b> on the map to the right.
+          <br/><br/>
+          <b>1)</b> Get started by clicking the search icon (above left). This will allow you to type in specific search criteria to let you find exactly what you are looking for.
+          <br/><br/>
+          <b>2)</b> Drag the map around and click on parcels, and the info window will prompt you for the next action.       
+        </p>
+      </div>  
+      <div id="second-search-suggestion" class="well custom-well-search-suggestion" style="display:none;">
+        <p class="heading">Perform a search!</p>
+        <p class="body">Each section to the left represents a different way to search property data
+          <br/><br/>
+          <b>1)</b> Simply type into the appropriate field and click 'search' below it, to perform a specific kind of search.
+          <br/><br/>
+          <b>2)</b> Sometimes just viewing results on a map is difficult, especially when many results are returned. Because of this at the top of the search area, you will notice two options, 'Map Only' and 'List & Map'. To get a 
+          flyout menu that displays your results in a sorted list menu AND on the map, slide the option over to 'list & Map'.       
+        </p>
+      </div>  
     </div>
   </div>
   <div class="dash-options" style="background-color:rgba(13,106,146,0.0);">
@@ -131,6 +149,7 @@
                   <option value="acreage">Acreage (size)</option>
                   <option value="name">Owner name</option>
                   <option value="mapTaxLot">Taxlot id</option>
+                  <option value="generatedTotal">Total value</option>
                 </select>  
               </div>  
             </div>
@@ -153,6 +172,14 @@
               <input type="hidden" id="lngMapAddressHidden">
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
               <a href="javascript:void(0);" class="btn btn-default" id="search-all-address">Search</a>
+            </div>
+            <!--Search Total Value-->
+            <div class="search-field-holder total-value-div well custom-well-info-dark-blue">
+              <!--<label for="exampleInputEmail1">Search Location:</label>-->
+              <input type="text" class="form-control" placeholder="Highest $" id="value-between-1">
+              <input type="text" class="form-control" placeholder="Lowest $" id="value-between-2">
+              <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
+              <a href="javascript:void(0);" class="btn btn-default" id="search-total-value">Search</a>
             </div>
             <!--Search Between Acreage-->
             <div class="search-field-holder acreage-div well custom-well-info-dark-blue">
@@ -475,6 +502,7 @@
 
     //console.log(window.g.mapConfig);
     $('#county-label').text(window.g.mapConfig.countyName);
+    $('.county-name-start').text(window.g.mapConfig.countyName);
     $('#state-label').text(window.g.mapConfig.stateAb);
     $('#latMap').val(window.g.mapConfig.startLat);
     $('#lngMap').val(window.g.mapConfig.startLng);
@@ -541,7 +569,7 @@
        var lng = $(event.target).closest('div').attr('data-result-lng');
        var owner = $(event.target).closest('div').attr('data-result-owner');
        window.g.communiqueOpen('Adding marker, and centering map, for taxlot owned by ' + owner);
-       window.gmd.interactMap.panToPosition('tree', lat, lng);
+       window.gmd.interactMap.panToPosition('blueMarker', lat, lng);
        setTimeout(function(){ 
          window.g.communiqueClose();
        }, 4000);
@@ -805,6 +833,8 @@
 
     //move to helper file, rename to left
     window.populateRightMenuWithResults = function(linkMode, numResults){
+      //we no longer need instructions because a search result has been returned
+      $('#second-search-suggestion').hide('fast');
       //start: populates right menu with correct data and highlights 
       var templateResult = rightDashTemplate(window.dashHelp.rightTemplateJson(linkMode, numResults));
       $('.dash-right-inter-margin').prepend(templateResult);
@@ -835,7 +865,8 @@
         }, 400, function() {
           // Animation complete.
         });
-        
+        $('#first-search-suggestion').hide();
+        $('#second-search-suggestion').show('fast');
         window.g.visualDashState = 'full_search';
         window.dashHelp.moveSelectionLeftArrow();
     });
@@ -880,6 +911,16 @@
 
       //type, params, shouldPopulateRightList, shouldPerformListQuery
       window.gmd.interactMap.multiQueryApplyToMap('acreage', { 'acreageFirst': first, 'acreageSecond': second }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
+
+    });
+
+    $(document).on('click', '#search-total-value', function() {
+      //window.gmd.interactMap.userQuery();
+      var first = $('#value-between-1').val();
+      var second = $('#value-between-2').val();
+
+      //type, params, shouldPopulateRightList, shouldPerformListQuery
+      window.gmd.interactMap.multiQueryApplyToMap('totalValue', { 'totalFirst': first, 'totalSecond': second }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
     });
 
@@ -929,6 +970,8 @@
        tempJson.owner = $(event.target).closest('table').attr('data-owner');
        tempJson.acreageFirst = $(event.target).closest('table').attr('data-acreage-first');
        tempJson.acreageSecond = $(event.target).closest('table').attr('data-acreage-second');
+       tempJson.totalFirst = $(event.target).closest('table').attr('data-total-first');
+       tempJson.totalSecond = $(event.target).closest('table').attr('data-total-second');
        tempJson.mapTaxLotId = $(event.target).closest('table').attr('data-taxlot-id');
        tempJson.searchType = $(event.target).closest('table').attr('data-search-type');
 
@@ -955,6 +998,7 @@
           // Animation complete.
         });
         ////////////////////////////////////////////////////////////////
+        console.log(tempJson);
        window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson, false, window.gmd.paginatedResultsData.shouldShowListResults);
     });
 

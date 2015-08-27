@@ -118,6 +118,15 @@ border-bottom: 0px solid #e5e5e5;
 	color:white;
 }
 
+.custom-well-search-suggestion {
+   	margin: 10px 10px 10px 10px;
+    border: 0px;
+    color: white;
+    background-color: #337ab7;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 /*start: list query view hover states*/
 .query-table-row {
 	margin-bottom:1px;

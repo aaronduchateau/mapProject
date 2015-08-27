@@ -129,6 +129,8 @@
             data-owner="@{{owner}}"
             data-acreage-first="@{{acreageFirst}}"
             data-acreage-second="@{{acreageSecond}}"
+            data-total-first="@{{totalFirst}}"
+            data-total-second="@{{totalSecond}}"
             data-taxlot-id="@{{mapTaxLotId}}"
             data-search-type="@{{searchType}}"
             >
@@ -158,7 +160,10 @@
                        <b>map taxlot #:</b> @{{mapTaxLotId}}
                     @{{/xIf}}
                     @{{#xIf searchType "===" "acreage"}}
-                       <b>acreage between:</b> @{{acreageFirst}} and @{{acreageSecond}} acres
+                       <b>acreage:</b> @{{acreageFirst}} and @{{acreageSecond}} acres
+                    @{{/xIf}}
+                    @{{#xIf searchType "===" "totalValue"}}
+                       <b>value:</b> $@{{formatCurrency totalSecond}} < $@{{formatCurrency totalFirst}}
                     @{{/xIf}}
                 </span>
                 <p class="small">

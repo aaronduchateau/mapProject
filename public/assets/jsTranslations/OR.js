@@ -6,6 +6,8 @@ window.translations = {
 		nameColumn: "name",
 		acreageColumn: "acreage",
 		mapTaxLotColumn: "taxid",
+		impValue: "total_imp",
+		landValue: "total_land",
 		mapArr: ["cartodb_id","acreage","addr1","addr2","addr3","allaccount","alt_acct_n","assd_value","block","code_area","county_pro","csz","id","inst_no","legal","loc_code","lot","maint_area","mtl_acreag","name","nbhd_code","owner_id","prop_id","special_in","taxid","total_imp","total_land","total_mark","created_at","updated_at"],
 		translate: function(o) {
 			if (o.csz) {
@@ -75,6 +77,8 @@ window.translations = {
 		nameColumn: "feeowner",
 		acreageColumn: "acreage",
 		mapTaxLotColumn: "tm_maplot",
+		impValue: "impvalue",
+		landValue: "landvalue",
 		mapArr: ["cartodb_id", "account", "acreage", "address1", "address2", "addressnum", "addsort", "assessimp", "assessland","buildcode", "city", "commsqft", "contract", "feeowner", "gis_area", "impvalue", "incareof", "landvalue", "lotdepth", "lottype", "lotwidth", "maintenanc", "maplot", "mapnum", "mapnumber", "neighborho", "ownersort", "propclass", "scheduleco", "shape_star", "shape_stle", "siteadd", "state", "streetname", "taxcode", "taxlot", "tm_maplot", "trssort", "yearblt", "zipcode", "created_at", "updated_at"],
 		translate: function(o) {
 			//should add different logic here to account for zero vals
@@ -138,6 +142,8 @@ window.translations = {
 		nameColumn: "name",
 		acreageColumn: "acreage",
 		mapTaxLotColumn: "taxlot",
+		impValue: "imp_value",
+		landValue: "land_mkt",
 		mapArr: ["cartodb_id", "account", "acctstatus", "acreage", "addr1", "addr2", "addr3", "address", "appr_value", "assd_value", "bedrms", "bldg_class", "block", "city", "code", "comp_mtl", "csz", "deed_type", "exempt", "gis_zone", "imp_value", "inst_no", "land_appr", "land_mkt", "legal_acre", "living_are", "loc_desc", "lot", "maint", "mapnum", "mapnumx", "mh_make", "mh_value", "mnx", "name", "nbhd", "prop_class", "qq", "rmv", "rng", "sale_date", "sale_price", "sale_type", "sd", "sec", "situs", "situs_pref", "situs_suf0", "situs_suff", "sptb_codes", "sq_ft", "st_name", "st_no", "state", "taxes", "taxlot", "tl", "twn", "type", "yr_blt", "zip", "zone", "created_at", "updated_at"],
 		translate: function(o) {
 			//query on ACCOUNT, queryVal holds actual query val
@@ -192,6 +198,8 @@ window.translations = {
 		nameColumn: "ownname",
 		acreageColumn: "mapacres",
 		mapTaxLotColumn: "maptaxlot",
+		impValue: "impval",
+		landValue: "landval",
 		mapArr: ["cartodb_id", "mapnumber", "acctno", "taxcode", "addr1", "addr2", "addr3", "ownercity", "ownerprvst", "ownerzip", "numowners", "ownname", "impval", "landval", "yearblt", "taxlot", "bldgtype", "exemptdesc", "propcl", "propcldes", "statcl", "statcldes", "mapacres", "assdtotval", "maptaxlot", "zoning", "numlanduse", "plandes", "firedist", "schooldist", "neighbor", "created_at", "updated_at"],
 		translate: function(o) {
 			//if (o.impval && o.landval){

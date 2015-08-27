@@ -11,7 +11,13 @@ window.dashHelp = {
 	    var tempJson = {};
 	    tempJson.mapTime = this.timeNow();
 	    tempJson.numResults = numResults;
-	    if ( searchType === 'latLng' ){
+	    if ( searchType === 'totalValue' ){
+	      tempJson.searchType = searchType;
+	      tempJson.totalFirst = $('#value-between-1').val();
+	      tempJson.totalSecond = $('#value-between-2').val();
+	      tempJson.mode = 'multi';
+	      return tempJson;
+	    } else if ( searchType === 'latLng' ){
 	      tempJson.searchType = searchType;
 	      tempJson.mapLat = $('#latMap').val();
 	      tempJson.mapLng = $('#lngMap').val();
@@ -107,7 +113,7 @@ window.dashHelp = {
       });
     },
   	instantiateScrollers: function(){
-  		thisHeld = this;
+  		var thisHeld = this;
   		//enforce all content is loaded with window.load
 	    $(window).load(function(){
 			$(".dash-left-list").mCustomScrollbar({

@@ -58,8 +58,26 @@ window.gmd = {
 			    case 'mapTaxlot':
 			        column = window.translations[window.g.mapConfig.countyNameConcat]['mapTaxLotColumn'];
 			        break;
+		        case 'impValue':
+			        column = window.translations[window.g.mapConfig.countyNameConcat]['impValue'];
+			        break;
+		        case 'landValue':
+			        column = window.translations[window.g.mapConfig.countyNameConcat]['landValue'];
+			        break;
+			    case 'generatedTotal':
+			        column = 'generatedtotal';
+			        break;
 			}
 			return column;
+		},
+		constructSqlPrefix: function(searchType, countOrSelect){
+			var prefixString = ""
+			if (countOrSelect === 'select'){
+				prefixString = "SELECT *, (" + this.findLocalColumn('impValue') + "::integer + " + this.findLocalColumn('landValue') + "::integer) AS generatedTotal";
+			} else {
+
+			}
+			return prefixString;
 		}
 	},
 	interactMap: {
@@ -156,13 +174,20 @@ window.gmd = {
 			var limit = window.gmd.paginatedResultsData.resultsPerPage;
 			var offset = window.gmd.paginatedResultsData.currentOffset;
 			var orderColumn = window.gmd.helper.findLocalColumn(window.gmd.paginatedResultsData.orderBy);
+			var prefixString = window.gmd.helper.constructSqlPrefix(type, 'select');
+			//save below working basic
+			//countSqlString = "SELECT *" + sqlString + " ORDER BY " + orderColumn + " LIMIT " + limit + " OFFSET " + offset;
+			
+			//countSqlString = "SELECT *, (CONVERT(INT, impval) + convert(INT, landval)) AS generatedTotal" + sqlString + " ORDER BY " + orderColumn + " LIMIT " + limit + " OFFSET " + offset;
+			//countSqlString = "SELECT *, (impval::integer + landval::integer) AS generatedTotal" + sqlString + " ORDER BY " + orderColumn + " LIMIT " + limit + " OFFSET " + offset;
+			countSqlString = prefixString + sqlString + " ORDER BY " + orderColumn + " LIMIT " + limit + " OFFSET " + offset;
 
-			countSqlString = "SELECT *" + sqlString + " ORDER BY " + orderColumn + " LIMIT " + limit + " OFFSET " + offset;
-	
+			//sql += " AND SELECT (CONVERT(INT, impval) + convert(INT, landval)) AS generatedTotal"
 			window.gmd.cartoSqlConfig.execute(countSqlString)
 			  .done(function(data) {
-			  	//console.log('BIG FAT RESULTS');
-			    //console.log(data.rows);
+
+			  	console.log('BIG FAT RESULTS');
+			    console.log(data.rows);
 			    thisHeld.listTableQueryResultHandler(type, sqlString, data, count);
 			  })
 			  .error(function(errors) {
@@ -194,6 +219,7 @@ window.gmd = {
 		listCountQuery: function(type, sqlString, shouldPopulateRightMenu, shouldPerformListQuery){ 
 			thisHeld = this;
 			countSqlString = "SELECT COUNT(*)" + sqlString;
+			console.log(countSqlString);
 
 			window.gmd.cartoSqlConfig.execute(countSqlString)
 			  .done(function(data) {
@@ -211,6 +237,7 @@ window.gmd = {
 				var userColumn = window.gmd.helper.findLocalColumn('name');
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results with owner name like '" + params.owner +"'";
 				var sql = " FROM devtest." + table + " WHERE " + userColumn + " ILIKE '%" + params.owner + "%'";
+				//sql += " AND SELECT (CONVERT(INT, impval) + convert(INT, landval)) AS generatedTotal"
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type == 'acreage'){
@@ -220,6 +247,13 @@ window.gmd = {
 				var sql = " FROM devtest." + table + " WHERE " + acreageColumn + " BETWEEN " + params.acreageFirst + " AND " + params.acreageSecond;
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
+			} else if(type === 'totalValue'){
+				window.gmd.paginatedResultsData.readableQueryTitle = "Results between " + params.totalFirst + " and " + params.totalSecond + " in $";
+				var sumLandImp = "(" + window.gmd.helper.findLocalColumn('impValue') + "::integer + " + window.gmd.helper.findLocalColumn('landValue') + "::integer)";
+				var sql = " FROM devtest." + table + " WHERE " + sumLandImp + " BETWEEN " + params.totalSecond + " AND " + params.totalFirst;
+				window.gmd.paginatedResultsData.sqlString = sql;
+				console.log(sql);
+				return sql;
 			} else if (type == 'taxlot'){
 				var mapTaxLotColumn = window.gmd.helper.findLocalColumn('mapTaxlot');
 				
@@ -228,7 +262,7 @@ window.gmd = {
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'latLng'){
-				window.gmd.paginatedResultsData.readableQueryTitle = "Results for Lat & Lng at '" + params.mapTaxLotId + "' " + params.mapLat + "'" + params.mapLng + "'";
+				window.gmd.paginatedResultsData.readableQueryTitle = "Result Lat & Long ('" + params.mapLat + "', '" + params.mapLng + "')";
 				var sql = " FROM devtest." + table + " WHERE ST_Intersects(the_geom,CDB_LatLng(" + params.mapLat + "," + params.mapLng + "))";
 				console.log(sql);
 				window.gmd.paginatedResultsData.sqlString = sql;
@@ -259,8 +293,11 @@ window.gmd = {
 			}
 		
 			var sql = this.multiResultQueryBuilder(type, params);
-			var sqlAsSelect = "SELECT *" + sql; 
-	
+			//save below working
+			//var sqlAsSelect = "SELECT *" + sql; 
+
+			var prefixString = window.gmd.helper.constructSqlPrefix(type, 'select');
+			var sqlAsSelect = prefixString + sql; 
 			var boundingBox = this.queryAndPanToBounds(window.map, sqlAsSelect);
 			//view-source:http://andrew.hedges.name/experiments/haversine/
 
