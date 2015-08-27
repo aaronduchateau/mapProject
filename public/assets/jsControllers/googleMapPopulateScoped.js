@@ -231,12 +231,16 @@ window.gmd = {
 			    console.log("errors:" + errors);
 			  });
 		},
-		multiResultQueryBuilder: function(type, params){
+		fromTableQueryBuilder: function(){
 			var table = window.g.mapConfig.dashTableName;
+			return " FROM devtest." + table;
+		},
+		multiResultQueryBuilder: function(type, params){
+			
 			if (type == 'owner'){
 				var userColumn = window.gmd.helper.findLocalColumn('name');
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results with owner name like '" + params.owner +"'";
-				var sql = " FROM devtest." + table + " WHERE " + userColumn + " ILIKE '%" + params.owner + "%'";
+				var sql = " " + userColumn + " ILIKE '%" + params.owner + "%'";
 				//sql += " AND SELECT (CONVERT(INT, impval) + convert(INT, landval)) AS generatedTotal"
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
@@ -244,13 +248,13 @@ window.gmd = {
 				var acreageColumn = window.gmd.helper.findLocalColumn('acreage');
 
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results between " + params.acreageFirst + " and " + params.acreageSecond + " acres";
-				var sql = " FROM devtest." + table + " WHERE " + acreageColumn + " BETWEEN " + params.acreageFirst + " AND " + params.acreageSecond;
+				var sql = " " + acreageColumn + " BETWEEN " + params.acreageFirst + " AND " + params.acreageSecond;
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if(type === 'totalValue'){
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results between " + params.totalFirst + " and " + params.totalSecond + " in $";
 				var sumLandImp = "(" + window.gmd.helper.findLocalColumn('impValue') + "::integer + " + window.gmd.helper.findLocalColumn('landValue') + "::integer)";
-				var sql = " FROM devtest." + table + " WHERE " + sumLandImp + " BETWEEN " + params.totalSecond + " AND " + params.totalFirst;
+				var sql = " " + sumLandImp + " BETWEEN " + params.totalSecond + " AND " + params.totalFirst;
 				window.gmd.paginatedResultsData.sqlString = sql;
 				console.log(sql);
 				return sql;
@@ -258,18 +262,18 @@ window.gmd = {
 				var mapTaxLotColumn = window.gmd.helper.findLocalColumn('mapTaxlot');
 				
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results where Assesor Parcel Number = '" + params.mapTaxLotId + "'";
-				var sql = " FROM devtest." + table + " WHERE " + mapTaxLotColumn + " = " + params.mapTaxLotId;
+				var sql = " " + mapTaxLotColumn + " = " + params.mapTaxLotId;
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'latLng'){
 				window.gmd.paginatedResultsData.readableQueryTitle = "Result Lat & Long ('" + params.mapLat + "', '" + params.mapLng + "')";
-				var sql = " FROM devtest." + table + " WHERE ST_Intersects(the_geom,CDB_LatLng(" + params.mapLat + "," + params.mapLng + "))";
+				var sql = " ST_Intersects(the_geom,CDB_LatLng(" + params.mapLat + "," + params.mapLng + "))";
 				console.log(sql);
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'address'){
 				window.gmd.paginatedResultsData.readableQueryTitle = "Result for '" + params.fullAddress + "'";
-				var sql = " FROM devtest." + table + " WHERE ST_Intersects(the_geom,CDB_LatLng(" + params.mapLatHidden + "," + params.mapLngHidden + "))";
+				var sql = " ST_Intersects(the_geom,CDB_LatLng(" + params.mapLatHidden + "," + params.mapLngHidden + "))";
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'custom'){
@@ -278,7 +282,7 @@ window.gmd = {
 		    	} else if (params.type === 'number'){
 		    		var customAccountString = params.name + " = " + params.val;
 		    	}
-				var sql = " FROM devtest." + table + " WHERE " + customAccountString;
+				var sql = " " + customAccountString;
 				return sql;
 			}
 
@@ -286,13 +290,28 @@ window.gmd = {
 		//this calls the function above it to build our query
 		//handle sql count and multi result vs single result here
 		multiQueryApplyToMap: function(type, params, shouldPopulateRightMenu, shouldPerformListQuery){
+			var thisHeld = this;
 
 			//if the layer exists, nuke the old results
 			if (window.layerOwnerResults){
 				window.map.removeLayer(window.layerOwnerResults);
 			}
-		
-			var sql = this.multiResultQueryBuilder(type, params);
+			//comprise our sql string, depending on string or array
+			if (typeof(type) === 'string') {
+				var fromTable = this.fromTableQueryBuilder();
+				var mainQuery = this.multiResultQueryBuilder(type, params);	
+				var sql = fromTable + " WHERE" + mainQuery;
+			} else {
+				console.log('in array !!!!!!!!')
+				var firstType = _.first(type);
+				var fromTable = this.fromTableQueryBuilder();
+				var mainQuery = this.multiResultQueryBuilder(firstType, params);	
+				var sql = fromTable + " WHERE" + mainQuery;
+				var rest = _.rest(type);
+				_.each(rest, function(type){
+			        sql += " AND" + thisHeld.multiResultQueryBuilder(type, params);
+			    });
+			}
 			//save below working
 			//var sqlAsSelect = "SELECT *" + sql; 
 
@@ -303,7 +322,7 @@ window.gmd = {
 
 	    	var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.0; line-color: #8a0002; line-width: 4; line-opacity: 1;}'
 			var LayerConfig = window.gmd.cartoLayerConfig(sqlAsSelect, styles);
-			var thisHeld = this;
+			
 			cartodb.createLayer(window.map, LayerConfig)
 	         .addTo(window.map)
 	         .on('done', function(layer) {
