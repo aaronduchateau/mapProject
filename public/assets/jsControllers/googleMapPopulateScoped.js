@@ -205,11 +205,11 @@ window.gmd = {
 				//should use communique here rather than alert
 				alert('no results found');
 			} else if (shouldPopulateRightMenu && shouldPerformListQuery) {
-				window.populateRightMenuWithResults(type, count);
+				window.populateLeftMenuWithResults(type, count);
 				this.listLimitedQuery(type, sqlString, count);
 			} else if (shouldPopulateRightMenu) {
 				//populates our right menu, and passes in count 
-				window.populateRightMenuWithResults(type, count);
+				window.populateLeftMenuWithResults(type, count);
 			} else if(shouldPerformListQuery) {
 				this.listLimitedQuery(type, sqlString, count);
 			}
@@ -269,7 +269,7 @@ window.gmd = {
 				return sql;
 			} else if (type === 'address'){
 				window.gmd.paginatedResultsData.readableQueryTitle = "Result for '" + params.fullAddress + "'";
-				var sql = " FROM devtest." + table + " WHERE ST_Intersects(the_geom,CDB_LatLng(" + params.mapLat + "," + params.mapLng + "))";
+				var sql = " FROM devtest." + table + " WHERE ST_Intersects(the_geom,CDB_LatLng(" + params.mapLatHidden + "," + params.mapLngHidden + "))";
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'custom'){

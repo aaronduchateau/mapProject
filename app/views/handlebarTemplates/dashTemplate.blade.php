@@ -123,16 +123,7 @@
 	<!--start item-->
         <div class="custom-well-dash-left single-right-item">
           <table style="margin-left:10px;margin-right:5px;" 
-            data-attr-lat="@{{mapLat}}" 
-            data-attr-lng="@{{mapLng}}"
-            data-address="@{{fullAddress}}"
-            data-owner="@{{owner}}"
-            data-acreage-first="@{{acreageFirst}}"
-            data-acreage-second="@{{acreageSecond}}"
-            data-total-first="@{{totalFirst}}"
-            data-total-second="@{{totalSecond}}"
-            data-taxlot-id="@{{mapTaxLotId}}"
-            data-search-type="@{{searchType}}"
+            data-attr-uuid="@{{uuid}}" 
             >
             <tr>
               <td style="width:18%;">
@@ -600,14 +591,14 @@ Handlebars.registerHelper('formatCurrency', function(value) {
     	var splitNum = currencyParse.split(".");
     	return splitNum[0];
 	} else {
-		return 'EMPTY';
+		return '(?)';
 	}
 });
 Handlebars.registerHelper('formatAcreage', function(value) {
     if (value){
         return parseFloat(Math.round(value * 100) / 100).toFixed(2);
     } else {
-        return 'EMPTY';
+        return '(?)';
     }
 });
 Handlebars.registerHelper('xIf', function (lvalue, operator, rvalue, options) {

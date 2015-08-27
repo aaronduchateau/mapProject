@@ -156,14 +156,24 @@
             <!--Search By Owner-->
             <div class="search-field-holder owner-div well custom-well-info-dark-blue">
               <!--<label for="exampleInputEmail1">Search By Owner:</label>-->
+              <div class="checkbox custom-checkbox">
+                <label>
+                  <input type="checkbox" class="link-search" data-type-attribute="owner"> 
+                </label>
+              </div>
               <input type="text" class="form-control" placeholder="Full Owner Name" id="search-owner">
 
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-              <a href="javascript:void(0);" class="btn btn-default" id="search-all-owners">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="owner">Search</a>
             </div>
             <!--Search Location-->
             <div class="search-field-holder address-div well custom-well-info-dark-blue">
               <!--<label for="exampleInputEmail1">Search Location:</label>-->
+              <div class="checkbox custom-checkbox">
+                <label>
+                  <input type="checkbox" class="link-search" data-type-attribute="address"> 
+                </label>
+              </div>
               <input type="text" class="form-control" placeholder="Address" id="search-address">
               <input type="text" class="form-control" placeholder="City" id="search-city">
               <input type="text" class="form-control" placeholder="State" id="search-state">
@@ -171,19 +181,29 @@
               <input type="hidden" id="latMapAddressHidden">
               <input type="hidden" id="lngMapAddressHidden">
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-              <a href="javascript:void(0);" class="btn btn-default" id="search-all-address">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="address">Search</a>
             </div>
             <!--Search Total Value-->
             <div class="search-field-holder total-value-div well custom-well-info-dark-blue">
               <!--<label for="exampleInputEmail1">Search Location:</label>-->
+              <div class="checkbox custom-checkbox">
+                <label>
+                  <input type="checkbox" class="link-search" data-type-attribute="totalValue"> 
+                </label>
+              </div>
               <input type="text" class="form-control" placeholder="Highest $" id="value-between-1">
               <input type="text" class="form-control" placeholder="Lowest $" id="value-between-2">
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-              <a href="javascript:void(0);" class="btn btn-default" id="search-total-value">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="totalValue">Search</a>
             </div>
             <!--Search Between Acreage-->
             <div class="search-field-holder acreage-div well custom-well-info-dark-blue">
               <!--<label for="exampleInputEmail1">Search Between Acreage:</label>-->
+              <div class="checkbox custom-checkbox">
+                <label>
+                  <input type="checkbox" class="link-search" data-type-attribute="acreage"> 
+                </label>
+              </div>
               <select id="acreage-between-1" class="form-control">
                 <option value=".01">.01 acres</option>
                 <option value=".02">.02 acres</option>
@@ -340,22 +360,32 @@
               </select>
 
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-              <a href="javascript:void(0);" class="btn btn-default" id="search-all-acreage">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="acreage">Search</a>
             </div>
             <!--Search By Map Taxlot-->
             <div class="search-field-holder taxlot-div well custom-well-info-dark-blue">
               <!--<label for="exampleInputEmail1">Search By Map Taxlot #:</label>-->
-              <input type="text" class="form-control" placeholder="Taxlot number" id="search-taxlot-field">
+              <div class="checkbox custom-checkbox">
+                <label>
+                  <input type="checkbox" class="link-search" data-type-attribute="taxLot"> 
+                </label>
+              </div>
+              <input type="text" class="form-control" placeholder="Taxlot number">
 
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
-              <a href="javascript:void(0);" class="btn btn-default" id="search-all-taxlots">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="taxLot">Search</a>
             </div>
             <!--Search by Lat & Long-->
             <div class="search-field-holder latLon-div well custom-well-info-dark-blue">
               <!--<label for="exampleInputEmail1">Search by Lat & Long:</label>-->
+              <div class="checkbox custom-checkbox">
+                <label>
+                  <input type="checkbox" class="link-search" data-type-attribute="latLng"> 
+                </label>
+              </div>
               <input type="text" class="form-control" id="lngMap" placeholder="longitude" value="-122.877734">
               <input type="text" class="form-control" id="latMap" placeholder="lattitude" value="42.320921">
-              <a href="javascript:void(0);" id="search-click"class="btn btn-default" >Search</a>
+              <a href="javascript:void(0);" id="search-click" class="btn btn-default btn-search" data-type-attribute="latLng">Search</a>
             </div>
           </div>
           <!--<div class="form-group">
@@ -457,6 +487,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script src="http://underscorejs.org/underscore.js"></script>
+
 
 <script src="{{ URL::asset('dist/js/bootstrap.min.js') }}"></script>
 <script src="{{ URL::asset('dist/js/handlebars-v2.0.0.js') }}"></script>
@@ -832,6 +864,34 @@
     var rightDashTemplate = Handlebars.compile($("#dash-right-template").html());
 
     //move to helper file, rename to left
+    window.populateLeftMenuWithResults = function(linkMode, numResults){
+      //we no longer need instructions because a search result has been returned
+      $('#second-search-suggestion').hide('fast');
+      //start: populates right menu with correct data and highlights 
+      //var templateResult = rightDashTemplate(window.dashHelp.rightTemplateJson(linkMode, numResults));
+      var retrievedSearchItem = _.where(window.dashHelp.sessionSearchArray, {uuid: window.dashHelp.lastSearchUuid});
+      console.log('retrieved!!!');
+      console.log(retrievedSearchItem[0]);
+      var templateResult = rightDashTemplate(retrievedSearchItem[0]);
+  
+      $('.dash-right-inter-margin').prepend(templateResult);
+      $( ".single-right-item" ).each(function() {
+        $( this ).removeClass('active-item-right');
+      });
+      $('.single-right-item:first').addClass('active-item-right');
+      
+      //start: prep arrow crap 
+      if (window.gmd.paginatedResultsData.shouldShowListResults){
+          window.g.visualDashState = 'multi_result';
+      } else {
+          window.g.visualDashState = 'full_search';
+      }
+      window.dashHelp.moveSelectionLeftArrow();
+      //end: prep arrow crap 
+      //end: populates right menu with correct data and highlights 
+    }
+
+    //move to helper file, rename to left
     window.populateRightMenuWithResults = function(linkMode, numResults){
       //we no longer need instructions because a search result has been returned
       $('#second-search-suggestion').hide('fast');
@@ -871,15 +931,27 @@
         window.dashHelp.moveSelectionLeftArrow();
     });
 
-    $(document).on('click', '#search-click', function() {
-       var lat = $('#latMap').val();
-       var lng = $('#lngMap').val();
-       window.gmd.interactMap.multiQueryApplyToMap('latLng', { 'mapLat': lat, 'mapLng': lng }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
+    $(document).on('click', '.link-search', function(event) {
+        var tempArr = [];
+        $(".link-search").each(function() {
+          if ( $(this).prop('checked') ){
+            tempArr.push($(this).attr('data-type-attribute'))
+          }
+        });
+        window.dashHelp.linkedSearchList = tempArr;
+        console.log('window.dashHelp');
+        console.log(window.dashHelp.linkedSearchList);
     });
 
-    $(document).on('click', '#search-all-address', function() {
-        window.g.communiqueOpen("Give us a second to find that address for you");
-
+    $(document).on('click', '.btn-search', function(event) {
+      var currentType = $(event.target).attr('data-type-attribute');
+      //see if we are in linked search mode, if so make type an array
+      if (!_.isEmpty(window.dashHelp.linkedSearchList)){
+        currentType = window.dashHelp.linkedSearchList;
+      }
+      
+      //is our current type address, or if it is an array, does it contain address?
+      if (currentType === 'address' || (_.indexOf(currentType, 'address') === 1) ){
         var address = $('#search-address').val();
         var city = $('#search-city').val();
         var state = $('#search-state').val();
@@ -895,38 +967,22 @@
               $('#latMapAddressHidden').val(lat);
               $('#lngMapAddressHidden').val(lng);
               
-              window.gmd.interactMap.multiQueryApplyToMap('address', { 'mapLat': lat, 'mapLng': lng }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
+              var formData = window.dashHelp.leftTemplateJson(currentType);
+              window.gmd.interactMap.multiQueryApplyToMap(formData.searchType, formData, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
           } else {
             window.g.communiqueClose();
             alert('Sorry, looks like we could not find that address');
           }
         });
-    });
+      } else {
+        //handle 99.9% of searches here
+        var formData = window.dashHelp.leftTemplateJson(currentType);
+        console.log('formData');
+        console.log(formData);
+        window.gmd.interactMap.multiQueryApplyToMap(formData.searchType, formData, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
-    $(document).on('click', '#search-all-acreage', function() {
-      //window.gmd.interactMap.userQuery();
-      var first = $('#acreage-between-1').val();
-      var second = $('#acreage-between-2').val();
-
-      //type, params, shouldPopulateRightList, shouldPerformListQuery
-      window.gmd.interactMap.multiQueryApplyToMap('acreage', { 'acreageFirst': first, 'acreageSecond': second }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
-
-    });
-
-    $(document).on('click', '#search-total-value', function() {
-      //window.gmd.interactMap.userQuery();
-      var first = $('#value-between-1').val();
-      var second = $('#value-between-2').val();
-
-      //type, params, shouldPopulateRightList, shouldPerformListQuery
-      window.gmd.interactMap.multiQueryApplyToMap('totalValue', { 'totalFirst': first, 'totalSecond': second }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
-
-    });
-
-    $(document).on('click', '#search-all-taxlots', function() {
-      var mapTaxLot = $('#search-taxlot-field').val();
-      window.gmd.interactMap.multiQueryApplyToMap('taxlot', { 'mapTaxLotId': mapTaxLot }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
+      }
     });
 
     //this handles tr clicks for our list flyout menu
@@ -947,34 +1003,16 @@
       window.dashHelp.moveSelectionLeftArrow();
     });
 
-    $(document).on('click', '#search-all-owners', function() {
-      var owner = $('#search-owner').val();
-      window.gmd.interactMap.multiQueryApplyToMap('owner', { 'owner': owner }, true, window.gmd.paginatedResultsData.shouldShowListResults); 
-    });
-
     $(document).on('click', '#current-loc-click', function() {
        window.g.communiqueOpen("Please wait while we find your location");
        navigator.geolocation.getCurrentPosition(window.dashHelp.myLocationCallback);
     });
 
+
     //this manages ALL responses to Search Results from Right column. 
     $(document).on('click', '.single-right-item', function(event) {
-        var latMap = $(event.target).closest('table').attr('data-attr-lat');
-        var lngMap = $(event.target).closest('table').attr('data-attr-lng');
-
-       var tempJson = {};
-
-       tempJson.mapLat = $(event.target).closest('table').attr('data-attr-lat');
-       tempJson.mapLng = $(event.target).closest('table').attr('data-attr-lng');
-       tempJson.address = $(event.target).closest('table').attr('data-address');
-       tempJson.owner = $(event.target).closest('table').attr('data-owner');
-       tempJson.acreageFirst = $(event.target).closest('table').attr('data-acreage-first');
-       tempJson.acreageSecond = $(event.target).closest('table').attr('data-acreage-second');
-       tempJson.totalFirst = $(event.target).closest('table').attr('data-total-first');
-       tempJson.totalSecond = $(event.target).closest('table').attr('data-total-second');
-       tempJson.mapTaxLotId = $(event.target).closest('table').attr('data-taxlot-id');
-       tempJson.searchType = $(event.target).closest('table').attr('data-search-type');
-
+        var uuid = $(event.target).closest('table').attr('data-attr-uuid');
+        var retrievedSearchItem = _.where(window.dashHelp.sessionSearchArray, {uuid: uuid});
 
        window.g.highlightLastItem('.single-right-item', event, 'active-item-right');
       
@@ -992,14 +1030,15 @@
        $('#config').hide();
        $('.back-right').show();
        $('.right-switch-detail-results-holder').show('fast');
-        $( ".container-dash" ).animate({
+       $( ".container-dash" ).animate({
           left: "0"
         }, 400, function() {
           // Animation complete.
         });
         ////////////////////////////////////////////////////////////////
-        console.log(tempJson);
-       window.gmd.interactMap.multiQueryApplyToMap(tempJson.searchType, tempJson, false, window.gmd.paginatedResultsData.shouldShowListResults);
+        console.log('retrievedSearchItemLow');
+        console.log(retrievedSearchItem[0]);
+        window.gmd.interactMap.multiQueryApplyToMap(retrievedSearchItem[0].searchType, retrievedSearchItem[0], false, window.gmd.paginatedResultsData.shouldShowListResults);
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////

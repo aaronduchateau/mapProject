@@ -7,6 +7,66 @@ window.dashHelp = {
 	timeNow: function() {
     	return moment().format('MMMM Do YYYY, h:mm a');
   	},
+  	linkedSearchList: [],
+  	lastSearchUuid : null,
+  	sessionSearchArray: [],
+  	generateUUID: function() {
+	    var d = new Date().getTime();
+	    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+	        var r = (d + Math.random()*16)%16 | 0;
+	        d = Math.floor(d/16);
+	        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+	    });
+	    return uuid;
+	},
+  	singleVsMultiLookup: {
+  		'totalValue' : 'multi',
+  		'latLng'	 : 'single',
+  		'address'	 : 'single',
+  		'owner'	     : 'multi',
+  		'acreage'	 : 'multi',
+  		'taxlot'	 : 'single'
+  	},
+  	leftTemplateJson: function( searchType, numResults){
+	    var tempJson = {};
+	    tempJson.mapTime = this.timeNow();
+	    tempJson.numResults = numResults;
+	    //uuid
+	    var uuid = this.generateUUID();
+	    tempJson.uuid = uuid;
+	    this.lastSearchUuid = uuid;
+	    //mode
+	    tempJson.mode = this.singleVsMultiLookup[searchType];
+	    //slurp up all form data
+	    tempJson.searchType = searchType;
+	    //totalValue
+        tempJson.totalFirst = $('#value-between-1').val();
+        tempJson.totalSecond = $('#value-between-2').val();
+        //latLng
+        tempJson.mapLat = $('#latMap').val();
+        tempJson.mapLng = $('#lngMap').val();
+        //address
+        var address = $('#search-address').val();
+		var city = $('#search-city').val();
+		var state = $('#search-state').val();
+		var zip = $('#search-zip').val();
+		var fullAddy = address + ' ' + city + ' ' + state + ' ' + zip;
+		tempJson.fullAddress = fullAddy;
+		//deal with duplicate here
+		tempJson.mapLatHidden = $('#latMapAddressHidden').val();
+		tempJson.mapLngHidden = $('#lngMapAddressHidden').val();
+		//owner
+		tempJson.owner = $('#search-owner').val();
+		//acreage
+		tempJson.acreageFirst = $('#acreage-between-1').val();
+	    tempJson.acreageSecond = $('#acreage-between-2').val();
+	    //taxlot
+	    tempJson.mapTaxLotId = $('#search-taxlot-field').val();
+
+	    //push into our global store
+	    this.sessionSearchArray.push(tempJson);
+	    return tempJson;
+  	},
 	rightTemplateJson: function( searchType, numResults){
 	    var tempJson = {};
 	    tempJson.mapTime = this.timeNow();

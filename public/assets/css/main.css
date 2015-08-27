@@ -503,6 +503,26 @@ border-bottom: 0px solid #e5e5e5;
   display: inline-block;
 }
 
+/* style checkboxes */
+.custom-checkbox {
+	float: left;
+    margin-left: -30px;
+    background: #0d6a92;
+    -moz-border-radius: 6px;
+    border-radius: 56px;
+    padding-left: 7px;
+    padding-top: 4px;
+    margin-top: -10px;
+}
+
+.link-search {
+	opacity:0.1;
+}
+
+.link-search:checked {
+	opacity:1;
+}
+
 
 
 
