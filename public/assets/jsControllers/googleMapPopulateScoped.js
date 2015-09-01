@@ -44,6 +44,7 @@ window.gmd = {
 		shouldShowListResults: false,
 		orderBy: 'acreage'
 	},
+	polygonQueryGeoJson: {},
 	helper: {
 		//look at our translation to find relevent column name
 		findLocalColumn: function(columnKeyWord){
@@ -276,6 +277,16 @@ window.gmd = {
 				var sql = " ST_Intersects(the_geom,CDB_LatLng(" + params.mapLatHidden + "," + params.mapLngHidden + "))";
 				window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
+			} else if (type === 'polygon'){
+				window.gmd.paginatedResultsData.readableQueryTitle = "Result for Polygon";
+				var sql = " ST_Intersects(ST_Centroid(the_geom),ST_GeomFromGeoJSON('" + JSON.stringify(params.polygon) + "')) AND " + window.gmd.helper.findLocalColumn('name') + " IS NOT NULL";
+				window.gmd.paginatedResultsData.sqlString = sql;
+				//MULTIPOLYGON(((-43.162879943848 -22.913021404896,-43.183307647705 -22.891041392518,-43.209915161133 -22.897841345212,-43.209915161132 -22.909068428006,-43.21626663208 -22.92092701284,-43.220729827881 -22.93310074698,-43.196353912354 -22.940372845276,-43.187084197998 -22.953493251659,-43.168888092041 -22.953809390333,-43.148288726807 -22.921875654802,-43.162879943848 -22.913021404896)),((-43.142280578613 -22.966296276961,-43.175239562988 -22.944482988916,-43.207511901855 -22.941953684522,-43.233604431152 -22.9495414559,-43.246307373047 -22.98115258902,-43.262100219727 -22.984313295763,-43.264846801758 -22.965031834579,-43.293685913086 -22.963767380373,-43.29231262207 -23.004224047371,-43.215408325195 -22.988422103968,-43.189830780029 -22.991266590272,-43.142280578613 -22.966296276961)),((-43.220901489258 -22.922349973292,-43.221416473389 -22.93626257684,-43.305015563965 -22.995059145473,-43.243560791016 -22.999799689663,-43.122024536133 -22.947960705279,-43.164596557617 -22.9043247036,-43.198757171631 -22.903692194474,-43.213176727295 -22.912072700955,-43.220901489258 -22.922349973292)))
+				//https://github.com/csvsoundsystem/nicar-cartodb-postgis
+				//SELECT ST_AsText(ST_Centroid('MULTIPOINT ( -1 0, -1 2, -1 3, -1 4, -1 7, 0 1, 0 3, 1 1, 2 0, 6 0, 7 8, 9 8, 10 6 )'));
+				//something like below...
+				//https://groups.google.com/forum/#!topic/cartodb/zEncez3tYZs
+				return sql;
 			} else if (type === 'custom'){
 				if (params.type === 'string'){
 		        	var customAccountString = params.name + " = '" + params.val + "'";
@@ -302,7 +313,6 @@ window.gmd = {
 				var mainQuery = this.multiResultQueryBuilder(type, params);	
 				var sql = fromTable + " WHERE" + mainQuery;
 			} else {
-				console.log('in array !!!!!!!!')
 				var firstType = _.first(type);
 				var fromTable = this.fromTableQueryBuilder();
 				var mainQuery = this.multiResultQueryBuilder(firstType, params);	
@@ -311,6 +321,7 @@ window.gmd = {
 				_.each(rest, function(type){
 			        sql += " AND" + thisHeld.multiResultQueryBuilder(type, params);
 			    });
+			    window.gmd.paginatedResultsData.readableQueryTitle = "Results for custom linked query";
 			}
 			//save below working
 			//var sqlAsSelect = "SELECT *" + sql; 
@@ -473,6 +484,60 @@ window.gmd = {
 		}
 	},
 
+	showPolygonAreaEdited: function(e) {
+	  e.layers.eachLayer(function(layer) {
+	    showPolygonArea({ layer: layer });
+	  });
+	},
+
+	showPolygonArea: function(e) {
+	  //console.log(e.layer._latlngs);	
+	  console.log(e.layer.toGeoJSON());	
+	  window.gmd.polygonQueryGeoJson = e.layer.toGeoJSON().geometry;
+	  window.gmd.polygonQueryGeoJson['crs'] = {"type":"name","properties":{"name":"EPSG:4326"}};
+	  window.featureGroup.clearLayers();
+	  window.featureGroup.addLayer(e.layer);
+	  e.layer.bindPopup((LGeo.area(e.layer) / 1000000).toFixed(2) + ' km<sup>2</sup>');
+	  e.layer.openPopup();
+	},
+
+	removeDrawingToolsFromMap : function(){
+		window.featureGroup.clearLayers();
+		window.map.removeControl(window.drawControl);
+		window.featureGroup = null;
+		window.drawControl = null;
+		window.mainTileSublayer.setInteraction(true);
+	},
+
+	addDrawingToolsToMap : function(){
+		var thisHeld = this;
+		if(window.featureGroup){
+			window.featureGroup.clearLayers();
+		}
+		if (window.drawControl){
+			window.map.removeControl(window.drawControl);
+		}
+		window.mainTileSublayer.setInteraction(false);
+    	window.featureGroup = L.featureGroup().addTo(window.map);
+		window.drawControl = new L.Control.Draw({
+		  position: 'topright',
+		  //edit: {
+		  //  featureGroup: featureGroup
+		  //},
+		  edit: false,
+		  draw: {
+		    polygon: true,
+		    polyline: false,
+		    rectangle: false,
+		    circle: false,
+		    marker: false
+		  }
+		}).addTo(window.map);
+
+		window.map.on('draw:created', thisHeld.showPolygonArea);
+		window.map.on('draw:edited', thisHeld.showPolygonAreaEdited);
+    },
+
 	//this guy is now the main function
 	populateMapAfterTimeout: function(){
         
@@ -507,7 +572,11 @@ window.gmd = {
                   //console.log('latlng');
                   //console.log(latlng);
                   //console.log(data);
+
+                  //maybe comment this guy out
                   infowindow_model.set('visibility', true);
+                  //mainTileSublayer.setInteraction(false); 
+
                   //console.log(infowindow_model);
     			  //console.log(window.translations[window.g.mapConfig.countyNameConcat]['mapArr']);
                   thisScoped.onClickTileManager(e, latlng, pos, data, layerNumber);
@@ -565,6 +634,8 @@ window.gmd = {
 			}
 			*/
 		});
+
+		//this.addDrawingToolsToMap();
     },
 
     //this is our entry point to the map

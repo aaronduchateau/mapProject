@@ -156,6 +156,9 @@
                     @{{#xIf searchType "===" "totalValue"}}
                        <b>value:</b> $@{{formatCurrency totalSecond}} < $@{{formatCurrency totalFirst}}
                     @{{/xIf}}
+                    @{{#xIf searchType "===" "linkedSearch"}}
+                       <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Linked Query
+                    @{{/xIf}}
                 </span>
                 <p class="small">
                 <span class="pull-left">

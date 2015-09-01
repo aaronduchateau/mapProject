@@ -36,7 +36,11 @@ window.dashHelp = {
 	    tempJson.uuid = uuid;
 	    this.lastSearchUuid = uuid;
 	    //mode
-	    tempJson.mode = this.singleVsMultiLookup[searchType];
+	    if (typeof(searchType) != 'string'){
+	    	tempJson.mode = 'multi';
+	    } else {	
+	    	tempJson.mode = this.singleVsMultiLookup[searchType];
+		}
 	    //slurp up all form data
 	    tempJson.searchType = searchType;
 	    //totalValue
@@ -62,6 +66,7 @@ window.dashHelp = {
 	    tempJson.acreageSecond = $('#acreage-between-2').val();
 	    //taxlot
 	    tempJson.mapTaxLotId = $('#search-taxlot-field').val();
+	    tempJson.polygon = window.gmd.polygonQueryGeoJson;
 
 	    //push into our global store
 	    this.sessionSearchArray.push(tempJson);

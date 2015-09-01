@@ -387,6 +387,19 @@
               <input type="text" class="form-control" id="latMap" placeholder="lattitude" value="42.320921">
               <a href="javascript:void(0);" id="search-click" class="btn btn-default btn-search" data-type-attribute="latLng">Search</a>
             </div>
+            <div class="search-field-holder polygon-div well custom-well-info-dark-blue">
+              <!--<label for="exampleInputEmail1">Search by Lat & Long:</label>-->
+              <div class="checkbox custom-checkbox">
+                <label>
+                  <input type="checkbox" class="link-search" data-type-attribute="polygon"> 
+                </label>
+              </div>
+              
+              <a href="javascript:void(0);" class="btn btn-default btn-draw" data-type-attribute="startDraw">Start Drawing</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-draw" data-type-attribute="clearDraw">Clear Drawing</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="polygon">Search</a>
+
+            </div>
           </div>
           <!--<div class="form-group">
              <div class="dropdown">
@@ -479,6 +492,10 @@
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&v=3&libraries=geometry"></script>
 <script src="http://api-maps.yandex.ru/2.0/?load=package.map&lang=ru-RU" type="text/javascript"></script>
 <script src="http://libs.cartocdn.com/cartodb.js/v3/3.14/cartodb.js"></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/leaflet.draw.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/leaflet.draw.js'></script>
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-geodesy/v0.1.0/leaflet-geodesy.js'></script>
+
 <script src="{{ URL::asset('dist/js/layer/tile/Google.js') }}"></script>
 <script src="{{ URL::asset('dist/js/layer/tile/Bing.js') }}"></script>
 
@@ -870,33 +887,14 @@
       //start: populates right menu with correct data and highlights 
       //var templateResult = rightDashTemplate(window.dashHelp.rightTemplateJson(linkMode, numResults));
       var retrievedSearchItem = _.where(window.dashHelp.sessionSearchArray, {uuid: window.dashHelp.lastSearchUuid});
-      console.log('retrieved!!!');
-      console.log(retrievedSearchItem[0]);
-      var templateResult = rightDashTemplate(retrievedSearchItem[0]);
-  
-      $('.dash-right-inter-margin').prepend(templateResult);
-      $( ".single-right-item" ).each(function() {
-        $( this ).removeClass('active-item-right');
-      });
-      $('.single-right-item:first').addClass('active-item-right');
-      
-      //start: prep arrow crap 
-      if (window.gmd.paginatedResultsData.shouldShowListResults){
-          window.g.visualDashState = 'multi_result';
-      } else {
-          window.g.visualDashState = 'full_search';
-      }
-      window.dashHelp.moveSelectionLeftArrow();
-      //end: prep arrow crap 
-      //end: populates right menu with correct data and highlights 
-    }
 
-    //move to helper file, rename to left
-    window.populateRightMenuWithResults = function(linkMode, numResults){
-      //we no longer need instructions because a search result has been returned
-      $('#second-search-suggestion').hide('fast');
-      //start: populates right menu with correct data and highlights 
-      var templateResult = rightDashTemplate(window.dashHelp.rightTemplateJson(linkMode, numResults));
+      //create a copy as to not modify our global object
+      var tempJson = _.clone(retrievedSearchItem[0]);
+      if(typeof(tempJson.searchType) != 'string'){
+         tempJson.searchType = 'linkedSearch';
+      }
+      var templateResult = rightDashTemplate(tempJson);
+  
       $('.dash-right-inter-margin').prepend(templateResult);
       $( ".single-right-item" ).each(function() {
         $( this ).removeClass('active-item-right');
@@ -931,6 +929,7 @@
         window.dashHelp.moveSelectionLeftArrow();
     });
 
+    //manage link-search checkboxes
     $(document).on('click', '.link-search', function(event) {
         var tempArr = [];
         $(".link-search").each(function() {
@@ -939,14 +938,22 @@
           }
         });
         window.dashHelp.linkedSearchList = tempArr;
-        console.log('window.dashHelp');
-        console.log(window.dashHelp.linkedSearchList);
+    });
+
+    $(document).on('click', '.btn-draw', function(event) {
+      var currentType = $(event.target).attr('data-type-attribute');
+      if (currentType === 'startDraw'){
+        window.gmd.addDrawingToolsToMap();
+      }
+      if (currentType === 'clearDraw'){
+        window.gmd.removeDrawingToolsFromMap();
+      }
     });
 
     $(document).on('click', '.btn-search', function(event) {
       var currentType = $(event.target).attr('data-type-attribute');
-      //see if we are in linked search mode, if so make type an array
-      if (!_.isEmpty(window.dashHelp.linkedSearchList)){
+      //see if we are in linked search mode, && there's more than one thing, if so make type an array
+      if (!_.isEmpty(window.dashHelp.linkedSearchList) && (window.dashHelp.linkedSearchList.length != 1)){
         currentType = window.dashHelp.linkedSearchList;
       }
       
@@ -978,8 +985,6 @@
       } else {
         //handle 99.9% of searches here
         var formData = window.dashHelp.leftTemplateJson(currentType);
-        console.log('formData');
-        console.log(formData);
         window.gmd.interactMap.multiQueryApplyToMap(formData.searchType, formData, true, window.gmd.paginatedResultsData.shouldShowListResults); 
 
       }
