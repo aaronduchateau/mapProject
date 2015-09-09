@@ -31,13 +31,16 @@ class userSeeder extends Seeder {
         DB::table('users')->delete();
         DB::table('users')->insert(
         array(
-          array('firstname' => 'Aaron', 'lastname' => 'duchateau', 'phone' => '541-653-0973', 'email' => 'chateauconcept@gmail.com', 'password' => Hash::make('asdfasdf') ),
-      		array('firstname' => 'Nash', 'lastname' => 'Gambee', 'phone' => '541-513-0628', 'email' => 'ibgambee@yahoo.com', 'password' => Hash::make('test123123') ),
-      		array('firstname' => 'Kent', 'lastname' => 'Gambee', 'phone' => '541-288-3315', 'email' => 'alpinepropertiesllc@gmail.com', 'password' => Hash::make('licorice0221') ),
-          array('firstname' => 'Andrew', 'lastname' => 'Cook', 'phone' => '541-729-1228', 'email' => 'andrewkcook@gmail.com', 'password' => Hash::make('test123123') ),
-          array('firstname' => 'Ben', 'lastname' => 'Hickman', 'phone' => '503-319-7057', 'email' => 'Ben@BenHickmanDesign.com', 'password' => Hash::make('ben1234') ),
-          array('firstname' => 'Matthew', 'lastname' => 'Hall', 'phone' => '503-510-8161', 'email' => 'Matthew.Hall@usbank.com', 'password' => Hash::make('matt1234') ),
+          array('firstname' => 'Aaron', 'lastname' => 'duchateau', 'phone' => '541-653-0973', 'email' => 'chateauconcept@gmail.com', 'password' => Hash::make('asdfasdf'), 'accountType' => 'standard' ),
+      		array('firstname' => 'Nash', 'lastname' => 'Gambee', 'phone' => '541-513-0628', 'email' => 'ibgambee@yahoo.com', 'password' => Hash::make('test123123'), 'accountType' => 'timber' ),
+      		array('firstname' => 'Kent', 'lastname' => 'Gambee', 'phone' => '541-288-3315', 'email' => 'alpinepropertiesllc@gmail.com', 'password' => Hash::make('licorice0221'), 'accountType' => 'timber' ),
+          array('firstname' => 'Andrew', 'lastname' => 'Cook', 'phone' => '541-729-1228', 'email' => 'andrewkcook@gmail.com', 'password' => Hash::make('test123123'), 'accountType' => 'standard' ),
+          array('firstname' => 'Ben', 'lastname' => 'Hickman', 'phone' => '503-319-7057', 'email' => 'Ben@BenHickmanDesign.com', 'password' => Hash::make('ben1234'), 'accountType' => 'standard' ),
+          array('firstname' => 'Matthew', 'lastname' => 'Hall', 'phone' => '503-510-8161', 'email' => 'Matthew.Hall@usbank.com', 'password' => Hash::make('matt1234'), 'accountType' => 'standard' ),
+          array('firstname' => 'Peter', 'lastname' => 'Shin', 'phone' => '503-510-8161', 'email' => 'peter@peter.com', 'password' => Hash::make('peter1234'), 'accountType' => 'standard' ),
+          array('firstname' => 'Test', 'lastname' => 'Account', 'phone' => '503-510-8161', 'email' => 'test@test.com', 'password' => Hash::make('test1234'), 'accountType' => 'standard' )
 		    ));
+        $this->command->info('WHAT THE FUCK!');
         $this->command->info('users seeded INSIDE called!');
     }
 

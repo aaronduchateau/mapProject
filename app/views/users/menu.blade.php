@@ -61,6 +61,7 @@
 </div>
 <!--include this on every sub page-->
 <input type="hidden" id="client-email-holder" value="{{Auth::user()->email}}">
+<input type="hidden" id="client-account-type" value="{{Auth::user()->accountType}}">
 <input type="hidden" id="client-name-holder" value="{{Auth::user()->firstname}} {{Auth::user()->lastname}}">
 
 
@@ -98,7 +99,8 @@
     window.g.populateTopMenu(
       { menu: {class: " active", link: "javascript:void(0);", action: ""},
         dash: {class: "", link: "javascript:void(0);", action: ""},
-        emailHeld: $('#client-email-holder').val() });
+        emailHeld: $('#client-email-holder').val(),
+        accountType: $('#client-account-type').val()});
       
     
 

@@ -174,6 +174,13 @@ border-bottom: 0px solid #e5e5e5;
 	color:#e5e5e5;
 }
 
+.options-inter-margin p.heading {
+	margin: 0px 0px 0px 0px;
+	font-size: 18px;
+	font-family: 'Open Sans', sans-serif;
+	padding-top:10px;
+}
+
 .dash-right-inter-margin span.body {
 	margin: 0px 0px 0px 0px;
 	font-size: 12px;

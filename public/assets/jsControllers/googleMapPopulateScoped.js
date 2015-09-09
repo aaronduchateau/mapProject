@@ -44,7 +44,10 @@ window.gmd = {
 		shouldShowListResults: false,
 		orderBy: 'acreage'
 	},
-	polygonQueryGeoJson: {},
+	polygonQueryGeoJson: {
+		geoJson: {},
+		readableArea: null,
+	},
 	helper: {
 		//look at our translation to find relevent column name
 		findLocalColumn: function(columnKeyWord){
@@ -169,6 +172,8 @@ window.gmd = {
 		},
 
 		listLimitedQuery: function(type, sqlString, count){ 
+			console.log('listLimitedQuery');
+			console.log(sqlString);
 			thisHeld = this;
 			//var table = window.g.mapConfig.dashTableName;
 			//window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
@@ -243,50 +248,50 @@ window.gmd = {
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results with owner name like '" + params.owner +"'";
 				var sql = " " + userColumn + " ILIKE '%" + params.owner + "%'";
 				//sql += " AND SELECT (CONVERT(INT, impval) + convert(INT, landval)) AS generatedTotal"
-				window.gmd.paginatedResultsData.sqlString = sql;
+				//window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type == 'acreage'){
 				var acreageColumn = window.gmd.helper.findLocalColumn('acreage');
 
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results between " + params.acreageFirst + " and " + params.acreageSecond + " acres";
 				var sql = " " + acreageColumn + " BETWEEN " + params.acreageFirst + " AND " + params.acreageSecond;
-				window.gmd.paginatedResultsData.sqlString = sql;
+				//window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if(type === 'totalValue'){
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results between " + params.totalFirst + " and " + params.totalSecond + " in $";
 				var sumLandImp = "(" + window.gmd.helper.findLocalColumn('impValue') + "::integer + " + window.gmd.helper.findLocalColumn('landValue') + "::integer)";
 				var sql = " " + sumLandImp + " BETWEEN " + params.totalSecond + " AND " + params.totalFirst;
-				window.gmd.paginatedResultsData.sqlString = sql;
-				console.log(sql);
+				//window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type == 'taxlot'){
 				var mapTaxLotColumn = window.gmd.helper.findLocalColumn('mapTaxlot');
 				
 				window.gmd.paginatedResultsData.readableQueryTitle = "Results where Assesor Parcel Number = '" + params.mapTaxLotId + "'";
 				var sql = " " + mapTaxLotColumn + " = " + params.mapTaxLotId;
-				window.gmd.paginatedResultsData.sqlString = sql;
+				//window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'latLng'){
 				window.gmd.paginatedResultsData.readableQueryTitle = "Result Lat & Long ('" + params.mapLat + "', '" + params.mapLng + "')";
 				var sql = " ST_Intersects(the_geom,CDB_LatLng(" + params.mapLat + "," + params.mapLng + "))";
 				console.log(sql);
-				window.gmd.paginatedResultsData.sqlString = sql;
+				//window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'address'){
 				window.gmd.paginatedResultsData.readableQueryTitle = "Result for '" + params.fullAddress + "'";
 				var sql = " ST_Intersects(the_geom,CDB_LatLng(" + params.mapLatHidden + "," + params.mapLngHidden + "))";
-				window.gmd.paginatedResultsData.sqlString = sql;
+				//window.gmd.paginatedResultsData.sqlString = sql;
 				return sql;
 			} else if (type === 'polygon'){
-				window.gmd.paginatedResultsData.readableQueryTitle = "Result for Polygon";
+				window.gmd.paginatedResultsData.readableQueryTitle = "Result for shape with area " + params.polygonReadableArea + " km<sup>2</sup>";
 				var sql = " ST_Intersects(ST_Centroid(the_geom),ST_GeomFromGeoJSON('" + JSON.stringify(params.polygon) + "')) AND " + window.gmd.helper.findLocalColumn('name') + " IS NOT NULL";
-				window.gmd.paginatedResultsData.sqlString = sql;
+				//window.gmd.paginatedResultsData.sqlString = sql;
 				//MULTIPOLYGON(((-43.162879943848 -22.913021404896,-43.183307647705 -22.891041392518,-43.209915161133 -22.897841345212,-43.209915161132 -22.909068428006,-43.21626663208 -22.92092701284,-43.220729827881 -22.93310074698,-43.196353912354 -22.940372845276,-43.187084197998 -22.953493251659,-43.168888092041 -22.953809390333,-43.148288726807 -22.921875654802,-43.162879943848 -22.913021404896)),((-43.142280578613 -22.966296276961,-43.175239562988 -22.944482988916,-43.207511901855 -22.941953684522,-43.233604431152 -22.9495414559,-43.246307373047 -22.98115258902,-43.262100219727 -22.984313295763,-43.264846801758 -22.965031834579,-43.293685913086 -22.963767380373,-43.29231262207 -23.004224047371,-43.215408325195 -22.988422103968,-43.189830780029 -22.991266590272,-43.142280578613 -22.966296276961)),((-43.220901489258 -22.922349973292,-43.221416473389 -22.93626257684,-43.305015563965 -22.995059145473,-43.243560791016 -22.999799689663,-43.122024536133 -22.947960705279,-43.164596557617 -22.9043247036,-43.198757171631 -22.903692194474,-43.213176727295 -22.912072700955,-43.220901489258 -22.922349973292)))
 				//https://github.com/csvsoundsystem/nicar-cartodb-postgis
 				//SELECT ST_AsText(ST_Centroid('MULTIPOINT ( -1 0, -1 2, -1 3, -1 4, -1 7, 0 1, 0 3, 1 1, 2 0, 6 0, 7 8, 9 8, 10 6 )'));
 				//something like below...
 				//https://groups.google.com/forum/#!topic/cartodb/zEncez3tYZs
 				return sql;
+			//i think i can delete this....	
 			} else if (type === 'custom'){
 				if (params.type === 'string'){
 		        	var customAccountString = params.name + " = '" + params.val + "'";
@@ -323,8 +328,9 @@ window.gmd = {
 			    });
 			    window.gmd.paginatedResultsData.readableQueryTitle = "Results for custom linked query";
 			}
-			//save below working
-			//var sqlAsSelect = "SELECT *" + sql; 
+			//this is used later by listLimitedQuery
+			window.gmd.paginatedResultsData.sqlString = sql;
+			
 
 			var prefixString = window.gmd.helper.constructSqlPrefix(type, 'select');
 			var sqlAsSelect = prefixString + sql; 
@@ -485,28 +491,37 @@ window.gmd = {
 	},
 
 	showPolygonAreaEdited: function(e) {
+	  console.log('showPolygonAreaEdited');
 	  e.layers.eachLayer(function(layer) {
 	    showPolygonArea({ layer: layer });
 	  });
 	},
 
 	showPolygonArea: function(e) {
+		console.log('showPolygonArea');
 	  //console.log(e.layer._latlngs);	
 	  console.log(e.layer.toGeoJSON());	
-	  window.gmd.polygonQueryGeoJson = e.layer.toGeoJSON().geometry;
-	  window.gmd.polygonQueryGeoJson['crs'] = {"type":"name","properties":{"name":"EPSG:4326"}};
+	  window.gmd.polygonQueryGeoJson.geoJson = e.layer.toGeoJSON().geometry;
+	  window.gmd.polygonQueryGeoJson.geoJson['crs'] = {"type":"name","properties":{"name":"EPSG:4326"}};
 	  window.featureGroup.clearLayers();
 	  window.featureGroup.addLayer(e.layer);
-	  e.layer.bindPopup((LGeo.area(e.layer) / 1000000).toFixed(2) + ' km<sup>2</sup>');
-	  e.layer.openPopup();
+	  window.gmd.polygonQueryGeoJson.readableArea = (LGeo.area(e.layer) / 1000000).toFixed(2);
+	  //e.layer.bindPopup((LGeo.area(e.layer) / 1000000).toFixed(2) + ' km<sup>2</sup>');
+	  //e.layer.openPopup();
 	},
 
-	removeDrawingToolsFromMap : function(){
+	removeDrawnLayersFromMap : function(){
+		window.dashHelp.polygonSearchInstructionsShow();
 		window.featureGroup.clearLayers();
-		window.map.removeControl(window.drawControl);
-		window.featureGroup = null;
-		window.drawControl = null;
+	},
+
+	polygonDrawStart : function(){
+		window.mainTileSublayer.setInteraction(false);
+	},
+
+	polygonDrawStop : function(){
 		window.mainTileSublayer.setInteraction(true);
+		window.dashHelp.polygonSearchButtonsShow();
 	},
 
 	addDrawingToolsToMap : function(){
@@ -517,7 +532,6 @@ window.gmd = {
 		if (window.drawControl){
 			window.map.removeControl(window.drawControl);
 		}
-		window.mainTileSublayer.setInteraction(false);
     	window.featureGroup = L.featureGroup().addTo(window.map);
 		window.drawControl = new L.Control.Draw({
 		  position: 'topright',
@@ -526,7 +540,22 @@ window.gmd = {
 		  //},
 		  edit: false,
 		  draw: {
-		    polygon: true,
+		    polygon: {
+				allowIntersection: false,
+				repeatMode: false,
+				drawError: {
+					color: '#b00b00',
+					timeout: 2500
+				},
+				shapeOptions: {
+					stroke: true,
+					color: '#f06eaa',
+					weight: 4,
+					opacity: 0.5,
+					fill: true,
+					clickable: false
+				}
+			},
 		    polyline: false,
 		    rectangle: false,
 		    circle: false,
@@ -536,6 +565,8 @@ window.gmd = {
 
 		window.map.on('draw:created', thisHeld.showPolygonArea);
 		window.map.on('draw:edited', thisHeld.showPolygonAreaEdited);
+		window.map.on('draw:drawstart', thisHeld.polygonDrawStart);
+		window.map.on('draw:drawstop', thisHeld.polygonDrawStop);
     },
 
 	//this guy is now the main function
@@ -635,7 +666,7 @@ window.gmd = {
 			*/
 		});
 
-		//this.addDrawingToolsToMap();
+		this.addDrawingToolsToMap();
     },
 
     //this is our entry point to the map

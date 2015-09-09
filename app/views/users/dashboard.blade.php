@@ -394,10 +394,17 @@
                   <input type="checkbox" class="link-search" data-type-attribute="polygon"> 
                 </label>
               </div>
-              
-              <a href="javascript:void(0);" class="btn btn-default btn-draw" data-type-attribute="startDraw">Start Drawing</a>
-              <a href="javascript:void(0);" class="btn btn-default btn-draw" data-type-attribute="clearDraw">Clear Drawing</a>
-              <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="polygon">Search</a>
+              <div id="search-form-polygon-search-1">
+                <p class="heading">Polygon Search</p>
+                <p class="body">
+                  Use the polygon draw tool (underneath the zoom controls on the map to the right) and draw a complete polygon. Make sure to complete the shape by connecting to the first drawn point, and bring your attention back to this area to perform a search.
+                </p>
+              </div>
+              <div id="search-form-polygon-search-2" style="display:none;">  
+                <p class="heading"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> ( <span id="search-form-polygon-area"></span> km<sup>2</sup> )</p>
+                <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="polygon">Search</a>
+                <a href="javascript:void(0);" class="btn btn-default btn-draw" data-type-attribute="clearDraw">Clear</a>
+              </div>
 
             </div>
           </div>
@@ -542,6 +549,9 @@
     window.g.mapConfig.accountOwnerName = '{{Auth::user()->firstname}} {{Auth::user()->lastname}}';
     window.g.mapConfig.accountOwnerPhone = '{{Auth::user()->phone}}';
     window.g.mapConfig.accountOwnerEmail = '{{Auth::user()->email}}';
+    window.g.mapConfig.accountType = '{{Auth::user()->accountType}}';
+    window.g.mapConfig.accountStatus = '{{Auth::user()->status}}';
+    window.g.mapConfig.accountActive = '{{Auth::user()->active}}';
 
     //VISUAL DASH STATES, 1) default state, 2) full_search state (two pains) 3) multi_result state 
     window.g.visualDashState = 'default'; 
@@ -560,10 +570,13 @@
     window.g.triPageSetup();
     
     //load global template and populate top menu
-     window.g.populateTopMenu(
+    window.g.populateTopMenu(
       { menu: {class: "", link: "{{ URL::asset('/users/menu') }}", action: ""},
         dash: {class: " active", link: "javascript:void(0);", action: ""},
-        emailHeld: $('#client-email-holder').val() });
+        emailHeld: $('#client-email-holder').val(),
+        accountType:  window.g.mapConfig.accountType
+      }
+    );
 
 
 
@@ -946,7 +959,7 @@
         window.gmd.addDrawingToolsToMap();
       }
       if (currentType === 'clearDraw'){
-        window.gmd.removeDrawingToolsFromMap();
+        window.gmd.removeDrawnLayersFromMap();
       }
     });
 

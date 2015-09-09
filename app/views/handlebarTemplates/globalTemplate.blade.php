@@ -10,7 +10,13 @@
             <li role="presentation"><a href="{{ URL::asset('/users/logout')}}">Sign out (@{{emailHeld}})</a></li>
           </ul>
         </nav>
-        <h3 class="custom-text-brand"><img src="{{ URL::asset('/images/icon-map-new.png') }}" style="width:20px;margin-top:-4px;"/> TimberChopper&#0153;</h3>
+        @{{#xIf accountType "===" "timber"}}
+            <h3 class="custom-text-brand"><img src="{{ URL::asset('/images/icon-map-new.png') }}" style="width:20px;margin-top:-4px;"/> TimberChopper&#0153;</h3>  
+        @{{/xIf}}
+        @{{#xIf accountType "===" "standard"}}
+            <h3 class="custom-text-brand" style="font-weight:200;letter-spacing: 0px;"><img src="{{ URL::asset('/images/frog_logo.png') }}" style="width: 35px;margin-top: -1px;margin-right: -5px;margin-left: 9px;"/> LotHopper&#0153;</h3>  
+        @{{/xIf}}
+        
         </div>
       </div>
     </nav>
@@ -28,4 +34,43 @@ Handlebars.registerHelper('currentDatePretty', function() {
 Handlebars.registerHelper('passedDatePretty', function(item) {
     return (moment(item).format('MMMM Do YYYY, h:mm a'));
 });
+Handlebars.registerHelper('xIf', function (lvalue, operator, rvalue, options) {
+
+    var operators, result;
+
+    if (arguments.length < 3) {
+        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+    }
+
+    if (options === undefined) {
+        options = rvalue;
+        rvalue = operator;
+        operator = "===";
+    }
+
+    operators = {
+        '==': function (l, r) { return l == r; },
+        '===': function (l, r) { return l === r; },
+        '!=': function (l, r) { return l != r; },
+        '!==': function (l, r) { return l !== r; },
+        '<': function (l, r) { return l < r; },
+        '>': function (l, r) { return l > r; },
+        '<=': function (l, r) { return l <= r; },
+        '>=': function (l, r) { return l >= r; },
+        'typeof': function (l, r) { return typeof l == r; }
+    };
+
+    if (!operators[operator]) {
+        throw new Error("'xIf' doesn't know the operator " + operator);
+    }
+
+    result = operators[operator](lvalue, rvalue);
+
+    if (result) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});
+//reference at https://github.com/wycats/handlebars.js/issues/616
 </script>

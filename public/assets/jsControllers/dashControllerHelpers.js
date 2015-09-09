@@ -4,6 +4,15 @@ window.dashHelp = {
 	    $('#lngMap').val(position.coords.longitude);
 	    $('#search-click').click();
 	},
+	polygonSearchInstructionsShow: function(){
+		$('#search-form-polygon-search-1').show();
+		$('#search-form-polygon-search-2').hide();
+	},
+	polygonSearchButtonsShow: function(){
+		$('#search-form-polygon-area').text(window.gmd.polygonQueryGeoJson.readableArea);
+		$('#search-form-polygon-search-2').show('fast');
+		$('#search-form-polygon-search-1').hide('fast');
+	},
 	timeNow: function() {
     	return moment().format('MMMM Do YYYY, h:mm a');
   	},
@@ -25,7 +34,8 @@ window.dashHelp = {
   		'address'	 : 'single',
   		'owner'	     : 'multi',
   		'acreage'	 : 'multi',
-  		'taxlot'	 : 'single'
+  		'taxlot'	 : 'single',
+  		'polygon'	 : 'multi'
   	},
   	leftTemplateJson: function( searchType, numResults){
 	    var tempJson = {};
@@ -66,7 +76,8 @@ window.dashHelp = {
 	    tempJson.acreageSecond = $('#acreage-between-2').val();
 	    //taxlot
 	    tempJson.mapTaxLotId = $('#search-taxlot-field').val();
-	    tempJson.polygon = window.gmd.polygonQueryGeoJson;
+	    tempJson.polygon = window.gmd.polygonQueryGeoJson.geoJson;
+	    tempJson.polygonReadableArea = window.gmd.polygonQueryGeoJson.readableArea;
 
 	    //push into our global store
 	    this.sessionSearchArray.push(tempJson);

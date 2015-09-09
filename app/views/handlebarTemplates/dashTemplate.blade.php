@@ -159,6 +159,9 @@
                     @{{#xIf searchType "===" "linkedSearch"}}
                        <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Linked Query
                     @{{/xIf}}
+                    @{{#xIf searchType "===" "polygon"}}
+                        Shape Query @{{polygonReadableArea}} km<sup>2</sup>
+                    @{{/xIf}}
                 </span>
                 <p class="small">
                 <span class="pull-left">
