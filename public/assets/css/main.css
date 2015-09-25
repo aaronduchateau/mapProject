@@ -530,6 +530,20 @@ border-bottom: 0px solid #e5e5e5;
 	opacity:1;
 }
 
+.btn-spinner-img{
+	margin-left: 13px;
+    margin-right: 13px;
+    width: 18px;
+}
+
+.btn-search-spin{
+	display:none;
+}
+
+.btn-search-spin:hover{
+	background-color:white;
+}
+
 
 
 

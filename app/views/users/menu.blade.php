@@ -1,3 +1,4 @@
+<span style="display:none;" id="environment">{{App::environment();}}</span>
 <!--top menu goes here-->
 <div class="options-area" style="margin-left:5px;margin-right:10px;">
   <h5 style="color:white;" class="left-result-heading dash-heading-4 pull-left">

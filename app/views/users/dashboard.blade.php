@@ -24,7 +24,7 @@
 <!--top menu goes here-->
 <div class="options-area" style="margin-left:5px;margin-right:10px;">
   <h5 style="color:white;margin-right:15px;" class="left-result-heading dash-heading-4 pull-right">
-    &nbsp;&nbsp;&nbsp;<span id="county-label"></span>, <span id="state-label"></span>
+    &nbsp;&nbsp;&nbsp;<span id="county-label"></span>, <span id="state-label"></span> <span style="font-size: 11px;">( updated <span id="created-at">loading date...</span> )</span>
   </h5>
   <div class="pull-right left-action-buttons" style="display:none;">
     <span class="left-action-buttons-title">
@@ -161,10 +161,13 @@
                   <input type="checkbox" class="link-search" data-type-attribute="owner"> 
                 </label>
               </div>
-              <input type="text" class="form-control" placeholder="Full Owner Name" id="search-owner">
+              <input type="text" class="form-control search-field" data-search-type="alphanumeric" placeholder="Full Owner Name" id="search-owner">
 
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
               <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="owner">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="owner">
+                <img src="{{ URL::asset('images/loading_spinner.gif')}}" class="btn-spinner-img"/>
+              </a>
             </div>
             <!--Search Location-->
             <div class="search-field-holder address-div well custom-well-info-dark-blue">
@@ -174,14 +177,17 @@
                   <input type="checkbox" class="link-search" data-type-attribute="address"> 
                 </label>
               </div>
-              <input type="text" class="form-control" placeholder="Address" id="search-address">
-              <input type="text" class="form-control" placeholder="City" id="search-city">
-              <input type="text" class="form-control" placeholder="State" id="search-state">
-              <input type="text" class="form-control" placeholder="Zip" id="search-zip">
+              <input type="text" class="form-control search-field" data-search-type="alphanumeric" placeholder="Address" id="search-address">
+              <input type="text" class="form-control search-field" data-search-type="alphanumeric" placeholder="City" id="search-city">
+              <input type="text" class="form-control search-field" data-search-type="alphanumeric" placeholder="State" id="search-state">
+              <input type="text" class="form-control search-field" data-search-type="alphanumeric" placeholder="Zip" id="search-zip">
               <input type="hidden" id="latMapAddressHidden">
               <input type="hidden" id="lngMapAddressHidden">
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
               <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="address">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="address">
+                <img src="{{ URL::asset('images/loading_spinner.gif')}}" class="btn-spinner-img"/>
+              </a>
             </div>
             <!--Search Total Value-->
             <div class="search-field-holder total-value-div well custom-well-info-dark-blue">
@@ -191,10 +197,13 @@
                   <input type="checkbox" class="link-search" data-type-attribute="totalValue"> 
                 </label>
               </div>
-              <input type="text" class="form-control" placeholder="Highest $" id="value-between-1">
-              <input type="text" class="form-control" placeholder="Lowest $" id="value-between-2">
+              <input type="text" class="form-control search-field" data-search-type="numeric" placeholder="Highest $" id="value-between-1">
+              <input type="text" class="form-control search-field" data-search-type="numeric" placeholder="Lowest $" id="value-between-2">
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
               <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="totalValue">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="totalValue">
+                <img src="{{ URL::asset('images/loading_spinner.gif')}}" class="btn-spinner-img"/>
+              </a>
             </div>
             <!--Search Between Acreage-->
             <div class="search-field-holder acreage-div well custom-well-info-dark-blue">
@@ -361,6 +370,9 @@
 
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
               <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="acreage">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="acreage">
+                <img src="{{ URL::asset('images/loading_spinner.gif')}}" class="btn-spinner-img"/>
+              </a>
             </div>
             <!--Search By Map Taxlot-->
             <div class="search-field-holder taxlot-div well custom-well-info-dark-blue">
@@ -370,10 +382,13 @@
                   <input type="checkbox" class="link-search" data-type-attribute="taxLot"> 
                 </label>
               </div>
-              <input type="text" class="form-control" placeholder="Taxlot number">
+              <input type="text" class="form-control search-field" data-search-type="alphanumeric" placeholder="Taxlot number">
 
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
               <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="taxLot">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="taxLot">
+                <img src="{{ URL::asset('images/loading_spinner.gif')}}" class="btn-spinner-img"/>
+              </a>
             </div>
             <!--Search by Lat & Long-->
             <div class="search-field-holder latLon-div well custom-well-info-dark-blue">
@@ -383,9 +398,12 @@
                   <input type="checkbox" class="link-search" data-type-attribute="latLng"> 
                 </label>
               </div>
-              <input type="text" class="form-control" id="lngMap" placeholder="longitude" value="-122.877734">
-              <input type="text" class="form-control" id="latMap" placeholder="lattitude" value="42.320921">
+              <input type="text" class="form-control search-field" data-search-type="numeric"id="lngMap" placeholder="longitude" value="-122.877734">
+              <input type="text" class="form-control search-field" data-search-type="numeric" id="latMap" placeholder="lattitude" value="42.320921">
               <a href="javascript:void(0);" id="search-click" class="btn btn-default btn-search" data-type-attribute="latLng">Search</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="latLng">
+                <img src="{{ URL::asset('images/loading_spinner.gif')}}" class="btn-spinner-img"/>
+              </a>
             </div>
             <div class="search-field-holder polygon-div well custom-well-info-dark-blue">
               <!--<label for="exampleInputEmail1">Search by Lat & Long:</label>-->
@@ -403,6 +421,9 @@
               <div id="search-form-polygon-search-2" style="display:none;">  
                 <p class="heading"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> ( <span id="search-form-polygon-area"></span> km<sup>2</sup> )</p>
                 <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="polygon">Search</a>
+                <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="polygon">
+                  <img src="{{ URL::asset('images/loading_spinner.gif')}}" class="btn-spinner-img"/>
+                </a>
                 <a href="javascript:void(0);" class="btn btn-default btn-draw" data-type-attribute="clearDraw">Clear</a>
               </div>
 
@@ -895,8 +916,13 @@
 
     //move to helper file, rename to left
     window.populateLeftMenuWithResults = function(linkMode, numResults){
+      window.dashHelp.hideSpinButton();
+      if(linkMode === 'noResults'){
+        alert('no results found');
+        return false;
+      }
       //we no longer need instructions because a search result has been returned
-      $('#second-search-suggestion').hide('fast');
+      $('#second-search-suggestion').remove();
       //start: populates right menu with correct data and highlights 
       //var templateResult = rightDashTemplate(window.dashHelp.rightTemplateJson(linkMode, numResults));
       var retrievedSearchItem = _.where(window.dashHelp.sessionSearchArray, {uuid: window.dashHelp.lastSearchUuid});
@@ -963,8 +989,32 @@
       }
     });
 
+    //keyup event for error handling
+    $( ".search-field" ).keyup(function() {
+      window.dashHelp.globalInputErrorStatus = true;
+      $( ".search-field" ).each(function(index, item) {
+        var item = $(item);
+        var errorType = item.attr('data-search-type');
+        var myVal = item.val();
+        if(window.dashHelp.validateSearchInput(myVal, errorType, item) === false){
+          window.dashHelp.globalInputErrorStatus = false;
+        }
+      });
+       
+    });
+
     $(document).on('click', '.btn-search', function(event) {
+      if(!window.dashHelp.globalInputErrorStatus){
+        alert('please correct errors in your submition before searching');
+        return false;
+      }
       var currentType = $(event.target).attr('data-type-attribute');
+
+      //start: add our spinner for the search in question
+      $(event.target).hide();
+      window.dashHelp.showSpinButton(currentType);
+      //end: add spinner for search in question
+
       //see if we are in linked search mode, && there's more than one thing, if so make type an array
       if (!_.isEmpty(window.dashHelp.linkedSearchList) && (window.dashHelp.linkedSearchList.length != 1)){
         currentType = window.dashHelp.linkedSearchList;

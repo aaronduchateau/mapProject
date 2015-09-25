@@ -40,7 +40,6 @@ class userSeeder extends Seeder {
           array('firstname' => 'Peter', 'lastname' => 'Shin', 'phone' => '503-510-8161', 'email' => 'peter@peter.com', 'password' => Hash::make('peter1234'), 'accountType' => 'standard' ),
           array('firstname' => 'Test', 'lastname' => 'Account', 'phone' => '503-510-8161', 'email' => 'test@test.com', 'password' => Hash::make('test1234'), 'accountType' => 'standard' )
 		    ));
-        $this->command->info('WHAT THE FUCK!');
         $this->command->info('users seeded INSIDE called!');
     }
 

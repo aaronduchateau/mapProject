@@ -209,7 +209,7 @@ window.gmd = {
 			window.activatePagination(count, window.gmd.paginatedResultsData.resultsPerPage);
 			if (listCountQueryResult.rows[0].count === 0 ){
 				//should use communique here rather than alert
-				alert('no results found');
+				window.populateLeftMenuWithResults('noResults', count);
 			} else if (shouldPopulateRightMenu && shouldPerformListQuery) {
 				window.populateLeftMenuWithResults(type, count);
 				this.listLimitedQuery(type, sqlString, count);
@@ -667,6 +667,19 @@ window.gmd = {
 		});
 
 		this.addDrawingToolsToMap();
+
+		//start: add created_at for last update to dom
+		var firstResult = "SELECT created_at" + window.gmd.interactMap.fromTableQueryBuilder() + " WHERE cartodb_id = 1";
+		window.gmd.cartoSqlConfig.execute(firstResult)
+			  .done(function(data) {
+			    var lastUpdated = moment(data.rows[0].created_at);
+			    $('#created-at').html(lastUpdated.format("MMMM Do, YYYY"));
+			  })
+			  .error(function(errors) {
+			    // errors contains a list of errors
+			    console.log("errors grabbing first result for updated val:" + errors);
+			  });
+		//end: add created_at for last update to dom
     },
 
     //this is our entry point to the map

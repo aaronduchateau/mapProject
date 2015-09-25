@@ -13,8 +13,37 @@ window.dashHelp = {
 		$('#search-form-polygon-search-2').show('fast');
 		$('#search-form-polygon-search-1').hide('fast');
 	},
+	validateSearchInput: function(myVal, valType, item){
+      item.css('border', '1px solid #ccc');
+      if(!myVal){
+      	return true;
+      }
+      if (valType === 'alphanumeric'){
+        if( (/[^-,.'#A-Za-z0-9\x20]/.test( myVal )) ) {
+           //input not alphanumeric
+           item.css('border', '1px solid red');
+           return false;
+        }
+        return true;     
+      } else if (valType === 'numeric'){
+      	if( (/[^-.#0-9]/.test( myVal )) ) {
+           //input not alphanumeric
+           item.css('border', '1px solid red');
+           return false;
+        }
+        return true;
+      }
+   	},
 	timeNow: function() {
     	return moment().format('MMMM Do YYYY, h:mm a');
+  	},
+  	showSpinButton: function(searchType){
+  		$(".btn-search-spin[data-type-attribute='" + searchType + "']").css('display','inline-block');
+  	},
+  	hideSpinButton: function(){
+  	  //show all of our search btns, hide spinner
+      $("[class$=btn-search]").show();
+      $("[class$=btn-search-spin]").hide();
   	},
   	linkedSearchList: [],
   	lastSearchUuid : null,
