@@ -52,15 +52,26 @@ return array(
 			'prefix'   => '',
 		),
 
+		//'mysql' => array(
+		//	'driver'    => 'mysql',
+		//	'host'      => 'localhost',
+		//	'database'  => 'homesteadtwo',
+		//	'username'  => 'homesteadtwo',
+		//	'password'  => 'secret',
+		//	'charset'   => 'utf8',
+		//	'collation' => 'utf8_unicode_ci',
+		//	'prefix'    => '',
+		),
+
 		'mysql' => array(
-			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'homesteadtwo',
-			'username'  => 'homesteadtwo',
-			'password'  => 'secret',
-			'charset'   => 'utf8',
-			'collation' => 'utf8_unicode_ci',
-			'prefix'    => '',
+			'driver'    => $_ENV['aaron_driver'],
+			'host'      => $_ENV['aaron_host'],
+			'database'  => $_ENV['aaron_database'],
+			'username'  => $_ENV['aaron_username'],
+			'password'  => $_ENV['aaron_password'],
+			'charset'   => $_ENV['aaron_charset'],
+			'collation' => $_ENV['aaron_collation'],
+			'prefix'    => $_ENV['aaron_prefix'],
 		),
 
 		'pgsql' => array(
