@@ -36,7 +36,7 @@
 		  			&nbsp;
 		  		</td>
 		  		<td>
-		  			<p>We'll communicate with the counties, order the data, import it into your dashbaord, and updated as often as you'd like.</p>
+		  			<p>We'll communicate with the counties, order the data, import it into your dashboard, and update it as often as you'd like.</p>
 		  		</td>	
 		  	</tr>	
 		  	<!--end section-->
