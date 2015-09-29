@@ -37,6 +37,9 @@ window.dashHelp = {
 	timeNow: function() {
     	return moment().format('MMMM Do YYYY, h:mm a');
   	},
+  	timeNowHoursMin: function() {
+    	return moment().format('h:mm a');
+  	},
   	showSpinButton: function(searchType){
   		$(".btn-search-spin[data-type-attribute='" + searchType + "']").css('display','inline-block');
   	},
@@ -68,7 +71,7 @@ window.dashHelp = {
   	},
   	leftTemplateJson: function( searchType, numResults){
 	    var tempJson = {};
-	    tempJson.mapTime = this.timeNow();
+	    tempJson.mapTime = this.timeNowHoursMin();
 	    tempJson.numResults = numResults;
 	    //uuid
 	    var uuid = this.generateUUID();

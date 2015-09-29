@@ -165,8 +165,7 @@
                 </span>
                 <p class="small">
                 <span class="pull-left">
-                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-                <span class="date-holder">@{{mapTime}}</span>
+                <span class="date-holder">@{{numResults}} results ~ @{{mapTime}}</span>
                 <br><br>
                 </p>
                 </div>

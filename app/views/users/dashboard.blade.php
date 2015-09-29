@@ -213,161 +213,8 @@
                   <input type="checkbox" class="link-search" data-type-attribute="acreage"> 
                 </label>
               </div>
-              <select id="acreage-between-1" class="form-control">
-                <option value=".01">.01 acres</option>
-                <option value=".02">.02 acres</option>
-                <option value=".03">.03 acres</option>
-                <option value=".04">.04 acres</option>
-                <option value=".05">.05 acres</option>
-                <option value=".06">.06 acres</option>
-                <option value=".07">.07 acres</option>
-                <option value=".08">.08 acres</option>
-                <option value=".09">.09 acres</option>
-                <option value="1">.1 acres</option>
-                <option value="1.5">1.5 acres</option>
-                <option value="2">2 acres</option>
-                <option value="2.5">2.5 acres</option>
-                <option value="3">3 acres</option>
-                <option value="3.5">3.5 acres</option>
-                <option value="4">4 acres</option>
-                <option value="5">5 acres</option>
-                <option value="6">6 acres</option>
-                <option value="7">7 acres</option>
-                <option value="8">8 acres</option>
-                <option value="9">9 acres</option>
-                <option value="10">10 acres</option>
-                <option value="15">15 acres</option>
-                <option value="20">20 acres</option>
-                <option value="25">25 acres</option>
-                <option value="30">30 acres</option>
-                <option value="40">40 acres</option>
-                <option value="50">50 acres</option>
-                <option value="60">60 acres</option>
-                <option value="70">70 acres</option>
-                <option value="80">80 acres</option>
-                <option value="90">90 acres</option>
-                <option value="100">100 acres</option>
-                <option value="130">130 acres</option>
-                <option value="160">160 acres</option>
-                <option value="190">190 acres</option>
-                <option value="200">200 acres</option>
-                <option value="225">225 acres</option>
-                <option value="250">250 acres</option>
-                <option value="275">275 acres</option>
-                <option value="300">300 acres</option>
-                <option value="325">325 acres</option>
-                <option value="350">350 acres</option>
-                <option value="375">375 acres</option>
-                <option value="400">400 acres</option>
-                <option value="425">425 acres</option>
-                <option value="450">450 acres</option>
-                <option value="475">475 acres</option>
-                <option value="500">500 acres</option>
-                <option value="525">525 acres</option>
-                <option value="550">550 acres</option>
-                <option value="575">575 acres</option>
-                <option value="600">600 acres</option>
-                <option value="625">625 acres</option>
-                <option value="650">650 acres</option>
-                <option value="675">675 acres</option>
-                <option value="700">700 acres</option>
-                <option value="750">750 acres</option>
-                <option value="800">800 acres</option>
-                <option value="850">850 acres</option>
-                <option value="900">900 acres</option>
-                <option value="950">950 acres</option>
-                <option value="1000">1000 acres</option>
-                <option value="1500">1500 acres</option>
-                <option value="2000">2000 acres</option>
-                <option value="2500">2500 acres</option>
-                <option value="3000">3000 acres</option>
-                <option value="3500">3500 acres</option>
-                <option value="4000">4000 acres</option>
-                <option value="4500">4500 acres</option>
-                <option value="5000">5000 acres</option>
-                <option value="10000">10000 acres</option>
-                <option value="20000">20000 acres</option>
-                <option value="30000">30000 acres</option>
-                <option value="40000">40000 acres</option>
-              </select>
-              <select id="acreage-between-2" class="form-control">
-                <option value=".01">.01 acres</option>
-                <option value=".02" selected="selected">.02 acres</option>
-                <option value=".03">.03 acres</option>
-                <option value=".04">.04 acres</option>
-                <option value=".05">.05 acres</option>
-                <option value=".06">.06 acres</option>
-                <option value=".07">.07 acres</option>
-                <option value=".08">.08 acres</option>
-                <option value=".09">.09 acres</option>
-                <option value="1">.1 acres</option>
-                <option value="1.5">1.5 acres</option>
-                <option value="2">2 acres</option>
-                <option value="2.5">2.5 acres</option>
-                <option value="3">3 acres</option>
-                <option value="3.5">3.5 acres</option>
-                <option value="4">4 acres</option>
-                <option value="5">5 acres</option>
-                <option value="6">6 acres</option>
-                <option value="7">7 acres</option>
-                <option value="8">8 acres</option>
-                <option value="9">9 acres</option>
-                <option value="10">10 acres</option>
-                <option value="15">15 acres</option>
-                <option value="20">20 acres</option>
-                <option value="25">25 acres</option>
-                <option value="30">30 acres</option>
-                <option value="40">40 acres</option>
-                <option value="50">50 acres</option>
-                <option value="60">60 acres</option>
-                <option value="70">70 acres</option>
-                <option value="80">80 acres</option>
-                <option value="90">90 acres</option>
-                <option value="100">100 acres</option>
-                <option value="130">130 acres</option>
-                <option value="160">160 acres</option>
-                <option value="190">190 acres</option>
-                <option value="200">200 acres</option>
-                <option value="225">225 acres</option>
-                <option value="250">250 acres</option>
-                <option value="275">275 acres</option>
-                <option value="300">300 acres</option>
-                <option value="325">325 acres</option>
-                <option value="350">350 acres</option>
-                <option value="375">375 acres</option>
-                <option value="400">400 acres</option>
-                <option value="425">425 acres</option>
-                <option value="450">450 acres</option>
-                <option value="475">475 acres</option>
-                <option value="500">500 acres</option>
-                <option value="525">525 acres</option>
-                <option value="550">550 acres</option>
-                <option value="575">575 acres</option>
-                <option value="600">600 acres</option>
-                <option value="625">625 acres</option>
-                <option value="650">650 acres</option>
-                <option value="675">675 acres</option>
-                <option value="700">700 acres</option>
-                <option value="750">750 acres</option>
-                <option value="800">800 acres</option>
-                <option value="850">850 acres</option>
-                <option value="900">900 acres</option>
-                <option value="950">950 acres</option>
-                <option value="1000">1000 acres</option>
-                <option value="1500">1500 acres</option>
-                <option value="2000">2000 acres</option>
-                <option value="2500">2500 acres</option>
-                <option value="3000">3000 acres</option>
-                <option value="3500">3500 acres</option>
-                <option value="4000">4000 acres</option>
-                <option value="4500">4500 acres</option>
-                <option value="5000">5000 acres</option>
-                <option value="10000">10000 acres</option>
-                <option value="20000">20000 acres</option>
-                <option value="30000">30000 acres</option>
-                <option value="40000">40000 acres</option>
-              </select>
-
+              <input type="text" class="form-control search-field" data-search-type="numeric" placeholder=".05 acres" id="acreage-between-1">
+              <input type="text" class="form-control search-field" data-search-type="numeric" placeholder="2.5 acres" id="acreage-between-2">
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
               <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="acreage">Search</a>
               <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="acreage">
@@ -932,6 +779,8 @@
       if(typeof(tempJson.searchType) != 'string'){
          tempJson.searchType = 'linkedSearch';
       }
+      //add the result count to our tempJson
+      tempJson.numResults = numResults;
       var templateResult = rightDashTemplate(tempJson);
   
       $('.dash-right-inter-margin').prepend(templateResult);

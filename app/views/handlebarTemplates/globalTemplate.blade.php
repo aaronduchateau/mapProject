@@ -14,7 +14,7 @@
             <h3 class="custom-text-brand"><img src="{{ URL::asset('/images/icon-map-new.png') }}" style="width:20px;margin-top:-4px;"/> TimberChopper&#0153;</h3>  
         @{{/xIf}}
         @{{#xIf accountType "===" "standard"}}
-            <h3 class="custom-text-brand" style="font-weight:200;letter-spacing: 0px;"><img src="{{ URL::asset('/images/frog_logo.png') }}" style="width: 35px;margin-top: -1px;margin-right: -5px;margin-left: 9px;"/> LotHopper&#0153;</h3>  
+            <h3 class="custom-text-brand" style="font-weight:200;letter-spacing: 0px;"><img src="{{ URL::asset('/images/frog_logo.png') }}" style="width: 35px;margin-top: -1px;margin-right: -5px;margin-left: 9px;"/> LotHoppers.com</h3>  
         @{{/xIf}}
         
         </div>
