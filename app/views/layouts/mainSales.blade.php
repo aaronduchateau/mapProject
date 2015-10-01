@@ -43,7 +43,6 @@
                         <textarea name="" id="messageFormPublic" class="input-spacing" style="height:120px;" placeholder="Your Message"></textarea>
                  </div>  
                  <div class="col-md-6">             
-                        Please fill out the form to your right.<br/><br/>
                         We are excited to hear from you and get back to you at our next possible convenience! Please include as much context as possible in your message so we can get back to you in the most professional and accurate way possible. 
                  </div>       
                  <div style="clear:both;"></div>    

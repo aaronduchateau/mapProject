@@ -197,8 +197,8 @@
                   <input type="checkbox" class="link-search" data-type-attribute="totalValue"> 
                 </label>
               </div>
-              <input type="text" class="form-control search-field" data-search-type="numeric" placeholder="Highest $" id="value-between-1">
               <input type="text" class="form-control search-field" data-search-type="numeric" placeholder="Lowest $" id="value-between-2">
+              <input type="text" class="form-control search-field" data-search-type="numeric" placeholder="Highest $" id="value-between-1">
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
               <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="totalValue">Search</a>
               <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="totalValue">
@@ -229,7 +229,7 @@
                   <input type="checkbox" class="link-search" data-type-attribute="taxLot"> 
                 </label>
               </div>
-              <input type="text" class="form-control search-field" data-search-type="alphanumeric" placeholder="Taxlot number">
+              <input type="text" class="form-control search-field" data-search-type="alphanumeric" placeholder="Taxlot number" id="search-taxlot-field">
 
               <!--<input type="checkbox"> <span style="color:white;">Reset to saved Address</span>-->
               <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="taxLot">Search</a>
@@ -245,7 +245,7 @@
                   <input type="checkbox" class="link-search" data-type-attribute="latLng"> 
                 </label>
               </div>
-              <input type="text" class="form-control search-field" data-search-type="numeric"id="lngMap" placeholder="longitude" value="-122.877734">
+              <input type="text" class="form-control search-field" data-search-type="numeric" id="lngMap" placeholder="longitude" value="-122.877734">
               <input type="text" class="form-control search-field" data-search-type="numeric" id="latMap" placeholder="lattitude" value="42.320921">
               <a href="javascript:void(0);" id="search-click" class="btn btn-default btn-search" data-type-attribute="latLng">Search</a>
               <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="latLng">
@@ -254,7 +254,7 @@
             </div>
             <div class="search-field-holder polygon-div well custom-well-info-dark-blue">
               <!--<label for="exampleInputEmail1">Search by Lat & Long:</label>-->
-              <div class="checkbox custom-checkbox">
+              <div class="checkbox custom-checkbox custom-checkbox-polygon" style="display:none;">
                 <label>
                   <input type="checkbox" class="link-search" data-type-attribute="polygon"> 
                 </label>
@@ -420,6 +420,7 @@
     window.g.mapConfig.accountType = '{{Auth::user()->accountType}}';
     window.g.mapConfig.accountStatus = '{{Auth::user()->status}}';
     window.g.mapConfig.accountActive = '{{Auth::user()->active}}';
+    window.dashHelp.globalInputErrorStatus = true;
 
     //VISUAL DASH STATES, 1) default state, 2) full_search state (two pains) 3) multi_result state 
     window.g.visualDashState = 'default'; 
@@ -642,15 +643,15 @@
     window.activatePagination = function(count, resultsPerPage){
 
       var totalPages = Math.floor((count + 1) / resultsPerPage);
-      console.log('count' + count + ' resultsPerpage' + resultsPerPage);
-      console.log(totalPages);
+      //console.log('count' + count + ' resultsPerpage' + resultsPerPage);
+      //console.log(totalPages);
 
       if (totalPages < 1){
         totalPages = 1;
       }
       
       var pageData = $('#pagination').data();
-      console.log(pageData);
+      //console.log(pageData);
       if ( !jQuery.isEmptyObject(pageData) ){
           $('#pagination').twbsPagination('destroy'); 
       } 
@@ -672,8 +673,8 @@
       $( ".dash-list-query-area" ).animate({
         left: 0 
       }, 400, function() {
-        console.log('paginatedResults');
-        console.log(paginatedResults);
+        //console.log('paginatedResults');
+        //console.log(paginatedResults);
         //compile result into template
         var source = $("#dash-list-query-table-template").html();
         var listQueryTemplate = Handlebars.compile(source);
@@ -839,6 +840,7 @@
     });
 
     //keyup event for error handling
+    /*
     $( ".search-field" ).keyup(function() {
       window.dashHelp.globalInputErrorStatus = true;
       $( ".search-field" ).each(function(index, item) {
@@ -851,23 +853,35 @@
       });
        
     });
+    */
+
+    $( ".search-field" ).keyup(function(e) {
+        var field = $(this);
+        var errorType = field.attr('data-search-type');
+        var myVal = field.val();
+        window.dashHelp.validateSearchInput(myVal, errorType, field, true);
+    });
 
     $(document).on('click', '.btn-search', function(event) {
+      var currentType = $(event.target).attr('data-type-attribute');
+      //see if we are in linked search mode, && there's more than one thing, if so make type an array
+      if (!_.isEmpty(window.dashHelp.linkedSearchList) && (window.dashHelp.linkedSearchList.length != 1)){
+        currentType = window.dashHelp.linkedSearchList;
+      }
+
+      //keyup error handling already taken place, check for empty
+      window.dashHelp.validateEmpty(currentType);
+  
       if(!window.dashHelp.globalInputErrorStatus){
         alert('please correct errors in your submition before searching');
         return false;
       }
-      var currentType = $(event.target).attr('data-type-attribute');
+      //end: error handling
 
       //start: add our spinner for the search in question
       $(event.target).hide();
       window.dashHelp.showSpinButton(currentType);
       //end: add spinner for search in question
-
-      //see if we are in linked search mode, && there's more than one thing, if so make type an array
-      if (!_.isEmpty(window.dashHelp.linkedSearchList) && (window.dashHelp.linkedSearchList.length != 1)){
-        currentType = window.dashHelp.linkedSearchList;
-      }
       
       //is our current type address, or if it is an array, does it contain address?
       if (currentType === 'address' || (_.indexOf(currentType, 'address') === 1) ){
@@ -891,6 +905,7 @@
 
           } else {
             window.g.communiqueClose();
+            window.dashHelp.hideSpinButton();
             alert('Sorry, looks like we could not find that address');
           }
         });

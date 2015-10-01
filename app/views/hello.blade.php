@@ -171,8 +171,7 @@
 
 
 <!--include handlbar templates-->
-@include('handlebarTemplates.menuTemplate')
-@include('handlebarTemplates.globalTemplate')
+
 
 
 

@@ -7,14 +7,21 @@ window.dashHelp = {
 	polygonSearchInstructionsShow: function(){
 		$('#search-form-polygon-search-1').show();
 		$('#search-form-polygon-search-2').hide();
+		//hide the joined query checkbox
+		$('.custom-checkbox-polygon').hide();
+		$('.custom-checkbox-polygon input[type=checkbox]').attr('checked', false);
 	},
 	polygonSearchButtonsShow: function(){
 		$('#search-form-polygon-area').text(window.gmd.polygonQueryGeoJson.readableArea);
 		$('#search-form-polygon-search-2').show('fast');
 		$('#search-form-polygon-search-1').hide('fast');
+		//show the joined query checkbox
+		$('.custom-checkbox-polygon').show();
 	},
-	validateSearchInput: function(myVal, valType, item){
-      item.css('border', '1px solid #ccc');
+	validateSearchInput: function(myVal, valType, item, reset){
+	  if(reset){	
+      	item.css('border', '1px solid #ccc');
+  	  }
       if(!myVal){
       	return true;
       }
@@ -33,6 +40,63 @@ window.dashHelp = {
         }
         return true;
       }
+   	},
+   	validationList: {
+   		"owner": [
+   			'search-owner'
+   		],
+   		//leave this blank as the geocoder
+   		//will take care of it for us
+ 		"address":[],
+ 		"totalValue": [
+ 			'value-between-1',
+ 			'value-between-2'
+		],
+		"acreage": [
+   			'acreage-between-1',
+   			'acreage-between-2'
+   		],
+		"taxLot": [
+   			'search-taxlot-field'
+   		],
+		"latLng": [
+   			'lngMap',
+   			'latMap'
+   		],
+		"polygon":[]
+   	},
+   	//this gets called on every search click
+   	validateEmpty: function(releventGroups){
+   		//start out with the assumption everything is cool.
+   		this.globalInputErrorStatus = true;
+   		var thisHeld = this;
+   		var releventGroupsArr = [];
+   		if (typeof(releventGroups) === 'string') {
+   			releventGroupsArr.push(releventGroups);
+   		} else {
+   			releventGroupsArr = releventGroups;
+   		}
+   		//check for empty
+   		_.each(releventGroupsArr, function(group){
+   			_.each(thisHeld.validationList[group], function(field){
+   				var field = $('#' + field);
+   				//catch blank values
+   				if(!field.val() || field.val() === " "){
+   					field.css('border', '1px solid red');
+   					window.dashHelp.globalInputErrorStatus = false;
+   				}
+
+   			});
+   		});
+   		//iterate over all fields and check for type specific errors
+   		$( ".search-field" ).each(function(index, item) {
+	        var item = $(item);
+	        var errorType = item.attr('data-search-type');
+	        var myVal = item.val();
+	        if(thisHeld.validateSearchInput(myVal, errorType, item) === false){
+	          thisHeld.globalInputErrorStatus = false;
+	        }
+      	});
    	},
 	timeNow: function() {
     	return moment().format('MMMM Do YYYY, h:mm a');

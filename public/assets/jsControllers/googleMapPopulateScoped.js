@@ -135,6 +135,7 @@ window.gmd = {
 			      
 			  } else {
 			  	alert('Sorry, looks like we could not find that address');
+			  	window.dashHelp.hideSpinButton();
 			  }
 			});
 		},
