@@ -70,12 +70,8 @@ window.dashHelp = {
    		//start out with the assumption everything is cool.
    		this.globalInputErrorStatus = true;
    		var thisHeld = this;
-   		var releventGroupsArr = [];
-   		if (typeof(releventGroups) === 'string') {
-   			releventGroupsArr.push(releventGroups);
-   		} else {
-   			releventGroupsArr = releventGroups;
-   		}
+   		var releventGroupsArr = releventGroups;
+   		
    		//check for empty
    		_.each(releventGroupsArr, function(group){
    			_.each(thisHeld.validationList[group], function(field){
@@ -105,7 +101,10 @@ window.dashHelp = {
     	return moment().format('h:mm a');
   	},
   	showSpinButton: function(searchType){
-  		$(".btn-search-spin[data-type-attribute='" + searchType + "']").css('display','inline-block');
+  		_.each(searchType, function(item){
+  			$(".btn-search[data-type-attribute='" + item + "']").css('display','none');
+  			$(".btn-search-spin[data-type-attribute='" + item + "']").css('display','inline-block');
+  		});
   	},
   	hideSpinButton: function(){
   	  //show all of our search btns, hide spinner
@@ -142,10 +141,10 @@ window.dashHelp = {
 	    tempJson.uuid = uuid;
 	    this.lastSearchUuid = uuid;
 	    //mode
-	    if (typeof(searchType) != 'string'){
-	    	tempJson.mode = 'multi';
+	    if (searchType.length === 1){
+	    	tempJson.mode = this.singleVsMultiLookup[searchType[0]];
 	    } else {	
-	    	tempJson.mode = this.singleVsMultiLookup[searchType];
+	    	tempJson.mode = 'multi';
 		}
 	    //slurp up all form data
 	    tempJson.searchType = searchType;
@@ -178,56 +177,6 @@ window.dashHelp = {
 	    //push into our global store
 	    this.sessionSearchArray.push(tempJson);
 	    return tempJson;
-  	},
-	rightTemplateJson: function( searchType, numResults){
-	    var tempJson = {};
-	    tempJson.mapTime = this.timeNow();
-	    tempJson.numResults = numResults;
-	    if ( searchType === 'totalValue' ){
-	      tempJson.searchType = searchType;
-	      tempJson.totalFirst = $('#value-between-1').val();
-	      tempJson.totalSecond = $('#value-between-2').val();
-	      tempJson.mode = 'multi';
-	      return tempJson;
-	    } else if ( searchType === 'latLng' ){
-	      tempJson.searchType = searchType;
-	      tempJson.mapLat = $('#latMap').val();
-	      tempJson.mapLng = $('#lngMap').val();
-	      tempJson.mode = 'single';
-	      return tempJson;
-	    } else if ( searchType === 'address' ) {
-	      tempJson.searchType = searchType;
-	      tempJson.mode = 'single';
-
-	      var address = $('#search-address').val();
-	      var city = $('#search-city').val();
-	      var state = $('#search-state').val();
-	      var zip = $('#search-zip').val();
-	      var fullAddy = address + ' ' + city + ' ' + state + ' ' + zip;
-
-	      tempJson.fullAddress = fullAddy;
-	      var returnCoords = {mapLat: $('#latMapAddressHidden').val(), mapLng: $('#lngMapAddressHidden').val()};
-	      $.extend( tempJson, returnCoords );
-	      return tempJson;
-	    } else if ( searchType === 'owner' ){
-	      tempJson.searchType = searchType;
-	      tempJson.owner = $('#search-owner').val();
-	      tempJson.mode = 'multi';
-	      return tempJson;
-	    } else if ( searchType === 'acreage' ){
-	      tempJson.searchType = searchType;
-	      tempJson.acreageFirst = $('#acreage-between-1').val();
-	      tempJson.acreageSecond = $('#acreage-between-2').val();
-	      tempJson.mode = 'multi';
-	      return tempJson;
-	    } else if ( searchType === 'taxlot' ){
-	      tempJson.searchType = searchType;
-	      tempJson.mapTaxLotId = $('#search-taxlot-field').val();
-	      tempJson.mode = 'single';
-	      return tempJson;
-	    } else {
-	      alert('issue!');
-	    }
   	},
   	moveSelectionLeftArrow: function(forceBlowOut){
       if (forceBlowOut){

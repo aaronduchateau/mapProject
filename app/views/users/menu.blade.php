@@ -178,156 +178,23 @@
     });
 
     $(document).on('click', '#accept', function(event) {
+        mixpanel.people.increment('has_agreed_to_terms', 1);
         window.location.href = "{{ URL::asset('') }}users/dashboard/" + state + "/" + countyConcat;
     });
     
-
-
-    /*
-
-    $(window).load(function(){
-        
-      $(".dash-left-list").mCustomScrollbar({
-        theme:"minimal"
-      });
-
-      $(".dash-right-list").mCustomScrollbar({
-        theme:"minimal"
-      });
-      
-    });
-
-    //print the left dash pain
-    $(document).on('click', '#print-left-dash', function(event) {
-      $('.dash-left-full-margin').print({
-        globalStyles : false, // Use Global styles
-        mediaPrint : false, // Add link with attrbute media=print
-        //stylesheet : "http://fonts.googleapis.com/css?family=Inconsolata", //Custom stylesheet
-        iframe : false, //Print in a hidden iframe
-        noPrintSelector : ".avoid-this", // Don't print this
-        append : "custom tip can go here", // Add this on top
-        prepend : "<h2>Avatar RFP - MyEyesRemote.com</h2>" // Add this at bottom
-      });
-    });
-
-    fetchCounties
-
-    $(document).on('click', '.left-open', function(event) {
-        //$(".container-dash").css('left','0px');
-        //if (window.nestedMap){
-          //window.nestedMap.setMap(null);
-        //}
-        $('#config').hide();
-        $('.back').show();
-        $('.back-right').hide()
-        //start: toggle heading area
-        $('.left-result-heading').hide();
-        $('.left-action-buttons').show();
-        //end: toggle heading area
-        $('.dash-left-inter-margin').slideUp('slow');
-        $('.dash-left-full-margin').slideUp('slow');
-        $( ".container-dash" ).animate({
-          left: "0"
-        }, 400, function() {
-          // Animation complete.
-          
-          //this loads our template for the expanded info view in the left pain
-          var source = $("#dash-expanded-info-template").html();
-          var leftDashTemplate = Handlebars.compile(source);
-          //var indexTracker = $(event.target).attr('data-result-index');
-          var indexTracker = $(event.target).closest('div').attr('data-result-index');
-        
-          var templateResult = leftDashTemplate(window.g.mapRowData);
-          $('.dash-left-full-margin').html(templateResult);
-
-          //
-          window.gmd.interactMap.nestedMap(window.g.mapRowData['ACCOUNT'].value);
-
-          //this loads the work description for the expanded view
-          source   = $("#job-description").html();
-          leftDashTemplate = Handlebars.compile(source);
-          templateResult = leftDashTemplate(window.avatar);
-          $('.dash-left-full-margin').append(templateResult);
-          //load empty div for binding
-          $('.dash-left-full-margin').append("<h4 id='top-review' class='white-class'>User Reviews:</h4>");
-          //this loads the user reviews for the expanded view
-          source   = $("#user-reviews").html();
-          leftDashTemplate = Handlebars.compile(source);
-          templateResult = leftDashTemplate(window.avatar);
-          $('.dash-left-full-margin').append(templateResult);
-
-          $('#image-thumb-slider').css("max-width", (window.g.halfWidth() - 80) + "px");
-          $('.dash-left-full-margin').slideDown('slow');
-        });
-    });
-    
-    //bind scroll click to view user reviews
-    $(document).on('click', '#review-scroll', function() {
-        $(".dash-left-list").mCustomScrollbar("scrollTo","#top-review");
-    });
-
-    $(document).on('click', '.back', function() {
-       goBack();
-    });
-
-    $(document).on('click', '.back-right', function() {
-       goBack();
-    });
-
-    function goBack(){
-      $('.back-right').hide();
-      $('#config').show();
-        //start: toggle heading area
-      $('.left-result-heading').show();
-      $('.left-action-buttons').hide();
-      //end: toggle heading area
-      $('.dash-left-full-margin').slideUp('slow');
-      $( ".container-dash" ).animate({
-        left: - window.g.oneQuarterWidth()
-      }, 400, function() {
-        $('.dash-left-inter-margin').slideDown('slow');
-          // Animation complete.
-      });
-    }
-
-    $(document).on('click', '#config', function() {
-       //$(".container-dash").css('left','0px');
-       $('#config').hide();
-       $('.back-right').show();
-        $( ".container-dash" ).animate({
-          left: - window.g.halfWidth()
-        }, 400, function() {
-          // Animation complete.
-        });
-    });
-
-    $(document).on('click', '#search-click', function() {
-       templateResult = rightDashTemplate(rightTemplateJson());
-       $('.dash-right-inter-margin').prepend(templateResult);
-       $( ".single-right-item" ).each(function() {
-         $( this ).removeClass('active-item-right');
-       });
-       $('.single-right-item:first').addClass('active-item-right');
-       window.gmd.interactMap.panToPosition( $('#latMap').val(), $('#lngMap').val() );
-       console.log('click');
-    });
-
-    $(document).on('click', '#current-loc-click', function() {
-       navigator.geolocation.getCurrentPosition(myLocationCallback);
-    });
-
-    $(document).on('click', '.single-right-item', function(event) {
-       var latMap = $(event.target).closest('table').attr('data-attr-lat');
-       var lngMap = $(event.target).closest('table').attr('data-attr-lng');
-       $( ".single-right-item" ).each(function() {
-         $( this ).removeClass('active-item-right');
-       });
-       $(event.target).closest('.single-right-item').addClass('active-item-right');
-       window.gmd.interactMap.panToPosition( latMap, lngMap );
-      
-    });
-    */
-    
   });
+  /////////////////////////////////////////////
+  //mixpanel analytics
+  mixpanel.people.set_once(
+    { "FirstName": "{{Auth::user()->firstname}}",
+      "LastName": "{{Auth::user()->lastname}}",
+      "email": $('#client-email-holder').val(),
+      "accountType": $('#client-account-type').val(),
+      "Name": "{{Auth::user()->firstname}} {{Auth::user()->lastname}}"
+    }
+  );
+  // identify must be called along with people.set
+  mixpanel.identify($('#client-email-holder').val());
+  mixpanel.people.increment('LoggedIn', 1);
 
 </script>

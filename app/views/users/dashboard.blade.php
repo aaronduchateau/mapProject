@@ -307,9 +307,9 @@
     <button id="current-loc-click" class="btn btn-primary pull-left" style="margin-left:10px;margin-top:5px;">
       <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Current Location
     </button>
-    <button id="advanced-options" class="btn btn-primary pull-right" style="margin-right:10px;margin-top:5px;">
+    <!--<button id="advanced-options" class="btn btn-primary pull-right" style="margin-right:10px;margin-top:5px;">
       Advanced Options
-    </button>
+    </button>-->
   </div>  
 </div>
 
@@ -521,6 +521,8 @@
         //append : "custom tip can go here", // Add this on top
         //prepend : "<h2>Avatar RFP - MyEyesRemote.com</h2>" // Add this at bottom
       });
+      mixpanel.track("Printed", {"query": window.gmd.trackLastDetailQuery});
+      mixpanel.people.increment('printCount', 1);
     });
 
     //list v grid toggle
@@ -777,8 +779,10 @@
 
       //create a copy as to not modify our global object
       var tempJson = _.clone(retrievedSearchItem[0]);
-      if(typeof(tempJson.searchType) != 'string'){
+      if(tempJson.searchType.length != 1){
          tempJson.searchType = 'linkedSearch';
+      } else {
+         tempJson.searchType = tempJson.searchType[0];
       }
       //add the result count to our tempJson
       tempJson.numResults = numResults;
@@ -863,7 +867,8 @@
     });
 
     $(document).on('click', '.btn-search', function(event) {
-      var currentType = $(event.target).attr('data-type-attribute');
+      var currentType = [];
+      currentType.push( $(event.target).attr('data-type-attribute') );
       //see if we are in linked search mode, && there's more than one thing, if so make type an array
       if (!_.isEmpty(window.dashHelp.linkedSearchList) && (window.dashHelp.linkedSearchList.length != 1)){
         currentType = window.dashHelp.linkedSearchList;
@@ -879,12 +884,11 @@
       //end: error handling
 
       //start: add our spinner for the search in question
-      $(event.target).hide();
       window.dashHelp.showSpinButton(currentType);
       //end: add spinner for search in question
       
       //is our current type address, or if it is an array, does it contain address?
-      if (currentType === 'address' || (_.indexOf(currentType, 'address') === 1) ){
+      if (_.indexOf(currentType, 'address') != -1){
         var address = $('#search-address').val();
         var city = $('#search-city').val();
         var state = $('#search-state').val();
@@ -924,7 +928,7 @@
       console.log('resultIndex', resultIndex);
       var resultQueryData = window.paginatedResults[resultIndex].queryVal;
       console.log(resultQueryData);
-      window.gmd.interactMap.multiQueryApplyToMap('custom', resultQueryData, false, false);
+      window.gmd.interactMap.multiQueryApplyToMap(['custom'], resultQueryData, false, false);
       
       $( ".query-table-row" ).each(function() {
         $( this ).removeClass('active-query-table-row');
@@ -1020,6 +1024,9 @@
         console.log(currentAction);
     });
     */
+    //instantiate mixpanel user
+    mixpanel.identify($('#client-email-holder').val());
+    mixpanel.people.increment('dashboardView', 1);
     
   });
 

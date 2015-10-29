@@ -174,7 +174,8 @@ window.gmd = {
 
 		listLimitedQuery: function(type, sqlString, count){ 
 			console.log('listLimitedQuery');
-			console.log(sqlString);
+			//console.log(sqlString);
+			//mixpanel.track("LimitedMapQuery", {"sqlString": sqlString});
 			thisHeld = this;
 			//var table = window.g.mapConfig.dashTableName;
 			//window.gmd.cartoSqlConfig.execute("SELECT * FROM devtest." + table + " WHERE ownname = 'RNS MANAGEMENT LLC'")
@@ -314,9 +315,9 @@ window.gmd = {
 				window.map.removeLayer(window.layerOwnerResults);
 			}
 			//comprise our sql string, depending on string or array
-			if (typeof(type) === 'string') {
+			if (type.length === 1) {
 				var fromTable = this.fromTableQueryBuilder();
-				var mainQuery = this.multiResultQueryBuilder(type, params);	
+				var mainQuery = this.multiResultQueryBuilder(type[0], params);	
 				var sql = fromTable + " WHERE" + mainQuery;
 			} else {
 				var firstType = _.first(type);
@@ -335,6 +336,11 @@ window.gmd = {
 
 			var prefixString = window.gmd.helper.constructSqlPrefix(type, 'select');
 			var sqlAsSelect = prefixString + sql; 
+			/////////////////////////////////////////////////////////////
+			//mixpanel tracking:
+			mixpanel.track("MapQuery", {"sqlString": sqlAsSelect, "params": params});
+
+			/////////////////////////////////////////////////////////////
 			var boundingBox = this.queryAndPanToBounds(window.map, sqlAsSelect);
 			//view-source:http://andrew.hedges.name/experiments/haversine/
 
@@ -347,11 +353,12 @@ window.gmd = {
 	         	window.layerOwnerResults = layer;
 				//custom is type used by mult result single clicks, and we don't want 
 				//that to blow our count out, or interfere with pagination	
-				if (type !== 'custom'){	
+				if (_.first(type) !== 'custom'){	
 					thisHeld.listCountQuery(type, sql, shouldPopulateRightMenu, shouldPerformListQuery);
 				}
 
 	          }).on('error', function() {
+	          	mixpanel.track("error", {"MultiQueryMapError": err});
 	            console.log("some error occurred");
 	        });
 
@@ -396,6 +403,8 @@ window.gmd = {
 	        console.log(tableName);
 			//console.log(customAccountString);
 	        var sql = "SELECT * FROM " + tableName + " WHERE " + customAccountString;
+	        window.gmd.trackLastDetailQuery = sql;
+	        mixpanel.track("NestedMapQuery", {"sqlString": sql});
 	        var styles = '#douglas83feet {polygon-fill: #0D6A92; polygon-opacity: 0.0; line-color: #8a0002; line-width: 2; line-opacity: 1;}';
 			var LayerConfig = window.gmd.cartoLayerConfig(sql, styles);
 
@@ -424,8 +433,9 @@ window.gmd = {
 	            //zoom and pan so our platlines fall nicely in our map
 				//thisScoped.queryAndPanToBounds(window.nestedMap, sql);
 
-	          }).on('error', function() {
-	            console.log("some error occurred");
+	          }).on('error', function(err) {
+	          	mixpanel.track("error", {"NestedMapError": err});
+	            console.log("nested error occurred");
 	        });
 	        
 	        setTimeout(function(){ 
@@ -593,6 +603,7 @@ window.gmd = {
           
             layer.getSubLayer(0).set('template', $('#infowindow_template').html())
             .on('error', function(err){
+              mixpanel.track("error", {"initialMapLoadSublayerError": err});
               console.log('infowindow error: ', err);
             });
            
@@ -623,6 +634,7 @@ window.gmd = {
             cdb.vis.Vis.addInfowindow(window.map, layer.getSubLayer(0), configurationArray, {'infowindowTemplate': $('#infowindow_template').html(), 'templateType': 'mustache'})
 
           }).on('error', function() {
+          	mixpanel.track("error", {"NestedMapError": err});
             console.log("some error occurred");
             alert('Something Went Wrong, Please Refresh the Page and let Aaron know');
         });
@@ -638,6 +650,7 @@ window.gmd = {
             window.layerCountyBoundry = layer.getSubLayer(0);
             window.layerCountyBoundry.hide();
           }).on('error', function() {
+          	mixpanel.track("error", {"countyLayerMapError": err});
             console.log("some error occurred");
         });
 
