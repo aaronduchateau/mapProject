@@ -39,7 +39,8 @@ class userSeeder extends Seeder {
           array('firstname' => 'Matthew', 'lastname' => 'Hall', 'phone' => '503-510-8161', 'email' => 'Matthew.Hall@usbank.com', 'password' => Hash::make('matt1234'), 'accountType' => 'standard' ),
           array('firstname' => 'Peter', 'lastname' => 'Shin', 'phone' => '503-510-8161', 'email' => 'peter@peter.com', 'password' => Hash::make('peter1234'), 'accountType' => 'standard' ),
           array('firstname' => 'Test', 'lastname' => 'Account', 'phone' => '503-510-8161', 'email' => 'test@test.com', 'password' => Hash::make('test1234'), 'accountType' => 'standard' ),
-          array('firstname' => 'Anders', 'lastname' => 'Stadum', 'phone' => '541-255-9173', 'email' => 'anders.stadum@gmail.com', 'password' => Hash::make('test1234'), 'accountType' => 'standard' )
+          array('firstname' => 'Anders', 'lastname' => 'Stadum', 'phone' => '541-255-9173', 'email' => 'anders.stadum@gmail.com', 'password' => Hash::make('test1234'), 'accountType' => 'standard' ),
+          array('firstname' => 'Stephan', 'lastname' => 'Andresen', 'phone' => '541-510-1052', 'email' => 'stephan@alternativerealtor.com', 'password' => Hash::make('sa1052'), 'accountType' => 'standard' )
 
 		    ));
         $this->command->info('users seeded INSIDE called!');
