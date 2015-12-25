@@ -1,4 +1,27 @@
 <div class="arrow-left"></div>
+
+<!--<div class="search-field-holder polygon-div well custom-well-info-dark-blue">
+  <div class="checkbox custom-checkbox custom-checkbox-polygon" style="display:none;">
+    <label>
+      <input type="checkbox" class="link-search" data-type-attribute="polygon"> 
+    </label>
+  </div>
+  <div id="search-form-polygon-search-1">
+    <p class="heading">Polygon Search</p>
+    <p class="body">
+      Use the polygon draw tool (underneath the zoom controls on the map to the right) and draw a complete polygon. Make sure to complete the shape by connecting to the first drawn point, and bring your attention back to this area to perform a search.
+    </p>
+  </div>
+  <div id="search-form-polygon-search-2" style="display:none;">  
+    <p class="heading"><span class="glyphicon glyphicon-check" aria-hidden="true"></span> ( <span id="search-form-polygon-area"></span> km<sup>2</sup> )</p>
+    <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="polygon">Search</a>
+    <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="polygon">
+      <img src="{{ URL::asset('images/loading_spinner.gif')}}" class="btn-spinner-img"/>
+    </a>
+    <a href="javascript:void(0);" class="btn btn-default btn-draw" data-type-attribute="clearDraw">Clear</a>
+  </div>
+</div>-->
+
 <!--list query area chills here-->
 <div id="dash-list-query-area" class="dash-list-query-area" style="display:none;">
   <div style="height:40px;background-color:#337ab7;">
@@ -77,11 +100,41 @@
     <div class="dash-left-full-margin">
     </div>
   </div>
-  <div id="map-canvas" class="dash-center" style="">
-    <h4 class="white-class" style="width:300px;text-align:center;margin-top:50px;">
-    <img src="{{ URL::asset('images/loader.GIF') }}" style="width:32px;height:32px;">
-    Loading Content...
-    </h4>
+  <div id="map-canvas-shell" class="dash-center-shell" style="background-color:red;">
+    <div id="map-canvas" class="dash-center" style="">
+      <h4 class="white-class" style="width:300px;text-align:center;margin-top:50px;">
+      <img src="{{ URL::asset('images/loader.GIF') }}" style="width:32px;height:32px;">
+      Loading Content...
+      </h4>
+    </div>
+    <div class="polygon-div">
+      <div style="width:100;float:right;cursor:pointer;" class="well custom-well-info-dark-blue polygon-search-handle closed">
+        Polygon Search
+      </div>  
+      <div class="search-field-holder well custom-well-info-dark-blue" style="margin-top:40px;">
+        <div class="checkbox custom-checkbox custom-checkbox-polygon" style="display:none;">
+          <label>
+            <input type="checkbox" class="link-search" data-type-attribute="polygon"> 
+          </label>
+        </div>
+        <div id="search-form-polygon-search-1">
+          <p class="body">
+            Use the polygon draw tool above and draw a complete polygon. Make sure to complete the entire shape.
+          </p>
+        </div>
+        <div id="search-form-polygon-search-2" style="display:none;"> 
+          <span style="float:left;margin-top: -6px;"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> ( check to combine with other criteria )</span><br/> 
+          <p class="heading" style="font-size:16px;">Selected Area, ( <span id="search-form-polygon-area"></span> km<sup>2</sup> )</p>
+          <a href="javascript:void(0);" class="btn btn-default btn-search" data-type-attribute="polygon">Search Area</a>
+          <a href="javascript:void(0);" class="btn btn-default btn-search-spin" data-type-attribute="polygon">
+            <img src="{{ URL::asset('images/loading_spinner.gif')}}" class="btn-spinner-img"/>
+          </a>
+          <a href="javascript:void(0);" class="btn btn-default btn-draw" data-type-attribute="clearDraw">Clear Polygon</a>
+        </div>
+        <br/>
+        <br/>
+      </div>
+    </div>
     <!--map goes here-->
   </div>
   <div class="dash-right-list" style="background-color:rgba(13,106,146,0.9);">
@@ -252,8 +305,8 @@
                 <img src="{{ URL::asset('images/loading_spinner.gif')}}" class="btn-spinner-img"/>
               </a>
             </div>
-            <div class="search-field-holder polygon-div well custom-well-info-dark-blue">
-              <!--<label for="exampleInputEmail1">Search by Lat & Long:</label>-->
+            <!--<div class="search-field-holder polygon-div well custom-well-info-dark-blue">
+              
               <div class="checkbox custom-checkbox custom-checkbox-polygon" style="display:none;">
                 <label>
                   <input type="checkbox" class="link-search" data-type-attribute="polygon"> 
@@ -274,7 +327,7 @@
                 <a href="javascript:void(0);" class="btn btn-default btn-draw" data-type-attribute="clearDraw">Clear</a>
               </div>
 
-            </div>
+            </div>-->
           </div>
           <!--<div class="form-group">
              <div class="dropdown">
@@ -840,6 +893,7 @@
       }
       if (currentType === 'clearDraw'){
         window.gmd.removeDrawnLayersFromMap();
+        window.polygonSearchShow('close');
       }
     });
 
@@ -867,6 +921,7 @@
     });
 
     $(document).on('click', '.btn-search', function(event) {
+      $('#config').click();
       var currentType = [];
       currentType.push( $(event.target).attr('data-type-attribute') );
       //see if we are in linked search mode, && there's more than one thing, if so make type an array
@@ -975,6 +1030,43 @@
         console.log('retrievedSearchItemLow');
         console.log(retrievedSearchItem[0]);
         window.gmd.interactMap.multiQueryApplyToMap(retrievedSearchItem[0].searchType, retrievedSearchItem[0], false, window.gmd.paginatedResultsData.shouldShowListResults);
+    });
+
+    window.polygonSearchShow = (state) => {
+      var openHeight;
+      if (state === 'open') {
+          $('.polygon-search-handle').removeClass('closed');
+          $('.polygon-search-handle').addClass('open');
+          openHeight = window.g.adjustedWindowHeight() - 150;
+      } else {
+          $('.polygon-search-handle').removeClass('open');
+          $('.polygon-search-handle').addClass('closed');
+          openHeight = window.g.adjustedWindowHeight() -40;
+      }
+      $( ".polygon-div" ).animate({
+          top: openHeight
+          }, 400, function() {
+         
+      });
+
+    }
+
+    $(document).on('click', '.polygon-search-handle', function(e) {
+      var openHeight;
+      if ($(e.target).hasClass('closed')) {
+          $(e.target).removeClass('closed');
+          $(e.target).addClass('open');
+          openHeight = window.g.adjustedWindowHeight() - 150;
+      } else {
+          $(e.target).removeClass('open');
+          $(e.target).addClass('closed');
+          openHeight = window.g.adjustedWindowHeight() -40;
+      }
+      $( ".polygon-div" ).animate({
+          top: openHeight
+          }, 400, function() {
+         
+      });
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////

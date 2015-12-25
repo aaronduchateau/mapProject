@@ -142,6 +142,8 @@ $(function() {
 
     var sh = $(window).height() - 15; 
     var sw = $("#content").width();
+    $('#map-canvas-shell').css('width',sw);
+    $('#map-canvas-shell').css('height',sh);
     $('#map-canvas').css('width',sw);
     $('#map-canvas').css('height',sh);
     $('#overflowTable').css('height',sh);

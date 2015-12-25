@@ -19,8 +19,10 @@
     {{ HTML::style('assets/css/main.css') }}
     {{ HTML::style('assets/css/sales.css') }}
     {{ HTML::style('dist/scroll/jquery.mCustomScrollbar.css') }}
+
    
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,800,400' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   </head>
 
   <body id="body-dash">

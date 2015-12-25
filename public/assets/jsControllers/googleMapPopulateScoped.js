@@ -419,7 +419,7 @@ window.gmd = {
 		        		    'Google Terrain' : gglTerrain, 
 		        		    'Google Hybrid' : gglHybrid,
 		        		    'Google Roadmap' : gglRoadmap,
-		        		    'Bing Satelite' : bing,
+		        		    //'Bing Satelite' : bing,
 		        		    'MapQuest Aerial': L.tileLayer.provider('MapQuestOpen.Aerial'),
 		        		    'Esri WorldTopoMap': L.tileLayer.provider('Esri.WorldTopoMap'),
 							'Esri WorldImagery': L.tileLayer.provider('Esri.WorldImagery'),
@@ -533,6 +533,7 @@ window.gmd = {
 	polygonDrawStop : function(){
 		window.mainTileSublayer.setInteraction(true);
 		window.dashHelp.polygonSearchButtonsShow();
+		window.polygonSearchShow('open');
 	},
 
 	addDrawingToolsToMap : function(){

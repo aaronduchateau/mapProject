@@ -479,6 +479,15 @@ border-bottom: 0px solid #e5e5e5;
   }
 }
 
+.polygon-div {
+	width:300px;
+	height:300px;
+	z-index:100000;
+	position:absolute;
+	top:0px;
+	left:30px;
+}
+
 .pagination {
   display: inline; 
   padding-left: 0;

@@ -35,7 +35,7 @@ window.g = {
 		var halfWidth = this.halfWidth();
 		var windowLargeWidth = this.windowLargeWidth();
 
-		$("#body-dash").css("overflow-x", "hidden"); 
+		$("#body-dash").css("overflow", "hidden"); 
 	    $(".container-dash").css('min-width', windowLargeWidth + 'px');
 	    $(".container-dash").css('position','absolute');
 	    $(".container-dash").css('top', '98px');
@@ -47,11 +47,13 @@ window.g = {
 
 	    $(".dash-left-list").css("width", halfWidth + "px");
 	    $(".dash-center").css("width", halfWidth + "px");
+	    $(".dash-center-shell").css("width", halfWidth + "px");
 	    $(".dash-right-list").css("width", oneQuarterWidth + "px");
 	    $(".dash-options").css("width", oneQuarterWidth + "px");
 
 	    $(".dash-left-list").css("height", adjustedWindowHeight + "px");
 	    $(".dash-center").css("height", adjustedWindowHeight + "px");
+	    $(".dash-center-shell").css("height", adjustedWindowHeight + "px");
 	    $(".dash-right-list").css("height", adjustedWindowHeight + "px");
 	    $(".dash-options").css("height", adjustedWindowHeight + "px");
 	    $(".dash-search-options").css("height", (adjustedWindowHeight - 40) + "px");
@@ -72,9 +74,13 @@ window.g = {
 	    $(".dash-left-list").css("top", "0px");
 	    $(".dash-left-list").css("left", windowWidth + "px");
 
-	    $(".dash-center").css("position", "absolute");
-	    $(".dash-center").css("top", "0px");
-	    $(".dash-center").css("left", halfWidth + "px");
+	    $(".polygon-div").css("position", "absolute");
+	    $(".polygon-div").css("top", (adjustedWindowHeight - 40) + "px");
+	    $(".polygon-div").css("left", (halfWidth - 310) + "px");
+
+	    $(".dash-center-shell").css("position", "absolute");
+	    $(".dash-center-shell").css("top", "0px");
+	    $(".dash-center-shell").css("left", halfWidth + "px");
 
 	    $(".dash-right-list").css("position", "absolute");
 	    $(".dash-right-list").css("top", "0px");
@@ -86,7 +92,7 @@ window.g = {
 
 	    //flyout for multi-query support
 	    $(".dash-list-query-area").css("position", "absolute");
-	    $(".dash-list-query-area").css("z-index", "90000");
+	    $(".dash-list-query-area").css("z-index", "90000000");
 	    $(".dash-list-query-area").css("height", adjustedWindowHeightLarge + "px");
 	    $(".dash-list-query-table-area").css("height", (adjustedWindowHeightLarge - 80) + "px")
 	    $(".dash-list-query-area").css("top", "57px");
