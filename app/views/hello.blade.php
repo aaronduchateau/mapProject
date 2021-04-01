@@ -5,7 +5,7 @@
 	      <ul class="nav nav-pills pull-right" style="margin-top:-12px;">
 	        <li role="presentation" class="@{{menu.class}}"><a href="{{ URL::asset('')}}">Home</a></li>
 	        <li role="presentation"><a href="javascript:void(0)" data-toggle="modal" data-target="#myModalContact">Contact</a></li>
-	        <li role="presentation"><a href="{{ URL::asset('/users/login')}}">Sign in</a></li>
+	        <li role="presentation"><a href="{{ URL::action('UsersController@getLogin')}}">Sign in</a></li>
 	      </ul>
 	    </nav>
 		<h3 class="custom-text-brand" style="font-weight:200;letter-spacing: 0px;"><img src="{{ URL::asset('/images/frog_logo.png') }}" style="width: 35px;margin-top: -1px;margin-right: -5px;margin-left: 9px;"/> LotHoppers.com</h3>  
