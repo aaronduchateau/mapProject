@@ -1,0 +1,3 @@
+[submodule "mapProject-docker"]
+	path = mapProject-docker
+	url = https://github.com/moonjellydigital/mapProject-docker
